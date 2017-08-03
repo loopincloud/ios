@@ -31,8 +31,9 @@ class NCBrandColor: NSObject {
     }()
 
     // Color
-    public let customer:                UIColor = UIColor(red: 0.0/255.0, green: 130.0/255.0, blue: 201.0/255.0, alpha: 1.0)    // BLU NC : #0082c9
-
+    //public let customer:                UIColor = UIColor(red: 0.0/255.0, green: 130.0/255.0, blue: 201.0/255.0, alpha: 1.0)    // BLU NC : #0082c9 
+    public let customer:                UIColor = UIColor(red: 117.0/255.0, green: 13.0/255.0, blue: 189.0/255.0, alpha: 1.0)    // Loopin default : #750dbd
+    
     public var brand:                   UIColor
     public var connectionNo:            UIColor = UIColor(red: 204.0/255.0, green: 204.0/255.0, blue: 204.0/255.0, alpha: 1.0)
     public var cryptocloud:             UIColor = UIColor(red: 241.0/255.0, green: 90.0/255.0, blue: 34.0/255.0, alpha: 1.0)
@@ -64,16 +65,16 @@ class NCBrandOptions: NSObject {
         return instance
     }()
     
-    public let brand:                           String = "Nextcloud"
+    public let brand:                           String = "Loopin"
     public let mailMe:                          String = "ios@nextcloud.com"
-    public let textCopyrightNextcloudiOS:       String = "Nextcloud for iOS %@ © 2017 T.W.S. Inc."
-    public let textCopyrightNextcloudServer:    String = "Nextcloud Server %@"
-    public let loginBaseUrl:                    String = "https://cloud.twsweb.it"
+    public let textCopyrightNextcloudiOS:       String = "Loopin for iOS %@ © 2017"
+    public let textCopyrightNextcloudServer:    String = "Loopin Server %@"
+    public let loginBaseUrl:                    String = "https://meu.loopin.cloud"
     public let loginBaseUrlMultiDomains:        [String] = ["domain.com", "domain.it"]
-    public let pushNotificationServer:          String = "https://push-notifications.nextcloud.com"
-    public let linkLoginProvider:               String = "https://nextcloud.com/providers"
+    public let pushNotificationServer:          String = "https://push.loopin.cloud"
+    public let linkLoginProvider:               String = "https://loopin.cloud/"
     public let textLoginProvider:               String = "_login_bottom_label_"
-    public let middlewarePingUrl:               String = ""
+    public let middlewarePingUrl:               String = "loopin.cloud"
     public let webLoginAutenticationProtocol:   String = ""
     public let webCloseViewProtocol:            String = ""
     public let folderBrandAutoUpload:           String = ""

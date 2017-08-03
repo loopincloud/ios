@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="56"
+   height="39.679996"
+   viewBox="0 0 14.816667 10.498666"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.1 r"
+   sodipodi:docname="intro1.svg"
+   inkscape:export-filename="/home/leonidas/nextcloud_src/ios-2.17.5/iOSClient/Brand/Custom.xcassets/loginLogo.imageset/loginLogo@3x.png"
+   inkscape:export-xdpi="900"
+   inkscape:export-ydpi="900">
+  <defs
+     id="defs2">
+    <clipPath
+       id="clipPath4145"
+       clipPathUnits="userSpaceOnUse">
+      <rect
+         height="1024"
+         width="1024"
+         y="-1.9073486e-06"
+         x="0"
+         id="rect4147"
+         style="fill:#0082c9"
+         rx="128"
+         ry="128" />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="11.313708"
+     inkscape:cx="15.443719"
+     inkscape:cy="8.9302448"
+     inkscape:document-units="mm"
+     inkscape:current-layer="g1024"
+     showgrid="false"
+     inkscape:pagecheckerboard="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     units="px" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-24.02172,-114.50078)">
+    <g
+       transform="matrix(0.07459582,0,0,0.07459582,54.796582,120.08967)"
+       id="g40"
+       style="opacity:1">
+      <g
+         id="g1024"
+         style="opacity:1">
+        <path
+           inkscape:connector-curvature="0"
+           id="rect8336"
+           d="m -346.71508,-69.583724 c -3.84833,0 -6.97528,3.129178 -6.97528,6.977504 v 60.8342062 c 0,3.848323 3.12695,6.977504 6.97528,6.977504 h 60.83643 c 3.84834,0 6.97528,-3.129184 6.97528,-6.977504 V -62.60622 c 0,-3.848323 -3.12694,-6.977504 -6.97528,-6.977504 z m 0,1.949957 h 60.83643 c 2.80181,0 5.02533,2.225754 5.02533,5.027547 v 60.8342062 c 0,2.80179 -2.22352,5.027546 -5.02533,5.027546 h -60.83643 c -2.80179,0 -5.02532,-2.225759 -5.02532,-5.027546 V -62.60622 c 0,-2.80179 2.22353,-5.027547 5.02532,-5.027547 z"
+           style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#9d2e8f;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.9499315;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" />
+        <path
+           sodipodi:nodetypes="ssccscsccssccsc"
+           style="font-style:normal;font-weight:normal;font-size:92.12721252px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;opacity:1;fill:#9d2e8f;fill-opacity:1;stroke:none;stroke-width:42.21773529;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+           d="m -316.7261,-57.105796 c -14.00203,0 -25.27462,3.239459 -25.27462,7.263561 v 22.337586 0.239645 13.444092 c 0,2.315358 3.73352,4.3536925 9.56979,5.6819918 4.06651,0.8025363 10.37683,1.5815679 15.70341,1.5815679 4.18773,0 7.28453,-0.2938885 10.7548,-0.807842 5.27945,-6.1257167 10.71301,-12.8547747 14.52118,-20.0654937 v -22.411547 c 0,-4.024102 -11.27256,-7.263561 -25.27456,-7.263561 z m 25.27456,34.262672 c -3.01786,5.23351 -7.09932,10.193828 -10.90821,14.8386023 5.58198,-1.3592888 10.90821,-3.5936253 10.90821,-5.8163903 z"
+           id="path4231"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path4142"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:92.12721252px;line-height:125%;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold';letter-spacing:0px;word-spacing:0px;opacity:1;fill:#3a65c0;fill-opacity:1;stroke:none;stroke-width:0.50471294px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m -396.84431,21.111162 h 8.50909 v 25.341307 h 13.80986 v 7.25365 h -22.31895 z"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path4144"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:92.12721252px;line-height:125%;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold';letter-spacing:0px;word-spacing:0px;opacity:1;fill:#3a65c0;fill-opacity:1;stroke:none;stroke-width:0.50471294px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m -354.13936,20.599687 q 4.97526,0 8.97408,2.185397 4.04531,2.185397 6.32371,5.998216 2.32487,3.81282 2.32487,8.555598 0,4.78927 -2.32487,8.648582 -2.2784,3.859327 -6.32371,6.091216 -3.99882,2.231898 -8.97408,2.231898 -4.97526,0 -9.02057,-2.185402 -3.9988,-2.231896 -6.3237,-6.091209 -2.27839,-3.905815 -2.27839,-8.695085 0,-4.742778 2.27839,-8.555598 2.3249,-3.812819 6.3237,-5.998216 4.04531,-2.185397 9.02057,-2.185397 z m 0.093,7.20716 q -2.41788,0 -4.51028,1.255439 -2.04591,1.255443 -3.25484,3.487336 -1.20894,2.18539 -1.20894,4.835764 0,2.696881 1.20894,4.928778 1.25544,2.185388 3.30134,3.487328 2.0459,1.255438 4.46378,1.255438 2.41789,0 4.4173,-1.255438 2.04591,-1.30194 3.20835,-3.487328 1.16245,-2.231897 1.16245,-4.928778 0,-2.650374 -1.16245,-4.835764 -1.16244,-2.231893 -3.20835,-3.487336 -1.99941,-1.255439 -4.4173,-1.255439 z"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path4146"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:92.12721252px;line-height:125%;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold';letter-spacing:0px;word-spacing:0px;opacity:1;fill:#3a65c0;fill-opacity:1;stroke:none;stroke-width:0.50471294px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m -327.48027,21.109522 q 4.97526,0 8.97407,2.185399 4.04532,2.185396 6.32371,5.998216 2.32489,3.812822 2.32489,8.555591 0,4.789279 -2.32489,8.648592 -2.27839,3.859319 -6.32371,6.091216 -3.99881,2.231897 -8.97407,2.231897 -4.97525,0 -9.02056,-2.185401 -3.99882,-2.231898 -6.32369,-6.09121 -2.2784,-3.905815 -2.2784,-8.695094 0,-4.742769 2.2784,-8.555591 2.32487,-3.81282 6.32369,-5.998216 4.04531,-2.185399 9.02056,-2.185399 z m 0.093,7.207161 q -2.41788,0 -4.51029,1.255438 -2.04589,1.255443 -3.25483,3.487331 -1.20895,2.185399 -1.20895,4.835774 0,2.696871 1.20895,4.92877 1.25543,2.185394 3.30133,3.487335 2.04591,1.255438 4.46379,1.255438 2.41789,0 4.4173,-1.255438 2.04589,-1.301941 3.20835,-3.487335 1.16244,-2.231899 1.16244,-4.92877 0,-2.650375 -1.16244,-4.835774 -1.16246,-2.231888 -3.20835,-3.487331 -1.99941,-1.255438 -4.4173,-1.255438 z"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path4148"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:92.12721252px;line-height:125%;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold';letter-spacing:0px;word-spacing:0px;opacity:1;fill:#3a65c0;fill-opacity:1;stroke:none;stroke-width:0.50471294px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m -292.0223,21.111162 q 6.2307,0 9.67155,3.022359 3.44083,2.975858 3.44083,8.416101 0,5.765723 -3.44083,8.974076 -3.44085,3.161856 -9.67155,3.161856 h -5.81223 v 9.020565 h -8.5091 V 21.111162 Z m -0.41849,16.785706 q 2.60388,0 3.99881,-1.301939 1.44145,-1.301937 1.44145,-3.766321 0,-2.371386 -1.44145,-3.62683 -1.39493,-1.301938 -3.99881,-1.301938 h -5.39374 v 9.997028 z"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path4150"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:92.12721252px;line-height:125%;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold';letter-spacing:0px;word-spacing:0px;opacity:1;fill:#3a65c0;fill-opacity:1;stroke:none;stroke-width:0.50471294px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m -274.73965,21.111162 h 8.50909 v 32.594957 h -8.50909 z"
+           inkscape:connector-curvature="0" />
+        <path
+           id="path4152"
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:92.12721252px;line-height:125%;font-family:Montserrat;-inkscape-font-specification:'Montserrat Bold';letter-spacing:0px;word-spacing:0px;opacity:1;fill:#3a65c0;fill-opacity:1;stroke:none;stroke-width:0.50471294px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           d="m -237.66419,21.111162 h 7.90463 v 32.594957 h -7.43966 l -14.7863,-19.482579 v 19.482579 h -7.95112 V 21.111162 h 7.48615 l 14.8328,19.62207 -0.0464,-19.62207 z"
+           inkscape:connector-curvature="0" />
+      </g>
+    </g>
+  </g>
+</svg>
