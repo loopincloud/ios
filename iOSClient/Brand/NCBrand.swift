@@ -83,7 +83,7 @@ class NCBrandOptions: NSObject {
     public var folderDefaultAutoUpload:         String = "Photos"
     
     // Capabilities Group
-    public let capabilitiesGroups:              String = "group.it.twsweb.Crypto-Cloud"
+    public let capabilitiesGroups:              String = "group.cloud.loopin"
     
     // Options
     public let use_login_web:                   Bool = false
@@ -96,8 +96,8 @@ class NCBrandOptions: NSObject {
     public let use_storeLocalAutoUploadAll:     Bool = false
     
     public let disable_intro:                   Bool = false
-    public let disable_linkLoginProvider:       Bool = false
-    public let disable_request_login_url:       Bool = false
+    public let disable_linkLoginProvider:       Bool = true
+    public let disable_request_login_url:       Bool = true
     public let disable_multiaccount:            Bool = false
     public let disable_cryptocloudsystem:       Bool = false
     public let disable_manage_account:          Bool = false

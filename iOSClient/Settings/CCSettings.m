@@ -152,15 +152,15 @@
     };
     [section addFormRow:row];
     
-    // Contact us mail
-    row = [XLFormRowDescriptor formRowDescriptorWithTag:@"sendmail" rowType:XLFormRowDescriptorTypeButton title:NSLocalizedString(@"_contact_by_email_", nil)];
+    // Support
+    row = [XLFormRowDescriptor formRowDescriptorWithTag:@"support" rowType:XLFormRowDescriptorTypeButton title:NSLocalizedString(@"_support_", nil)];
     [row.cellConfig setObject:[UIColor blackColor] forKey:@"textLabel.textColor"];
     [row.cellConfig setObject:@(NSTextAlignmentLeft) forKey:@"textLabel.textAlignment"];
     [row.cellConfig setObject:[UIFont systemFontOfSize:15.0]forKey:@"textLabel.font"];
-    [row.cellConfig setObject:[UIImage imageNamed:@"settingsMail"] forKey:@"imageView.image"];
-    row.action.formSelector = @selector(sendMail:);
+    [row.cellConfig setObject:[UIImage imageNamed:@"settingsSupport"] forKey:@"imageView.image"];
+    row.action.formSelector = @selector(openSupportPage:);
     [section addFormRow:row];
-   
+    
     self.form = form;
 }
 
@@ -513,6 +513,10 @@
         [CCUtility sendMailEncryptPass:[CCUtility getEmail] validateEmail:NO form:self nameImage:@"backgroundDetail"];
 }
 
+- (void)openSupportPage:(XLFormRowDescriptor *) sender
+{
+    [UIApplication.sharedApplication openURL:[NSURL URLWithString:@"https://suporte.loopin.cloud"]];
+}
 #pragma --------------------------------------------------------------------------------------------
 #pragma mark === BKPasscodeViewController ===
 #pragma --------------------------------------------------------------------------------------------

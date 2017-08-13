@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -24,6 +24,7 @@
                         <subviews>
                             <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Username" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1Gf-Bw-Nim">
                                 <rect key="frame" x="50" y="200" width="319" height="44"/>
+                                <accessibility key="accessibilityConfiguration" identifier="LoginUsernameField"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="JYC-15-QFZ"/>
                                 </constraints>
@@ -33,6 +34,7 @@
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="jU7-Iw-XfU">
                                 <rect key="frame" x="50" y="244" width="273" height="44"/>
+                                <accessibility key="accessibilityConfiguration" identifier="LoginPasswordField"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="44" id="SHB-pM-p1U"/>
                                 </constraints>
@@ -43,6 +45,7 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HQd-pF-3cE">
                                 <rect key="frame" x="-4" y="302" width="383" height="50"/>
                                 <color key="backgroundColor" red="0.2196078431372549" green="0.50196078431372548" blue="0.76470588235294112" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <accessibility key="accessibilityConfiguration" identifier="LoginButton"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="S6Y-YG-g6O"/>
                                 </constraints>

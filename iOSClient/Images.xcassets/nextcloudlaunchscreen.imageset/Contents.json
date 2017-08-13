@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "nextcloudlaunchscreen.png",
+      "filename" : "plainLogo@x1.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "nextcloudlaunchscreen@2x.png",
+      "filename" : "RlbTsLz.png",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "nextcloudlaunchscreen@3x.png",
+      "filename" : "plainLogo@x3.png",
       "scale" : "3x"
     }
   ],

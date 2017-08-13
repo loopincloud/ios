@@ -27,7 +27,7 @@
     #if defined(CUSTOM_BUILD)
         #import "CustomSwift.h"
     #else
-        #import "Nextcloud-Swift.h"
+        #import "Loopin-Swift.h"
     #endif
 
 #endif
