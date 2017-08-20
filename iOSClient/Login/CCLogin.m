@@ -42,28 +42,6 @@
     self.imageBrand.image = [UIImage imageNamed:@"loginLogo"];
     self.login.backgroundColor = [NCBrandColor sharedInstance].customer;
     
-    // Bottom label
-    self.bottomLabel.text = NSLocalizedString([NCBrandOptions sharedInstance].textLoginProvider, nil);
-    self.bottomLabel.userInteractionEnabled = YES;
-    
-    if ([NCBrandOptions sharedInstance].disable_linkLoginProvider) {
-        self.bottomLabel.hidden = YES;
-    }
-
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tabBottomLabel)];
-    [self.bottomLabel addGestureRecognizer:tapGesture];
-    
-    if (self.view.frame.size.width == ([[UIScreen mainScreen] bounds].size.width*([[UIScreen mainScreen] bounds].size.width<[[UIScreen mainScreen] bounds].size.height))+([[UIScreen mainScreen] bounds].size.height*([[UIScreen mainScreen] bounds].size.width>[[UIScreen mainScreen] bounds].size.height))) {
-        
-        // Portrait
-        self.bottomLabel.hidden = NO;
-        
-    } else {
-        
-        // Landscape
-        self.bottomLabel.hidden = YES;
-    }
-    
     self.annulla.tintColor = [NCBrandColor sharedInstance].customer;
     
     [self.baseUrl setDelegate:self];
@@ -135,25 +113,6 @@
 {
     [textField resignFirstResponder];
     return YES;
-}
-
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
-{
-    [coordinator animateAlongsideTransition:nil completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
-        
-        if (self.view.frame.size.width == ([[UIScreen mainScreen] bounds].size.width*([[UIScreen mainScreen] bounds].size.width<[[UIScreen mainScreen] bounds].size.height))+([[UIScreen mainScreen] bounds].size.height*([[UIScreen mainScreen] bounds].size.width>[[UIScreen mainScreen] bounds].size.height))) {
-            
-            // Portrait
-            self.bottomLabel.hidden = NO;
-            
-        } else {
-            
-            // Landscape
-            self.bottomLabel.hidden = YES;
-        }
-    }];
-    
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
 }
 
 #pragma --------------------------------------------------------------------------------------------
@@ -356,11 +315,6 @@
 #pragma --------------------------------------------------------------------------------------------
 #pragma mark == Action ==
 #pragma --------------------------------------------------------------------------------------------
-
-- (void)tabBottomLabel
-{
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NCBrandOptions sharedInstance].linkLoginProvider]];
-}
 
 - (IBAction)handlebaseUrlchange:(id)sender
 {

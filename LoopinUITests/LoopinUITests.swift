@@ -65,8 +65,17 @@ class LoopinUITests: XCTestCase {
         passwordSecureTextField.typeText("depositodechorume")
         app.buttons["LoginButton"].tap()
         
-        sleep(10)
+        sleep(30)
 
+        
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            let tablesQuery = XCUIApplication().tables
+            tablesQuery.cells.staticTexts["Fotos"].tap()
+            sleep(5)
+            tablesQuery.staticTexts["Hummingbird.jpg"].tap()
+            sleep(5)
+        }
+        
         snapshot("02-MainScreen")
         app.children(matching: .window).element(boundBy: 0).children(matching: .other).element.children(matching: .other).element.children(matching: .button).element(boundBy: 0).tap()
         
