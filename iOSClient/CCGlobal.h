@@ -70,7 +70,7 @@ extern NSString *const urlBaseUploadDB;
 #define k_returnPassaporto                              13
 
 // Name Default DB
-#define k_databaseDefault                               @"loopin.realm"
+#define k_databaseDefault                               @"techsize.realm"
 
 // Picker select image
 #define k_pickerControllerMax                           100.0
@@ -92,25 +92,25 @@ extern NSString *const urlBaseUploadDB;
 #define k_networkingSessionNotification                 @"networkingSessionNotification"
 
 // Session
-#define k_domain_session_queue                          @"group.cloud.loopin"
+#define k_domain_session_queue                          @"group.cloud.techsize"
 
-#define k_download_session                              @"group.cloud.loopin.download.session"
-#define k_download_session_foreground                   @"group.cloud.loopin.download.sessionforeground"
-#define k_download_session_wwan                         @"group.cloud.loopin.download.sessionwwan"
-#define k_upload_session                                @"group.cloud.loopin.upload.session"
-#define k_upload_session_foreground                     @"group.cloud.loopin.upload.sessionforeground"
-#define k_upload_session_wwan                           @"group.cloud.loopin.upload.sessionwwan"
+#define k_download_session                              @"group.cloud.techsize.download.session"
+#define k_download_session_foreground                   @"group.cloud.techsize.download.sessionforeground"
+#define k_download_session_wwan                         @"group.cloud.techsize.download.sessionwwan"
+#define k_upload_session                                @"group.cloud.techsize.upload.session"
+#define k_upload_session_foreground                     @"group.cloud.techsize.upload.sessionforeground"
+#define k_upload_session_wwan                           @"group.cloud.techsize.upload.sessionwwan"
 
 // OperationQueue
-#define k_queue                                         @"group.cloud.loopin.queue"
-#define k_download_queue                                @"group.cloud.loopin.download.queue"
-#define k_download_queuewwan                            @"group.cloud.loopin.download.queuewwan"
-#define k_upload_queue                                  @"group.cloud.loopin.upload.queue"
-#define k_upload_queuewwan                              @"group.cloud.loopin.upload.queuewwan"
+#define k_queue                                         @"group.cloud.techsize.queue"
+#define k_download_queue                                @"group.cloud.techsize.download.queue"
+#define k_download_queuewwan                            @"group.cloud.techsize.download.queuewwan"
+#define k_upload_queue                                  @"group.cloud.techsize.upload.queue"
+#define k_upload_queuewwan                              @"group.cloud.techsize.upload.queuewwan"
 
 // Service Key Share
-#define k_serviceShareKeyChain                          @"Crypto Cloud"
-#define k_metadataKeyedUnarchiver                       @"group.cloud.loopin.metadata"
+#define k_serviceShareKeyChain                          @"TechSize Cloud"
+#define k_metadataKeyedUnarchiver                       @"group.cloud.techsize.metadata"
 
 // TaskIdentifier
 #define k_taskIdentifierDone                            -1

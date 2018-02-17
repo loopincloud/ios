@@ -32,7 +32,7 @@ class NCBrandColor: NSObject {
 
     // Color
     //public let customer:                UIColor = UIColor(red: 0.0/255.0, green: 130.0/255.0, blue: 201.0/255.0, alpha: 1.0)    // BLU NC : #0082c9 
-    public let customer:                UIColor = UIColor(red: 117.0/255.0, green: 13.0/255.0, blue: 189.0/255.0, alpha: 1.0)    // Loopin default : #750dbd
+    public let customer:                UIColor = UIColor(red: 1.0/255.0, green: 174.0/255.0, blue: 243.0/255.0, alpha: 1.0)    // Techsize default : #01aef3ff
     
     public var brand:                   UIColor
     public var connectionNo:            UIColor = UIColor(red: 204.0/255.0, green: 204.0/255.0, blue: 204.0/255.0, alpha: 1.0)
@@ -65,16 +65,16 @@ class NCBrandOptions: NSObject {
         return instance
     }()
     
-    public let brand:                           String = "Loopin"
-    public let mailMe:                          String = "ios@nextcloud.com"
-    public let textCopyrightNextcloudiOS:       String = "Loopin for iOS %@ © 2017"
-    public let textCopyrightNextcloudServer:    String = "Loopin Server %@"
-    public let loginBaseUrl:                    String = "https://meu.loopin.cloud"
+    public let brand:                           String = "TechSize Cloud"
+    public let mailMe:                          String = "anderson.santos@techsize.com.br"
+    public let textCopyrightNextcloudiOS:       String = "TechSize for iOS %@ © 2018"
+    public let textCopyrightNextcloudServer:    String = "TechSize Server %@"
+    public let loginBaseUrl:                    String = "https://cloud.techsize.com.br"
     public let loginBaseUrlMultiDomains:        [String] = ["domain.com", "domain.it"]
-    public let pushNotificationServer:          String = "https://push.loopin.cloud"
-    public let linkLoginProvider:               String = "https://loopin.cloud/"
+    public let pushNotificationServer:          String = "https://push.techsize.com.br"
+    public let linkLoginProvider:               String = "https://techsize.com.br"
     public let textLoginProvider:               String = "_login_bottom_label_"
-    public let middlewarePingUrl:               String = "loopin.cloud"
+    public let middlewarePingUrl:               String = "cloud.techsize.com.br"
     public let webLoginAutenticationProtocol:   String = ""
     public let webCloseViewProtocol:            String = ""
     public let folderBrandAutoUpload:           String = ""
@@ -83,7 +83,7 @@ class NCBrandOptions: NSObject {
     public var folderDefaultAutoUpload:         String = "Photos"
     
     // Capabilities Group
-    public let capabilitiesGroups:              String = "group.cloud.loopin"
+    public let capabilitiesGroups:              String = "group.cloud.techsize"
     
     // Options
     public let use_login_web:                   Bool = false
