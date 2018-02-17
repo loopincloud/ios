@@ -52,7 +52,7 @@ class FileProvider: NSFileProviderExtension {
         
         // TODO: get file size for file at <url> from model
         let fileSize = 0
-        let metadata = [AnyHashable(URLResourceKey.fileSizeKey): fileSize]
+        let metadata = [URLResourceKey.fileSizeKey: fileSize]
         do {
             try NSFileProviderExtension.writePlaceholder(at: placeholderURL, withMetadata: metadata)
         } catch {
