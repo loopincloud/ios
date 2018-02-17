@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E47F191C2038D725005959D0 /* NextcloudUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E47F191B2038D725005959D0 /* NextcloudUITests.swift */; };
+		E47F19252038D87D005959D0 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E47F19232038D856005959D0 /* SnapshotHelper.swift */; };
 		F700222C1EC479840080073F /* Custom.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F700222B1EC479840080073F /* Custom.xcassets */; };
 		F700222D1EC479840080073F /* Custom.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F700222B1EC479840080073F /* Custom.xcassets */; };
 		F700222E1EC479840080073F /* Custom.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F700222B1EC479840080073F /* Custom.xcassets */; };
@@ -694,6 +696,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		E47F191E2038D725005959D0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F7F67BA01A24D27800EE80DA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F77B0DEB1D118A16002130FE;
+			remoteInfo = Nextcloud;
+		};
 		F7145A311D12E65F00CAFEEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F7F67BA01A24D27800EE80DA /* Project object */;
@@ -807,6 +816,10 @@
 		08EA97451E6554FC004C83FA /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseCore.framework; sourceTree = "<group>"; };
 		08EA97461E6554FC004C83FA /* FirebaseInstanceID.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseInstanceID.framework; sourceTree = "<group>"; };
 		08EA97471E6554FC004C83FA /* GoogleToolboxForMac.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleToolboxForMac.framework; sourceTree = "<group>"; };
+		E47F19192038D725005959D0 /* NextcloudUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NextcloudUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E47F191B2038D725005959D0 /* NextcloudUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextcloudUITests.swift; sourceTree = "<group>"; };
+		E47F191D2038D725005959D0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E47F19232038D856005959D0 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SnapshotHelper.swift; path = NextcloudUITests/SnapshotHelper.swift; sourceTree = "<group>"; };
 		F700222B1EC479840080073F /* Custom.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Custom.xcassets; sourceTree = "<group>"; };
 		F70022591EC4C9100080073F /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
 		F700225A1EC4C9100080073F /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPSessionManager.m; sourceTree = "<group>"; };
@@ -945,20 +958,6 @@
 		F7169A191EE590930086BD69 /* NCSharesCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCSharesCell.h; sourceTree = "<group>"; };
 		F7169A1A1EE590930086BD69 /* NCSharesCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCSharesCell.m; sourceTree = "<group>"; };
 		F7169A1B1EE590930086BD69 /* NCSharesCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NCSharesCell.xib; sourceTree = "<group>"; };
-		F7169A2D1EE59BB70086BD69 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/CTAssetsPicker.strings; sourceTree = "<group>"; };
-		F7169A2E1EE59BB70086BD69 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/SwiftWebVC.strings; sourceTree = "<group>"; };
-		F7169A2F1EE59BB70086BD69 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/BKPasscodeView.strings; sourceTree = "<group>"; };
-		F7169A301EE59BB70086BD69 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F7169A311EE59BB70086BD69 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F7169A321EE59BB70086BD69 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Intro.strings; sourceTree = "<group>"; };
-		F7169A331EE59BB80086BD69 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Error.strings; sourceTree = "<group>"; };
-		F7169A491EE59C630086BD69 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/CTAssetsPicker.strings; sourceTree = "<group>"; };
-		F7169A4A1EE59C640086BD69 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/SwiftWebVC.strings; sourceTree = "<group>"; };
-		F7169A4B1EE59C640086BD69 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/BKPasscodeView.strings; sourceTree = "<group>"; };
-		F7169A4C1EE59C640086BD69 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F7169A4D1EE59C640086BD69 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F7169A4E1EE59C640086BD69 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Intro.strings; sourceTree = "<group>"; };
-		F7169A4F1EE59C640086BD69 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Error.strings; sourceTree = "<group>"; };
 		F720E01E1E48C73E001A4B9E /* CCActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = CCActions.swift; path = Actions/CCActions.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		F721371D1BAFF0920012B613 /* CCAccountWeb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAccountWeb.h; sourceTree = "<group>"; };
 		F721371E1BAFF0920012B613 /* CCAccountWeb.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAccountWeb.m; sourceTree = "<group>"; };
@@ -1120,13 +1119,6 @@
 		F75AC2421F1F62450073EC19 /* NCManageAutoUploadFileName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NCManageAutoUploadFileName.swift; sourceTree = "<group>"; };
 		F75ADF441DC75FFE008A7347 /* CCLogin.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CCLogin.storyboard; sourceTree = "<group>"; };
 		F75AE3C61E9D12900088BB09 /* SwiftyAvatar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyAvatar.swift; sourceTree = "<group>"; };
-		F75B91DF1ECAE17800199C96 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/CTAssetsPicker.strings; sourceTree = "<group>"; };
-		F75B91E01ECAE17800199C96 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/SwiftWebVC.strings; sourceTree = "<group>"; };
-		F75B91E11ECAE17800199C96 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/BKPasscodeView.strings; sourceTree = "<group>"; };
-		F75B91E21ECAE17800199C96 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F75B91E31ECAE17800199C96 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F75B91E41ECAE17800199C96 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Intro.strings; sourceTree = "<group>"; };
-		F75B91E51ECAE17800199C96 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Error.strings; sourceTree = "<group>"; };
 		F75B91F41ECAE26300199C96 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/CTAssetsPicker.strings"; sourceTree = "<group>"; };
 		F75B91F51ECAE26300199C96 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/SwiftWebVC.strings"; sourceTree = "<group>"; };
 		F75B91F61ECAE26300199C96 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/BKPasscodeView.strings"; sourceTree = "<group>"; };
@@ -1134,13 +1126,6 @@
 		F75B91F81ECAE26400199C96 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		F75B91F91ECAE26400199C96 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Intro.strings"; sourceTree = "<group>"; };
 		F75B91FA1ECAE26400199C96 /* pt-BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-BR"; path = "pt-BR.lproj/Error.strings"; sourceTree = "<group>"; };
-		F75B923A1ECAE55E00199C96 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/CTAssetsPicker.strings; sourceTree = "<group>"; };
-		F75B923B1ECAE55E00199C96 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/SwiftWebVC.strings; sourceTree = "<group>"; };
-		F75B923C1ECAE55E00199C96 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/BKPasscodeView.strings; sourceTree = "<group>"; };
-		F75B923D1ECAE55E00199C96 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F75B923E1ECAE55E00199C96 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F75B923F1ECAE55F00199C96 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Intro.strings; sourceTree = "<group>"; };
-		F75B92401ECAE55F00199C96 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Error.strings; sourceTree = "<group>"; };
 		F75CDBF51DF063AD00116AD0 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; name = .gitignore; path = ../.gitignore; sourceTree = "<group>"; };
 		F75EDFA51E8C106900E6F369 /* Firebase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Firebase.h; sourceTree = "<group>"; };
 		F75EDFA61E8C106900E6F369 /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseAnalytics.framework; sourceTree = "<group>"; };
@@ -1287,13 +1272,6 @@
 		F76C3B881C638A4C00DC4301 /* CCError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCError.m; sourceTree = "<group>"; };
 		F76F23321ED4600700C40023 /* Share-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Share-Bridging-Header.h"; sourceTree = "<group>"; };
 		F76F23331ED4603700C40023 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
-		F772BEB11EE69975006A232B /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/CTAssetsPicker.strings"; sourceTree = "<group>"; };
-		F772BEB21EE69975006A232B /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/SwiftWebVC.strings"; sourceTree = "<group>"; };
-		F772BEB31EE69976006A232B /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/BKPasscodeView.strings"; sourceTree = "<group>"; };
-		F772BEB41EE69976006A232B /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		F772BEB51EE69976006A232B /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		F772BEB61EE69976006A232B /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Intro.strings"; sourceTree = "<group>"; };
-		F772BEB71EE69976006A232B /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/Error.strings"; sourceTree = "<group>"; };
 		F777F0301C29717F00CE81CB /* PHAsset+Utility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PHAsset+Utility.h"; sourceTree = "<group>"; };
 		F777F0311C29717F00CE81CB /* PHAsset+Utility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PHAsset+Utility.m"; sourceTree = "<group>"; };
 		F77D49A71DC238E500CDC568 /* loading@2x.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "loading@2x.gif"; sourceTree = "<group>"; };
@@ -1315,62 +1293,6 @@
 		F78964AB1EBB576C00403E13 /* JDStatusBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JDStatusBarView.h; sourceTree = "<group>"; };
 		F78964AC1EBB576C00403E13 /* JDStatusBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JDStatusBarView.m; sourceTree = "<group>"; };
 		F78BFEDE1D31126B00E513CF /* MainInterface.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainInterface.storyboard; sourceTree = "<group>"; };
-		F78D6F351F0B7C6E002F9619 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/CTAssetsPicker.strings"; sourceTree = "<group>"; };
-		F78D6F361F0B7C6E002F9619 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/SwiftWebVC.strings"; sourceTree = "<group>"; };
-		F78D6F371F0B7C6E002F9619 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/BKPasscodeView.strings"; sourceTree = "<group>"; };
-		F78D6F381F0B7C6E002F9619 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		F78D6F391F0B7C6E002F9619 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		F78D6F3A1F0B7C6F002F9619 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Intro.strings"; sourceTree = "<group>"; };
-		F78D6F3B1F0B7C6F002F9619 /* cs-CZ */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "cs-CZ"; path = "cs-CZ.lproj/Error.strings"; sourceTree = "<group>"; };
-		F78D6F3C1F0B7CA8002F9619 /* es-AR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-AR"; path = "es-AR.lproj/CTAssetsPicker.strings"; sourceTree = "<group>"; };
-		F78D6F3D1F0B7CA8002F9619 /* es-AR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-AR"; path = "es-AR.lproj/SwiftWebVC.strings"; sourceTree = "<group>"; };
-		F78D6F3E1F0B7CA9002F9619 /* es-AR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-AR"; path = "es-AR.lproj/BKPasscodeView.strings"; sourceTree = "<group>"; };
-		F78D6F3F1F0B7CA9002F9619 /* es-AR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-AR"; path = "es-AR.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		F78D6F401F0B7CA9002F9619 /* es-AR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-AR"; path = "es-AR.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		F78D6F411F0B7CA9002F9619 /* es-AR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-AR"; path = "es-AR.lproj/Intro.strings"; sourceTree = "<group>"; };
-		F78D6F421F0B7CA9002F9619 /* es-AR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-AR"; path = "es-AR.lproj/Error.strings"; sourceTree = "<group>"; };
-		F78D6F431F0B7CB9002F9619 /* es-MX */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-MX"; path = "es-MX.lproj/CTAssetsPicker.strings"; sourceTree = "<group>"; };
-		F78D6F441F0B7CB9002F9619 /* es-MX */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-MX"; path = "es-MX.lproj/SwiftWebVC.strings"; sourceTree = "<group>"; };
-		F78D6F451F0B7CB9002F9619 /* es-MX */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-MX"; path = "es-MX.lproj/BKPasscodeView.strings"; sourceTree = "<group>"; };
-		F78D6F461F0B7CB9002F9619 /* es-MX */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-MX"; path = "es-MX.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		F78D6F471F0B7CB9002F9619 /* es-MX */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-MX"; path = "es-MX.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		F78D6F481F0B7CB9002F9619 /* es-MX */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-MX"; path = "es-MX.lproj/Intro.strings"; sourceTree = "<group>"; };
-		F78D6F491F0B7CB9002F9619 /* es-MX */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-MX"; path = "es-MX.lproj/Error.strings"; sourceTree = "<group>"; };
-		F78D6F4A1F0B7CE4002F9619 /* nb-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nb-NO"; path = "nb-NO.lproj/CTAssetsPicker.strings"; sourceTree = "<group>"; };
-		F78D6F4B1F0B7CE4002F9619 /* nb-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nb-NO"; path = "nb-NO.lproj/SwiftWebVC.strings"; sourceTree = "<group>"; };
-		F78D6F4C1F0B7CE4002F9619 /* nb-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nb-NO"; path = "nb-NO.lproj/BKPasscodeView.strings"; sourceTree = "<group>"; };
-		F78D6F4D1F0B7CE4002F9619 /* nb-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nb-NO"; path = "nb-NO.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		F78D6F4E1F0B7CE4002F9619 /* nb-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nb-NO"; path = "nb-NO.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		F78D6F4F1F0B7CE4002F9619 /* nb-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nb-NO"; path = "nb-NO.lproj/Intro.strings"; sourceTree = "<group>"; };
-		F78D6F501F0B7CE5002F9619 /* nb-NO */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "nb-NO"; path = "nb-NO.lproj/Error.strings"; sourceTree = "<group>"; };
-		F78D6F511F0B7D47002F9619 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/CTAssetsPicker.strings; sourceTree = "<group>"; };
-		F78D6F521F0B7D47002F9619 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/SwiftWebVC.strings; sourceTree = "<group>"; };
-		F78D6F531F0B7D47002F9619 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/BKPasscodeView.strings; sourceTree = "<group>"; };
-		F78D6F541F0B7D47002F9619 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F78D6F551F0B7D47002F9619 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F78D6F561F0B7D47002F9619 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Intro.strings; sourceTree = "<group>"; };
-		F78D6F571F0B7D48002F9619 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Error.strings; sourceTree = "<group>"; };
-		F78D6F581F0B7D9A002F9619 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/CTAssetsPicker.strings; sourceTree = "<group>"; };
-		F78D6F591F0B7D9A002F9619 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/SwiftWebVC.strings; sourceTree = "<group>"; };
-		F78D6F5A1F0B7D9B002F9619 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/BKPasscodeView.strings; sourceTree = "<group>"; };
-		F78D6F5B1F0B7D9B002F9619 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F78D6F5C1F0B7D9B002F9619 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F78D6F5D1F0B7D9B002F9619 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Intro.strings; sourceTree = "<group>"; };
-		F78D6F5E1F0B7D9B002F9619 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Error.strings; sourceTree = "<group>"; };
-		F78D6F5F1F0B7DDE002F9619 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/CTAssetsPicker.strings; sourceTree = "<group>"; };
-		F78D6F601F0B7DDF002F9619 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SwiftWebVC.strings; sourceTree = "<group>"; };
-		F78D6F611F0B7DDF002F9619 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/BKPasscodeView.strings; sourceTree = "<group>"; };
-		F78D6F621F0B7DDF002F9619 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F78D6F631F0B7DDF002F9619 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F78D6F641F0B7DDF002F9619 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Intro.strings; sourceTree = "<group>"; };
-		F78D6F651F0B7DDF002F9619 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Error.strings; sourceTree = "<group>"; };
-		F78D6F661F0B7E1E002F9619 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/CTAssetsPicker.strings; sourceTree = "<group>"; };
-		F78D6F671F0B7E1F002F9619 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/SwiftWebVC.strings; sourceTree = "<group>"; };
-		F78D6F681F0B7E1F002F9619 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/BKPasscodeView.strings; sourceTree = "<group>"; };
-		F78D6F691F0B7E1F002F9619 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F78D6F6A1F0B7E1F002F9619 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F78D6F6B1F0B7E1F002F9619 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Intro.strings; sourceTree = "<group>"; };
-		F78D6F6C1F0B7E1F002F9619 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Error.strings; sourceTree = "<group>"; };
 		F78F6FAE1CC8CCB700F4EA25 /* CCSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCSection.h; sourceTree = "<group>"; };
 		F78F6FAF1CC8CCB700F4EA25 /* CCSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCSection.m; sourceTree = "<group>"; };
 		F792A77B1BC7C45400C9388E /* CCSplit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCSplit.h; sourceTree = "<group>"; };
@@ -1417,13 +1339,6 @@
 		F7B0C0CC1EE7E7750033AC24 /* CCSynchronize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCSynchronize.m; sourceTree = "<group>"; };
 		F7B0C1731EE839A30033AC24 /* NCAutoUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NCAutoUpload.h; sourceTree = "<group>"; };
 		F7B0C1741EE839A30033AC24 /* NCAutoUpload.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NCAutoUpload.m; sourceTree = "<group>"; };
-		F7B1A7731EBB3C8000BFB6D1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/CTAssetsPicker.strings; sourceTree = "<group>"; };
-		F7B1A7741EBB3C8000BFB6D1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/SwiftWebVC.strings; sourceTree = "<group>"; };
-		F7B1A7751EBB3C8000BFB6D1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/BKPasscodeView.strings; sourceTree = "<group>"; };
-		F7B1A7761EBB3C8000BFB6D1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F7B1A7771EBB3C8100BFB6D1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F7B1A7781EBB3C8100BFB6D1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Intro.strings; sourceTree = "<group>"; };
-		F7B1A7791EBB3C8100BFB6D1 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Error.strings; sourceTree = "<group>"; };
 		F7B1FBB11E72E3D1001781FE /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		F7B1FBBF1E72E3D1001781FE /* SwiftModalWebVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftModalWebVC.swift; sourceTree = "<group>"; };
 		F7B1FBC01E72E3D1001781FE /* SwiftWebVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftWebVC.swift; sourceTree = "<group>"; };
@@ -1479,20 +1394,6 @@
 		F7D02A461C5F9E4400D6F972 /* CCMove.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMove.h; sourceTree = "<group>"; };
 		F7D02A471C5F9E4400D6F972 /* CCMove.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCMove.m; sourceTree = "<group>"; };
 		F7D02A481C5F9E4400D6F972 /* CCMove.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CCMove.storyboard; sourceTree = "<group>"; };
-		F7D046AF1F0E1E1F00A3F350 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/CTAssetsPicker.strings"; sourceTree = "<group>"; };
-		F7D046B01F0E1E1F00A3F350 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SwiftWebVC.strings"; sourceTree = "<group>"; };
-		F7D046B11F0E1E1F00A3F350 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/BKPasscodeView.strings"; sourceTree = "<group>"; };
-		F7D046B21F0E1E1F00A3F350 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		F7D046B31F0E1E1F00A3F350 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		F7D046B41F0E1E2000A3F350 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Intro.strings"; sourceTree = "<group>"; };
-		F7D046B51F0E1E2000A3F350 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Error.strings"; sourceTree = "<group>"; };
-		F7D046B61F0E1EA000A3F350 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = is.lproj/CTAssetsPicker.strings; sourceTree = "<group>"; };
-		F7D046B71F0E1EA000A3F350 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = is.lproj/SwiftWebVC.strings; sourceTree = "<group>"; };
-		F7D046B81F0E1EA000A3F350 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = is.lproj/BKPasscodeView.strings; sourceTree = "<group>"; };
-		F7D046B91F0E1EA100A3F350 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = is.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F7D046BA1F0E1EA100A3F350 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = is.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F7D046BB1F0E1EA100A3F350 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = is.lproj/Intro.strings; sourceTree = "<group>"; };
-		F7D046BC1F0E1EA100A3F350 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = is.lproj/Error.strings; sourceTree = "<group>"; };
 		F7D0E65E1BC5042E008D989A /* CCDetail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = CCDetail.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		F7D0E65F1BC5042E008D989A /* CCDetail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = CCDetail.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		F7D154271E2392A300202FD9 /* Nextcloud-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Nextcloud-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -1819,6 +1720,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		E47F19162038D725005959D0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F7145A141D12E3B700CAFEEC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1876,6 +1784,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E47F191A2038D725005959D0 /* NextcloudUITests */ = {
+			isa = PBXGroup;
+			children = (
+				E47F191B2038D725005959D0 /* NextcloudUITests.swift */,
+				E47F191D2038D725005959D0 /* Info.plist */,
+			);
+			path = NextcloudUITests;
+			sourceTree = "<group>";
+		};
 		F70022561EC4C9100080073F /* OCCommunicationLib */ = {
 			isa = PBXGroup;
 			children = (
@@ -3520,13 +3437,16 @@
 		F7F67B9F1A24D27800EE80DA = {
 			isa = PBXGroup;
 			children = (
+				E47F19232038D856005959D0 /* SnapshotHelper.swift */,
 				F7F67BAA1A24D27800EE80DA /* iOSClient */,
 				F7F67BAB1A24D27800EE80DA /* Supporting Files */,
 				F7C0F46D1C8880540059EC54 /* Share */,
 				F74344131E1264EE001CC831 /* Picker */,
 				F74344211E1264EE001CC831 /* PickerFileProvider */,
+				E47F191A2038D725005959D0 /* NextcloudUITests */,
 				F7FC7D651DC1F98700BB2C6A /* Products */,
 				F7FC7D541DC1F93700BB2C6A /* Frameworks */,
+				E47F19192038D725005959D0 /* NextcloudUITests.xctest */,
 			);
 			sourceTree = "<group>";
 		};
@@ -3655,6 +3575,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		E47F19182038D725005959D0 /* NextcloudUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E47F19202038D725005959D0 /* Build configuration list for PBXNativeTarget "NextcloudUITests" */;
+			buildPhases = (
+				E47F19152038D725005959D0 /* Sources */,
+				E47F19162038D725005959D0 /* Frameworks */,
+				E47F19172038D725005959D0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E47F191F2038D725005959D0 /* PBXTargetDependency */,
+			);
+			name = NextcloudUITests;
+			productName = NextcloudUITests;
+			productReference = E47F19192038D725005959D0 /* NextcloudUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		F71459B41D12E3B700CAFEEC /* Share */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F7145A251D12E3B700CAFEEC /* Build configuration list for PBXNativeTarget "Share" */;
@@ -3737,12 +3675,18 @@
 		F7F67BA01A24D27800EE80DA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0820;
+				LastSwiftUpdateCheck = 0920;
 				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = TWS;
 				TargetAttributes = {
+					E47F19182038D725005959D0 = {
+						CreatedOnToolsVersion = 9.2;
+						DevelopmentTeam = CTL5SM84G7;
+						ProvisioningStyle = Automatic;
+						TestTargetID = F77B0DEB1D118A16002130FE;
+					};
 					F71459B41D12E3B700CAFEEC = {
-						DevelopmentTeam = 6JLRKY9ZV7;
+						DevelopmentTeam = MQ224A6W7W;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -3754,7 +3698,7 @@
 					};
 					F74344111E1264ED001CC831 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 6JLRKY9ZV7;
+						DevelopmentTeam = MQ224A6W7W;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -3767,7 +3711,7 @@
 					};
 					F743441F1E1264EE001CC831 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 6JLRKY9ZV7;
+						DevelopmentTeam = MQ224A6W7W;
 						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -3777,7 +3721,7 @@
 						};
 					};
 					F77B0DEB1D118A16002130FE = {
-						DevelopmentTeam = 6JLRKY9ZV7;
+						DevelopmentTeam = MQ224A6W7W;
 						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -3798,23 +3742,7 @@
 			knownRegions = (
 				en,
 				Base,
-				de,
-				fr,
 				"pt-BR",
-				ru,
-				it,
-				tr,
-				"en-GB",
-				"cs-CZ",
-				"es-AR",
-				"es-MX",
-				"nb-NO",
-				pl,
-				nl,
-				es,
-				el,
-				"zh-Hans",
-				is,
 			);
 			mainGroup = F7F67B9F1A24D27800EE80DA;
 			productRefGroup = F7F67B9F1A24D27800EE80DA;
@@ -3831,6 +3759,7 @@
 				F71459B41D12E3B700CAFEEC /* Share */,
 				F74344111E1264ED001CC831 /* Picker */,
 				F743441F1E1264EE001CC831 /* PickerFileProvider */,
+				E47F19182038D725005959D0 /* NextcloudUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -3895,6 +3824,13 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		E47F19172038D725005959D0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F7145A181D12E3B700CAFEEC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4158,6 +4094,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		E47F19152038D725005959D0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E47F191C2038D725005959D0 /* NextcloudUITests.swift in Sources */,
+				E47F19252038D87D005959D0 /* SnapshotHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F71459B51D12E3B700CAFEEC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -4652,6 +4597,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		E47F191F2038D725005959D0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F77B0DEB1D118A16002130FE /* Nextcloud */;
+			targetProxy = E47F191E2038D725005959D0 /* PBXContainerItemProxy */;
+		};
 		F7145A321D12E65F00CAFEEC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = F71459B41D12E3B700CAFEEC /* Share */;
@@ -4674,23 +4624,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F7151A801D477A4B00E6AF45 /* en */,
-				F7B1A7751EBB3C8000BFB6D1 /* de */,
-				F75B91E11ECAE17800199C96 /* fr */,
 				F75B91F61ECAE26300199C96 /* pt-BR */,
-				F75B923C1ECAE55E00199C96 /* ru */,
-				F7169A2F1EE59BB70086BD69 /* it */,
-				F7169A4B1EE59C640086BD69 /* tr */,
-				F772BEB31EE69976006A232B /* en-GB */,
-				F78D6F371F0B7C6E002F9619 /* cs-CZ */,
-				F78D6F3E1F0B7CA9002F9619 /* es-AR */,
-				F78D6F451F0B7CB9002F9619 /* es-MX */,
-				F78D6F4C1F0B7CE4002F9619 /* nb-NO */,
-				F78D6F531F0B7D47002F9619 /* pl */,
-				F78D6F5A1F0B7D9B002F9619 /* nl */,
-				F78D6F611F0B7DDF002F9619 /* es */,
-				F78D6F681F0B7E1F002F9619 /* el */,
-				F7D046B11F0E1E1F00A3F350 /* zh-Hans */,
-				F7D046B81F0E1EA000A3F350 /* is */,
 			);
 			name = BKPasscodeView.strings;
 			path = "Supporting Files";
@@ -4700,23 +4634,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F732B3361E8045A1002B7D75 /* en */,
-				F7B1A7741EBB3C8000BFB6D1 /* de */,
-				F75B91E01ECAE17800199C96 /* fr */,
 				F75B91F51ECAE26300199C96 /* pt-BR */,
-				F75B923B1ECAE55E00199C96 /* ru */,
-				F7169A2E1EE59BB70086BD69 /* it */,
-				F7169A4A1EE59C640086BD69 /* tr */,
-				F772BEB21EE69975006A232B /* en-GB */,
-				F78D6F361F0B7C6E002F9619 /* cs-CZ */,
-				F78D6F3D1F0B7CA8002F9619 /* es-AR */,
-				F78D6F441F0B7CB9002F9619 /* es-MX */,
-				F78D6F4B1F0B7CE4002F9619 /* nb-NO */,
-				F78D6F521F0B7D47002F9619 /* pl */,
-				F78D6F591F0B7D9A002F9619 /* nl */,
-				F78D6F601F0B7DDF002F9619 /* es */,
-				F78D6F671F0B7E1F002F9619 /* el */,
-				F7D046B01F0E1E1F00A3F350 /* zh-Hans */,
-				F7D046B71F0E1EA000A3F350 /* is */,
 			);
 			name = SwiftWebVC.strings;
 			path = "Supporting Files";
@@ -4726,23 +4644,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F7151A831D477A4B00E6AF45 /* en */,
-				F7B1A7781EBB3C8100BFB6D1 /* de */,
-				F75B91E41ECAE17800199C96 /* fr */,
 				F75B91F91ECAE26400199C96 /* pt-BR */,
-				F75B923F1ECAE55F00199C96 /* ru */,
-				F7169A321EE59BB70086BD69 /* it */,
-				F7169A4E1EE59C640086BD69 /* tr */,
-				F772BEB61EE69976006A232B /* en-GB */,
-				F78D6F3A1F0B7C6F002F9619 /* cs-CZ */,
-				F78D6F411F0B7CA9002F9619 /* es-AR */,
-				F78D6F481F0B7CB9002F9619 /* es-MX */,
-				F78D6F4F1F0B7CE4002F9619 /* nb-NO */,
-				F78D6F561F0B7D47002F9619 /* pl */,
-				F78D6F5D1F0B7D9B002F9619 /* nl */,
-				F78D6F641F0B7DDF002F9619 /* es */,
-				F78D6F6B1F0B7E1F002F9619 /* el */,
-				F7D046B41F0E1E2000A3F350 /* zh-Hans */,
-				F7D046BB1F0E1EA100A3F350 /* is */,
 			);
 			name = Intro.strings;
 			path = "Supporting Files";
@@ -4752,23 +4654,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F75797AD1E81356C00187A1B /* en */,
-				F7B1A7731EBB3C8000BFB6D1 /* de */,
-				F75B91DF1ECAE17800199C96 /* fr */,
 				F75B91F41ECAE26300199C96 /* pt-BR */,
-				F75B923A1ECAE55E00199C96 /* ru */,
-				F7169A2D1EE59BB70086BD69 /* it */,
-				F7169A491EE59C630086BD69 /* tr */,
-				F772BEB11EE69975006A232B /* en-GB */,
-				F78D6F351F0B7C6E002F9619 /* cs-CZ */,
-				F78D6F3C1F0B7CA8002F9619 /* es-AR */,
-				F78D6F431F0B7CB9002F9619 /* es-MX */,
-				F78D6F4A1F0B7CE4002F9619 /* nb-NO */,
-				F78D6F511F0B7D47002F9619 /* pl */,
-				F78D6F581F0B7D9A002F9619 /* nl */,
-				F78D6F5F1F0B7DDE002F9619 /* es */,
-				F78D6F661F0B7E1E002F9619 /* el */,
-				F7D046AF1F0E1E1F00A3F350 /* zh-Hans */,
-				F7D046B61F0E1EA000A3F350 /* is */,
 			);
 			name = CTAssetsPicker.strings;
 			path = "Supporting Files";
@@ -4778,23 +4664,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F7151A841D477A4B00E6AF45 /* en */,
-				F7B1A7791EBB3C8100BFB6D1 /* de */,
-				F75B91E51ECAE17800199C96 /* fr */,
 				F75B91FA1ECAE26400199C96 /* pt-BR */,
-				F75B92401ECAE55F00199C96 /* ru */,
-				F7169A331EE59BB80086BD69 /* it */,
-				F7169A4F1EE59C640086BD69 /* tr */,
-				F772BEB71EE69976006A232B /* en-GB */,
-				F78D6F3B1F0B7C6F002F9619 /* cs-CZ */,
-				F78D6F421F0B7CA9002F9619 /* es-AR */,
-				F78D6F491F0B7CB9002F9619 /* es-MX */,
-				F78D6F501F0B7CE5002F9619 /* nb-NO */,
-				F78D6F571F0B7D48002F9619 /* pl */,
-				F78D6F5E1F0B7D9B002F9619 /* nl */,
-				F78D6F651F0B7DDF002F9619 /* es */,
-				F78D6F6C1F0B7E1F002F9619 /* el */,
-				F7D046B51F0E1E2000A3F350 /* zh-Hans */,
-				F7D046BC1F0E1EA100A3F350 /* is */,
 			);
 			name = Error.strings;
 			path = "Supporting Files";
@@ -4804,23 +4674,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F7151A821D477A4B00E6AF45 /* en */,
-				F7B1A7771EBB3C8100BFB6D1 /* de */,
-				F75B91E31ECAE17800199C96 /* fr */,
 				F75B91F81ECAE26400199C96 /* pt-BR */,
-				F75B923E1ECAE55E00199C96 /* ru */,
-				F7169A311EE59BB70086BD69 /* it */,
-				F7169A4D1EE59C640086BD69 /* tr */,
-				F772BEB51EE69976006A232B /* en-GB */,
-				F78D6F391F0B7C6E002F9619 /* cs-CZ */,
-				F78D6F401F0B7CA9002F9619 /* es-AR */,
-				F78D6F471F0B7CB9002F9619 /* es-MX */,
-				F78D6F4E1F0B7CE4002F9619 /* nb-NO */,
-				F78D6F551F0B7D47002F9619 /* pl */,
-				F78D6F5C1F0B7D9B002F9619 /* nl */,
-				F78D6F631F0B7DDF002F9619 /* es */,
-				F78D6F6A1F0B7E1F002F9619 /* el */,
-				F7D046B31F0E1E1F00A3F350 /* zh-Hans */,
-				F7D046BA1F0E1EA100A3F350 /* is */,
 			);
 			name = InfoPlist.strings;
 			path = "Supporting Files";
@@ -4830,23 +4684,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				F7151A811D477A4B00E6AF45 /* en */,
-				F7B1A7761EBB3C8000BFB6D1 /* de */,
-				F75B91E21ECAE17800199C96 /* fr */,
 				F75B91F71ECAE26300199C96 /* pt-BR */,
-				F75B923D1ECAE55E00199C96 /* ru */,
-				F7169A301EE59BB70086BD69 /* it */,
-				F7169A4C1EE59C640086BD69 /* tr */,
-				F772BEB41EE69976006A232B /* en-GB */,
-				F78D6F381F0B7C6E002F9619 /* cs-CZ */,
-				F78D6F3F1F0B7CA9002F9619 /* es-AR */,
-				F78D6F461F0B7CB9002F9619 /* es-MX */,
-				F78D6F4D1F0B7CE4002F9619 /* nb-NO */,
-				F78D6F541F0B7D47002F9619 /* pl */,
-				F78D6F5B1F0B7D9B002F9619 /* nl */,
-				F78D6F621F0B7DDF002F9619 /* es */,
-				F78D6F691F0B7E1F002F9619 /* el */,
-				F7D046B21F0E1E1F00A3F350 /* zh-Hans */,
-				F7D046B91F0E1EA100A3F350 /* is */,
 			);
 			name = Localizable.strings;
 			path = "Supporting Files";
@@ -4855,6 +4693,68 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		E47F19212038D725005959D0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = CTL5SM84G7;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = NextcloudUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.nigiri.NextcloudUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Nextcloud;
+			};
+			name = Debug;
+		};
+		E47F19222038D725005959D0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = CTL5SM84G7;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = NextcloudUITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.nigiri.NextcloudUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Nextcloud;
+			};
+			name = Release;
+		};
 		F7145A261D12E3B700CAFEEC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -4866,7 +4766,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)\"/Libraries external/Realm\"",
@@ -4888,7 +4788,7 @@
 					"-Obj-C",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = it.twsweb.Nextcloud.Share;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Share/Share-Bridging-Header.h";
@@ -4910,7 +4810,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)\"/Libraries external/Realm\"",
@@ -4932,7 +4832,7 @@
 					"-Obj-C",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = it.twsweb.Nextcloud.Share;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Share/Share-Bridging-Header.h";
@@ -4952,7 +4852,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)\"/Libraries external/Realm\"",
@@ -4969,7 +4869,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"Libraries external\"/**";
-				PRODUCT_BUNDLE_IDENTIFIER = it.twsweb.Nextcloud.Picker;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud.Picker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG NC";
@@ -4990,7 +4890,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)\"/Libraries external/Realm\"",
@@ -5006,7 +4906,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"Libraries external\"/**";
-				PRODUCT_BUNDLE_IDENTIFIER = it.twsweb.Nextcloud.Picker;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud.Picker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = NC;
@@ -5027,7 +4927,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					DEBUG,
@@ -5038,7 +4938,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = it.twsweb.Nextcloud.PickerFileProvider;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud.PickerFileProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG NC";
@@ -5060,7 +4960,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					EXTENSION,
@@ -5070,7 +4970,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = it.twsweb.Nextcloud.PickerFileProvider;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud.PickerFileProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = NC;
@@ -5091,7 +4991,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development IOS Push Services: it.twsweb.Nextcloud";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = "";
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5114,7 +5014,7 @@
 					"-Obj-C",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "it.twsweb.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5139,7 +5039,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = "";
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -5162,7 +5062,7 @@
 					"-Obj-C",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "it.twsweb.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -5275,6 +5175,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		E47F19202038D725005959D0 /* Build configuration list for PBXNativeTarget "NextcloudUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E47F19212038D725005959D0 /* Debug */,
+				E47F19222038D725005959D0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F7145A251D12E3B700CAFEEC /* Build configuration list for PBXNativeTarget "Share" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
