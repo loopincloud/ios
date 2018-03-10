@@ -1,6 +1,6 @@
 //
 //  CCSection.m
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 04/02/16.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -54,7 +54,7 @@
 //
 // orderByField : nil, date, typeFile
 //
-+ (CCSectionDataSourceMetadata *)creataDataSourseSectionMetadata:(NSArray *)records listProgressMetadata:(NSMutableDictionary *)listProgressMetadata groupByField:(NSString *)groupByField replaceDateToExifDate:(BOOL)replaceDateToExifDate activeAccount:(NSString *)activeAccount
++ (CCSectionDataSourceMetadata *)creataDataSourseSectionMetadata:(NSArray *)records listProgressMetadata:(NSMutableDictionary *)listProgressMetadata e2eEncryptions:(NSArray *)e2eEncryptions groupByField:(NSString *)groupByField activeAccount:(NSString *)activeAccount
 {
     id dataSection;
     long counterSessionDownload = 0;
@@ -69,30 +69,36 @@
     */
     
     NSInteger numDirectory = 0;
+    NSInteger numDirectoryFavorite = 0;
     BOOL directoryOnTop = [CCUtility getDirectoryOnTop];
+    NSMutableArray *metadataFilesFavorite = [NSMutableArray new];
     
     for (tableMetadata* metadata in records) {
         
-        // if exists replace date with exif date
-        if (replaceDateToExifDate) {
-            
-            tableLocalFile *localFile = [[NCManageDatabase sharedInstance] getTableLocalFileWithPredicate:[NSPredicate predicateWithFormat:@"fileID = %@", metadata.fileID]];
-            if (localFile)
-                if (localFile.exifDate)
-                    metadata.date = localFile.exifDate;
-        }
-        
         if ([listProgressMetadata objectForKey:metadata.fileID] && [groupByField isEqualToString:@"session"]) {
+            
             [copyRecords insertObject:metadata atIndex:0];
+            
         } else {
             
-            if ([metadata.typeFile isEqualToString: k_metadataTypeFile_directory] && directoryOnTop) {
-                [copyRecords insertObject:metadata atIndex:numDirectory++];
+            if (metadata.directory && directoryOnTop) {
+                if (metadata.favorite) {
+                    [copyRecords insertObject:metadata atIndex:numDirectoryFavorite++];
+                    numDirectory++;
+                } else {
+                    [copyRecords insertObject:metadata atIndex:numDirectory++];
+                }
             } else {
-                [copyRecords addObject:metadata];
+                if (metadata.favorite && directoryOnTop) {
+                    [metadataFilesFavorite addObject:metadata];
+                } else {
+                    [copyRecords addObject:metadata];
+                }
             }
         }
     }
+    if (directoryOnTop && metadataFilesFavorite.count > 0)
+        [copyRecords insertObjects:metadataFilesFavorite atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(numDirectoryFavorite, metadataFilesFavorite.count)]]; // Add Favorite files at end of favorite folders
     
     /*
      sectionArrayRow
@@ -122,7 +128,7 @@
         }
         else if ([groupByField isEqualToString:@"none"]) dataSection = @"_none_";
         else if ([groupByField isEqualToString:@"date"]) dataSection = [CCUtility datetimeWithOutTime:metadata.date];
-        else if ([groupByField isEqualToString:@"alphabetic"]) dataSection = [[metadata.fileNamePrint substringToIndex:1] uppercaseString];
+        else if ([groupByField isEqualToString:@"alphabetic"]) dataSection = [[metadata.fileNameView substringToIndex:1] uppercaseString];
         else if ([groupByField isEqualToString:@"typefile"]) dataSection = metadata.typeFile;
         if (!dataSection) dataSection = @"_none_";
         
@@ -151,7 +157,7 @@
     
     BOOL ascending;
     
-    if (replaceDateToExifDate || [groupByField isEqualToString:@"date"]) ascending = NO;
+    if ([groupByField isEqualToString:@"date"]) ascending = NO;
     else ascending = YES;
     
     NSArray *sortSections = [[sectionDataSource.sectionArrayRow allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {

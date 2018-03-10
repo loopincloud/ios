@@ -169,11 +169,8 @@ NSString *OCCWebDAVURIKey           = @"uri";
             _currentFile.fileName = lastBit;
         }
             
-        NSString *decodedFileName = [self decodeFromPercentEscapeString:self.currentFile.fileName];
-        NSString *decodedFilePath = [self decodeFromPercentEscapeString:self.currentFile.filePath];
-            
-        self.currentFile.fileName = [decodedFileName encodeString:NSUTF8StringEncoding];
-        self.currentFile.filePath = [decodedFilePath encodeString:NSUTF8StringEncoding];
+        self.currentFile.fileName = [self.currentFile.fileName stringByRemovingPercentEncoding];
+        self.currentFile.filePath = [self.currentFile.filePath stringByRemovingPercentEncoding];
             
         isNotFirstFileOfList = YES;
 
@@ -235,12 +232,12 @@ NSString *OCCWebDAVURIKey           = @"uri";
         _currentFile = [[OCFileDto alloc] init];
 
         _xmlBucket = nil;
-    } else if ([elementName isEqualToString:@"d:quota-used-bytes"]) {
-        _currentFile.quotaUsed = (double)[_xmlChars doubleValue];
-    } else if ([elementName isEqualToString:@"d:quota-available-bytes"]) {
-        _currentFile.quotaAvailable = (double)[_xmlChars doubleValue];
     } else if ([elementName isEqualToString:@"oc:favorite"]) {
         _currentFile.isFavorite = [_xmlChars boolValue];
+    } else if ([elementName isEqualToString:@"x1:share-permissions"]) {
+        _currentFile.permissions = _xmlChars;
+    } else if ([elementName isEqualToString:@"nc:is-encrypted"]) {
+        _currentFile.isEncrypted = [_xmlChars boolValue];
     }
 }
 
@@ -252,15 +249,5 @@ NSString *OCCWebDAVURIKey           = @"uri";
     
     NSLog(@"Finish xml directory list parse");
 }
-
-// Decode a percent escape encoded string.
-- (NSString*) decodeFromPercentEscapeString:(NSString *) string {
-    return (__bridge_transfer NSString *) CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL,
-                                                                                         (__bridge CFStringRef) string,
-                                                                                         CFSTR(""),
-                                                                                         kCFStringEncodingUTF8);
-}
-
-
 
 @end

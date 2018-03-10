@@ -1,6 +1,6 @@
 //
 //  CCShareInfoCMOC.m
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 07/03/16.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -25,22 +25,23 @@
 #import "XLFormViewController.h"
 #import "XLForm.h"
 #import "AppDelegate.h"
+#import "CCHud.h"
 #import "NCBridgeSwift.h"
 
 @interface CCShareInfoCMOC ()
-
+{
+    AppDelegate *appDelegate;
+    CCHud *_hud;
+}
 @end
 
 /*
- #define k_permission_shared @"S"
- #define k_permission_can_share @"R"
- #define k_permission_mounted @"M"
- #define k_permission_file_can_write @"W"
- #define k_permission_can_create_file @"C"
- #define k_permission_can_create_folder @"K"
- #define k_permission_can_delete @"D"
- #define k_permission_can_rename @"N"
- #define k_permission_can_move @"V"
+const PERMISSION_CREATE = 4;
+const PERMISSION_READ = 1;
+const PERMISSION_UPDATE = 2;
+const PERMISSION_DELETE = 8;
+const PERMISSION_SHARE = 16;
+const PERMISSION_ALL = 31;
 */
 
 @implementation CCShareInfoCMOC
@@ -49,8 +50,8 @@
 {
     self = [super initWithCoder:coder];
     if (self) {
-                
-        [self initializeForm];
+        
+        appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     }
     return self;
 }
@@ -67,59 +68,29 @@
     section = [XLFormSectionDescriptor formSectionWithTitle:NSLocalizedString(@"_share_permission_title_", nil)];
     [form addFormSection:section];
     
-    if (self.metadata.directory == NO) {
+    row = [XLFormRowDescriptor formRowDescriptorWithTag:@"create" rowType:XLFormRowDescriptorTypeBooleanCheck title:NSLocalizedString(@"_share_permission_create_", nil)];
+    [row.cellConfig setObject:[UIFont systemFontOfSize:15.0]forKey:@"textLabel.font"];
+    [row.cellConfig setObject:[NCBrandColor sharedInstance].brandElement forKey:@"tintColor"];
+    [section addFormRow:row];
     
-        row = [XLFormRowDescriptor formRowDescriptorWithTag:@"edit" rowType:XLFormRowDescriptorTypeBooleanCheck title:NSLocalizedString(@"_share_permission_file_can_write_", nil)];
-        if ([self.metadata.permissions rangeOfString:k_permission_file_can_write].location != NSNotFound) row.value = @1;
-        else row.value = @0;
-        [row.cellConfig setObject:[UIFont systemFontOfSize:15.0]forKey:@"textLabel.font"];
-        [row.cellConfig setObject:[NCBrandColor sharedInstance].brand forKey:@"tintColor"];
-        [section addFormRow:row];
-    }
+    row = [XLFormRowDescriptor formRowDescriptorWithTag:@"read" rowType:XLFormRowDescriptorTypeBooleanCheck title:NSLocalizedString(@"_share_permission_read_", nil)];
+    [row.cellConfig setObject:[UIFont systemFontOfSize:15.0]forKey:@"textLabel.font"];
+    [row.cellConfig setObject:[NCBrandColor sharedInstance].brandElement forKey:@"tintColor"];
+    [section addFormRow:row];
     
-    if (self.metadata.directory == YES) {
-        
-        row = [XLFormRowDescriptor formRowDescriptorWithTag:@"createfile" rowType:XLFormRowDescriptorTypeBooleanCheck title:NSLocalizedString(@"_share_permission_create_file_", nil)];
-        if ([self.metadata.permissions rangeOfString:k_permission_can_create_file].location != NSNotFound) row.value = @1;
-        else row.value = @0;
-        [row.cellConfig setObject:[UIFont systemFontOfSize:15.0]forKey:@"textLabel.font"];
-        [row.cellConfig setObject:[NCBrandColor sharedInstance].brand forKey:@"tintColor"];
-        [section addFormRow:row];
-    
-        row = [XLFormRowDescriptor formRowDescriptorWithTag:@"createfolder" rowType:XLFormRowDescriptorTypeBooleanCheck title:NSLocalizedString(@"_share_permission_create_folder_", nil)];
-        if ([self.metadata.permissions rangeOfString:k_permission_can_create_folder].location != NSNotFound) row.value = @1;
-        else row.value = @0;
-        [row.cellConfig setObject:[UIFont systemFontOfSize:15.0]forKey:@"textLabel.font"];
-        [row.cellConfig setObject:[NCBrandColor sharedInstance].brand forKey:@"tintColor"];
-        [section addFormRow:row];
-    }
+    row = [XLFormRowDescriptor formRowDescriptorWithTag:@"change" rowType:XLFormRowDescriptorTypeBooleanCheck title:NSLocalizedString(@"_share_permission_change_", nil)];
+    [row.cellConfig setObject:[UIFont systemFontOfSize:15.0]forKey:@"textLabel.font"];
+    [row.cellConfig setObject:[NCBrandColor sharedInstance].brandElement forKey:@"tintColor"];
+    [section addFormRow:row];
     
     row = [XLFormRowDescriptor formRowDescriptorWithTag:@"delete" rowType:XLFormRowDescriptorTypeBooleanCheck title:NSLocalizedString(@"_share_permission_delete_", nil)];
-    if ([self.metadata.permissions rangeOfString:k_permission_can_delete].location != NSNotFound) row.value = @1;
-    else row.value = @0;
     [row.cellConfig setObject:[UIFont systemFontOfSize:15.0]forKey:@"textLabel.font"];
-    [row.cellConfig setObject:[NCBrandColor sharedInstance].brand forKey:@"tintColor"];
-    [section addFormRow:row];
-    
-    row = [XLFormRowDescriptor formRowDescriptorWithTag:@"rename" rowType:XLFormRowDescriptorTypeBooleanCheck title:NSLocalizedString(@"_share_permission_rename_", nil)];
-    if ([self.metadata.permissions rangeOfString:k_permission_can_rename].location != NSNotFound) row.value = @1;
-    else row.value = @0;
-    [row.cellConfig setObject:[UIFont systemFontOfSize:15.0]forKey:@"textLabel.font"];
-    [row.cellConfig setObject:[NCBrandColor sharedInstance].brand forKey:@"tintColor"];
-    [section addFormRow:row];
-
-    row = [XLFormRowDescriptor formRowDescriptorWithTag:@"move" rowType:XLFormRowDescriptorTypeBooleanCheck title:NSLocalizedString(@"_share_permission_move_", nil)];
-    if ([self.metadata.permissions rangeOfString:k_permission_can_move].location != NSNotFound) row.value = @1;
-    else row.value = @0;
-    [row.cellConfig setObject:[UIFont systemFontOfSize:15.0]forKey:@"textLabel.font"];
-    [row.cellConfig setObject:[NCBrandColor sharedInstance].brand forKey:@"tintColor"];
+    [row.cellConfig setObject:[NCBrandColor sharedInstance].brandElement forKey:@"tintColor"];
     [section addFormRow:row];
     
     row = [XLFormRowDescriptor formRowDescriptorWithTag:@"share" rowType:XLFormRowDescriptorTypeBooleanCheck title:NSLocalizedString(@"_share_permission_share_", nil)];
-    if ([self.metadata.permissions rangeOfString:k_permission_can_share].location != NSNotFound) row.value = @1;
-    else row.value = @0;
     [row.cellConfig setObject:[UIFont systemFontOfSize:15.0]forKey:@"textLabel.font"];
-    [row.cellConfig setObject:[NCBrandColor sharedInstance].brand forKey:@"tintColor"];
+    [row.cellConfig setObject:[NCBrandColor sharedInstance].brandElement forKey:@"tintColor"];
     [section addFormRow:row];
     
     section = [XLFormSectionDescriptor formSection];
@@ -146,12 +117,75 @@
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [NCBrandColor sharedInstance].tableBackground;
+    self.view.backgroundColor = [NCBrandColor sharedInstance].backgroundView;
     
     [self.endButton setTitle:NSLocalizedString(@"_done_", nil) forState:UIControlStateNormal];
-    self.endButton.tintColor = [NCBrandColor sharedInstance].brand;
+    self.endButton.tintColor = [UIColor blackColor];
     
-    self.tableView.backgroundColor = [NCBrandColor sharedInstance].tableBackground;
+    self.tableView.backgroundColor = [NCBrandColor sharedInstance].backgroundView;
+    
+    _hud = [[CCHud alloc] initWithView:[[[UIApplication sharedApplication] delegate] window]];
+    [_hud visibleHudTitle:@"" mode:MBProgressHUDModeIndeterminate color:nil];
+    
+    CCMetadataNet *metadataNet = [[CCMetadataNet alloc] initWithAccount:appDelegate.activeAccount];
+    metadataNet.action = actionGetSharePermissionsFile;
+    metadataNet.fileName = _metadata.fileName;
+    metadataNet.serverUrl = [[NCManageDatabase sharedInstance] getServerUrl:_metadata.directoryID];
+    [appDelegate addNetworkingOperationQueue:appDelegate.netQueue delegate:self metadataNet:metadataNet];
+
+    [self initializeForm];
+}
+
+#pragma --------------------------------------------------------------------------------------------
+#pragma mark ===== Delegate getSharePermissions =====
+#pragma --------------------------------------------------------------------------------------------
+
+- (void)getSharePermissionsFileSuccess:(CCMetadataNet *)metadataNet permissions:(NSString *)permissions
+{
+    [_hud hideHud];
+
+    if (permissions == nil)
+        return;
+    
+    NSInteger iPermissions = [permissions integerValue];
+
+    // ------------------------------------------------------------------
+    
+    XLFormRowDescriptor *rowCreate = [self.form formRowWithTag:@"create"];
+    XLFormRowDescriptor *rowRead = [self.form formRowWithTag:@"read"];
+    XLFormRowDescriptor *rowChange = [self.form formRowWithTag:@"change"];
+    XLFormRowDescriptor *rowDelete = [self.form formRowWithTag:@"delete"];
+    XLFormRowDescriptor *rowShare = [self.form formRowWithTag:@"share"];
+    
+    // ------------------------------------------------------------------
+    
+    if ([UtilsFramework isPermissionToCanCreate:iPermissions]) rowCreate.value = @1;
+    else rowCreate.value = @0;
+        
+    if ([UtilsFramework isPermissionToRead:iPermissions]) rowRead.value = @1;
+    else rowRead.value = @0;
+
+    if ([UtilsFramework isPermissionToCanChange:iPermissions]) rowChange.value = @1;
+    else rowChange.value = @0;
+
+    if ([UtilsFramework isPermissionToCanDelete:iPermissions]) rowDelete.value = @1;
+    else rowDelete.value = @0;
+
+    if ([UtilsFramework isPermissionToCanShare:iPermissions]) rowShare.value = @1;
+    else rowShare.value = @0;
+
+    // -----------------------------------------------------------------
+    
+    [self.tableView reloadData];
+}
+
+- (void)getSharePermissionsFileFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
+{
+    [_hud hideHud];
+
+    [appDelegate messageNotification:@"_error_" description:message visible:YES delay:k_dismissAfterSecond type:TWMessageBarMessageTypeError errorCode:errorCode];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma --------------------------------------------------------------------------------------------

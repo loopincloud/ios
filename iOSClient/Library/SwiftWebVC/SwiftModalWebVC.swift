@@ -12,6 +12,8 @@ public protocol SwiftModalWebVCDelegate: class {
     func didStartLoading()
     func didReceiveServerRedirectForProvisionalNavigation(url: URL)
     func didFinishLoading(success: Bool, url: URL)
+    func loginWebClose()
+    func decidePolicyForNavigationAction(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void)
 }
 
 public class SwiftModalWebVC: UINavigationController {
@@ -76,7 +78,8 @@ public class SwiftModalWebVC: UINavigationController {
             doneButton.tintColor = colorText
             webViewController.buttonColor = colorText
             webViewController.titleColor = colorText
-            
+            webViewController.view.backgroundColor = color
+
             self.navigationBar.isTranslucent = false
             UINavigationBar.appearance().barTintColor = color
             
@@ -93,8 +96,6 @@ public class SwiftModalWebVC: UINavigationController {
             }
         }
         webViewController.delegate = self
-        
-        
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -107,6 +108,14 @@ public class SwiftModalWebVC: UINavigationController {
     
     override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
+    }
+    
+    public override func viewWillDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+    }
+
+    public override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
     }
 }
 
@@ -126,5 +135,14 @@ extension SwiftModalWebVC: SwiftWebVCDelegate {
     
     public func didFinishLoading(success: Bool, url: URL) {
         self.delegateWeb?.didFinishLoading(success: success, url: url)
+    }
+    
+    public func loginWebClose() {
+        self.delegateWeb?.loginWebClose()
+    }
+    
+    public func decidePolicyForNavigationAction(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        
+        self.delegateWeb?.decidePolicyForNavigationAction(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler)        
     }
 }

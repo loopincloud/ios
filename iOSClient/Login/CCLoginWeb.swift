@@ -10,32 +10,41 @@ import UIKit
 
 @objc protocol CCLoginDelegateWeb: class {
     func loginSuccess(_: NSInteger)
+    func loginWebClose()
 }
 
 public class CCLoginWeb: UIViewController {
 
-    enum enumLoginType : NSInteger {
+    /*
+    @objc enum enumLoginTypeWeb : NSInteger {
         case loginAdd = 0
         case loginAddForced = 1
         case loginModifyPasswordUser = 2
     }
+    */
     
-    weak var delegate: CCLoginDelegateWeb?
+    @objc weak var delegate: CCLoginDelegateWeb?
+    @objc var loginType = loginAdd
+    @objc var urlBase = ""
     
     var viewController : UIViewController?
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    var loginType = loginAdd
     var doneButtonVisible: Bool = false
     
-    func presentModalWithDefaultTheme(_ vc: UIViewController) {
+    @objc func presentModalWithDefaultTheme(_ vc: UIViewController) {
         
+        var urlString = urlBase
         self.viewController = vc
         
         if (loginType == loginAdd || loginType == loginModifyPasswordUser) {
             doneButtonVisible = true
         }
         
-        let webVC = SwiftModalWebVC(urlString: NCBrandOptions.sharedInstance.loginBaseUrl, theme: .custom, color: NCBrandColor.sharedInstance.brand, colorText: NCBrandColor.sharedInstance.navigationBarText, doneButtonVisible: doneButtonVisible, hideToolbar: true)
+        if (NCBrandOptions.sharedInstance.use_login_web_personalized == false) {
+            urlString =  urlBase+flowEndpoint
+        }
+        
+        let webVC = SwiftModalWebVC(urlString: urlString, theme: .custom, color: NCBrandColor.sharedInstance.customer, colorText: NCBrandColor.sharedInstance.customerText, doneButtonVisible: doneButtonVisible, hideToolbar: true)
         webVC.delegateWeb = self
 
         vc.present(webVC, animated: false, completion: nil)
@@ -52,7 +61,7 @@ extension CCLoginWeb: SwiftModalWebVCDelegate {
                 
         let urlString: String = url.absoluteString.lowercased()
         
-        if (urlString.contains(NCBrandOptions.sharedInstance.webLoginAutenticationProtocol) == true && urlString.contains("login") == true && (loginType == loginAdd || loginType == loginAddForced)) {
+        if (urlString.hasPrefix(NCBrandOptions.sharedInstance.webLoginAutenticationProtocol) == true && urlString.contains("login") == true) {
             
             let keyValue = url.path.components(separatedBy: "&")
             if (keyValue.count == 3) {
@@ -61,25 +70,63 @@ extension CCLoginWeb: SwiftModalWebVCDelegate {
                 
                     var serverUrl : String = keyValue[0].replacingOccurrences(of: "/server:", with: "")
                     
-                    if (serverUrl.characters.last == "/") {
-                        serverUrl = String(serverUrl.characters.dropLast())
+                    // Login Flow NC 12
+                    if (NCBrandOptions.sharedInstance.use_login_web_personalized == false && serverUrl.hasPrefix("http://") == false && serverUrl.hasPrefix("https://") == false) {
+                        serverUrl = urlBase
                     }
-                
-                    let username : String = keyValue[1].replacingOccurrences(of: "user:", with: "")
+                    
+                    if (serverUrl.last == "/") {
+                        serverUrl = String(serverUrl.dropLast())
+                    }
+            
+                    let username : String = keyValue[1].replacingOccurrences(of: "user:", with: "").replacingOccurrences(of: "+", with: " ")
                     let password : String = keyValue[2].replacingOccurrences(of: "password:", with: "")
                 
                     let account : String = "\(username) \(serverUrl)"
                 
-                    NCManageDatabase.sharedInstance.deleteAccount(account)
-                    NCManageDatabase.sharedInstance.addAccount(account, url: serverUrl, user: username, password: password)
-                                    
-                    let tableAccount : tableAccount = NCManageDatabase.sharedInstance.setAccountActive(account)
-                
-                    if (tableAccount.account == account) {
-                    
-                        appDelegate.settingActiveAccount(account, activeUrl: serverUrl, activeUser: username, activePassword: password)
+                    // Login Flow
+                    if (loginType == loginModifyPasswordUser && NCBrandOptions.sharedInstance.use_login_web_personalized == false) {
+                        
+                        // Verify if change the active account
+                        guard let activeAccount = NCManageDatabase.sharedInstance.getAccountActive() else {
+                            self.viewController?.dismiss(animated: true, completion: nil)
+                            return
+                        }
+                        if (activeAccount.account != account) {
+                            self.viewController?.dismiss(animated: true, completion: nil)
+                            return
+                        }
+                        
+                        // Change Password
+                        guard let tableAccount = NCManageDatabase.sharedInstance.setAccountPassword(account, password: password) else {
+                            self.viewController?.dismiss(animated: true, completion: nil)
+                            return
+                        }
+                        
+                        appDelegate.settingActiveAccount(account, activeUrl: serverUrl, activeUser: username, activeUserID: tableAccount.userID, activePassword: password)
+                        
                         self.delegate?.loginSuccess(NSInteger(loginType.rawValue))
-                
+                        self.delegate?.loginWebClose()
+
+                        self.viewController?.dismiss(animated: true, completion: nil)
+                    }
+                    
+                    if (loginType == loginAdd || loginType == loginAddForced) {
+                        
+                        // Add new account
+                        NCManageDatabase.sharedInstance.deleteAccount(account)
+                        NCManageDatabase.sharedInstance.addAccount(account, url: serverUrl, user: username, password: password, loginFlow: true)
+                        
+                        guard let tableAccount = NCManageDatabase.sharedInstance.setAccountActive(account) else {
+                            self.viewController?.dismiss(animated: true, completion: nil)
+                            return
+                        }
+                        
+                        appDelegate.settingActiveAccount(account, activeUrl: serverUrl, activeUser: username, activeUserID: tableAccount.userID, activePassword: password)
+                        
+                        self.delegate?.loginSuccess(NSInteger(loginType.rawValue))
+                        self.delegate?.loginWebClose()
+
                         self.viewController?.dismiss(animated: true, completion: nil)
                     }
                 }
@@ -89,6 +136,14 @@ extension CCLoginWeb: SwiftModalWebVCDelegate {
 
     public func didFinishLoading(success: Bool, url: URL) {
         print("Finished loading. Success: \(success).")
+    }
+    
+    public func loginWebClose() {
+        self.delegate?.loginWebClose()
+    }
+    
+    public func decidePolicyForNavigationAction(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        decisionHandler(.allow)
     }
 }
 

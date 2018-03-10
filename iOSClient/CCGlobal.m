@@ -1,6 +1,6 @@
 //
 //  CCGlobal.m
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 13/10/14.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -25,10 +25,16 @@
 
 // Directory on Group
 NSString *const appApplicationSupport = @"Library/Application Support";
-NSString *const appDatabase = @"Library/Application Support/Crypto Cloud";
 NSString *const appDatabaseNextcloud = @"Library/Application Support/Nextcloud";
 NSString *const appCertificates = @"Library/Application Support/Certificates";
+
+// Server Status
+NSString *const serverStatus = @"/status.php";
 
 // webDAV & DAV
 NSString *const webDAV = @"/remote.php/webdav";
 NSString *const dav = @"/remote.php/dav";
+
+// Login Flow
+NSString *const flowEndpoint = @"/index.php/login/flow";
+

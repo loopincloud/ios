@@ -43,7 +43,7 @@ class CCMore: UIViewController, UITableViewDelegate, UITableViewDataSource, CCLo
     var menuExternalSite: [tableExternalSites]?
     var tabAccount : tableAccount?
     
-    var loginWeb : CCLoginWeb!
+    //var loginWeb : CCLoginWeb!
 
     override func viewDidLoad() {
         
@@ -54,7 +54,11 @@ class CCMore: UIViewController, UITableViewDelegate, UITableViewDataSource, CCLo
         
         tableView.separatorColor = NCBrandColor.sharedInstance.seperator
         
-        themingBackground.image = UIImage.init(named: "themingBackground")
+        if #available(iOS 11, *) {
+            //tableView.contentInsetAdjustmentBehavior = .never
+        }
+        
+        themingBackground.image = #imageLiteral(resourceName: "themingBackground")
         
         // create tap gesture recognizer
         let tapQuota = UITapGestureRecognizer(target: self, action: #selector(tapLabelQuotaExternalSite))
@@ -102,36 +106,34 @@ class CCMore: UIViewController, UITableViewDelegate, UITableViewDataSource, CCLo
         item.url = "segueShares"
         functionMenu.append(item)
         
-        /*
-        // ITEM : Local storage
-        item = OCExternalSites.init()
-        item.name = "_local_storage_"
-        item.icon = "moreLocalStorage"
-        item.url = "segueLocalStorage"
-        functionMenu.append(item)
-        */
-        
         // ITEM : External
-        menuExternalSite = NCManageDatabase.sharedInstance.getAllExternalSites(predicate: NSPredicate(format: "(account == '\(appDelegate.activeAccount!)')"))
         
-        for table in menuExternalSite! {
+        if NCBrandOptions.sharedInstance.disable_more_external_site == false {
+        
+            menuExternalSite = NCManageDatabase.sharedInstance.getAllExternalSites()
             
-            item = OCExternalSites.init()
+            if menuExternalSite != nil {
+                
+                for table in menuExternalSite! {
             
-            item.name = table.name
-            item.url = table.url
-            item.icon = table.icon
+                    item = OCExternalSites.init()
             
-            if (table.type == "link") {
-                item.icon = "moreExternalSite"
-                functionMenu.append(item)
-            }
-            if (table.type == "settings") {
-                item.icon = "moreSettingsExternalSite"
-                settingsMenu.append(item)
-            }
-            if (table.type == "quota") {
-                quotaMenu.append(item)
+                    item.name = table.name
+                    item.url = table.url
+                    item.icon = table.icon
+            
+                    if (table.type == "link") {
+                        item.icon = "moreExternalSite"
+                        functionMenu.append(item)
+                    }
+                    if (table.type == "settings") {
+                        item.icon = "moreSettingsExternalSite"
+                        settingsMenu.append(item)
+                    }
+                    if (table.type == "quota") {
+                        quotaMenu.append(item)
+                    }
+                }
             }
         }
         
@@ -156,7 +158,7 @@ class CCMore: UIViewController, UITableViewDelegate, UITableViewDataSource, CCLo
         self.navigationItem.title = NSLocalizedString("_more_", comment: "")
         
         // Aspect
-        appDelegate.aspectNavigationControllerBar(self.navigationController?.navigationBar, encrypted: false, online: appDelegate.reachability.isReachable(), hidden: false)
+        appDelegate.aspectNavigationControllerBar(self.navigationController?.navigationBar, online: appDelegate.reachability.isReachable(), hidden: false)
         appDelegate.aspectTabBar(self.tabBarController?.tabBar, hidden: false)
 
         // +
@@ -173,12 +175,14 @@ class CCMore: UIViewController, UITableViewDelegate, UITableViewDataSource, CCLo
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
-    func changeTheming() {
+    @objc func changeTheming() {
+        
+        self.view.backgroundColor = NCBrandColor.sharedInstance.brand
         
         if let theminBackgroundFile = UIImage.init(contentsOfFile: "\(appDelegate.directoryUser!)/themingBackground.png") {
             themingBackground.image = theminBackgroundFile
         } else {
-            themingBackground.image = UIImage.init(named: "themingBackground")
+            themingBackground.image = #imageLiteral(resourceName: "themingBackground")
         }
         
         if (self.isViewLoaded && (self.view.window != nil)) {
@@ -186,7 +190,7 @@ class CCMore: UIViewController, UITableViewDelegate, UITableViewDataSource, CCLo
         }
     }
     
-    func changeUserProfile() {
+    @objc func changeUserProfile() {
      
         if let themingAvatarFile = UIImage.init(contentsOfFile: "\(appDelegate.directoryUser!)/avatar.png") {
             themingAvatar.image = themingAvatarFile
@@ -206,17 +210,27 @@ class CCMore: UIViewController, UITableViewDelegate, UITableViewDataSource, CCLo
             labelUsername.text = tabAccount.displayName
         }
         
-        // fix CCMore.swift line 208 Version 2.17.2 (00005)
-        if (tabAccount.quotaRelative != 0 && tabAccount.quotaTotal != 0 && tabAccount.quotaUsed != 0) {
-                
+        // Shadow labelUsername TEST BLUR
+        /*
+        labelUsername.layer.shadowColor = UIColor.black.cgColor
+        labelUsername.layer.shadowRadius = 4
+        labelUsername.layer.shadowOpacity = 0.8
+        labelUsername.layer.shadowOffset = CGSize(width: 0, height: 0)
+        labelUsername.layer.masksToBounds = false
+        */
+        
+        if (tabAccount.quotaRelative > 0) {
             progressQuota.progress = Float(tabAccount.quotaRelative) / 100
-            progressQuota.progressTintColor = NCBrandColor.sharedInstance.brand
-                
-            let quota : String = CCUtility.transformedSize(Double(tabAccount.quotaTotal))
-            let quotaUsed : String = CCUtility.transformedSize(Double(tabAccount.quotaUsed))
-                
-            labelQuota.text = String.localizedStringWithFormat(NSLocalizedString("_quota_using_", comment: ""), quotaUsed, quota)
+        } else {
+            progressQuota.progress = 0
         }
+
+        progressQuota.progressTintColor = NCBrandColor.sharedInstance.brandElement
+                
+        let quota : String = CCUtility.transformedSize(Double(tabAccount.quotaTotal))
+        let quotaUsed : String = CCUtility.transformedSize(Double(tabAccount.quotaUsed))
+                
+        labelQuota.text = String.localizedStringWithFormat(NSLocalizedString("_quota_using_", comment: ""), quotaUsed, quota)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -267,7 +281,7 @@ class CCMore: UIViewController, UITableViewDelegate, UITableViewDataSource, CCLo
             
             cell.imageIcon?.image = UIImage.init(named: item.icon)
             cell.labelText?.text = NSLocalizedString(item.name, comment: "")
-            cell.labelText.textColor = NCBrandColor.sharedInstance.moreNormal
+            cell.labelText.textColor = NCBrandColor.sharedInstance.textView
 
         }
         
@@ -278,7 +292,7 @@ class CCMore: UIViewController, UITableViewDelegate, UITableViewDataSource, CCLo
             
             cell.imageIcon?.image = UIImage.init(named: item.icon)
             cell.labelText?.text = NSLocalizedString(item.name, comment: "")
-            cell.labelText.textColor = NCBrandColor.sharedInstance.moreSettings
+            cell.labelText.textColor = NCBrandColor.sharedInstance.textView
         }
         
         return cell
@@ -308,7 +322,9 @@ class CCMore: UIViewController, UITableViewDelegate, UITableViewDataSource, CCLo
         
         } else if item.url.contains("open") && !item.url.contains("//") {
             
-            let nameStoryboard = item.url.substring(from: item.url.index(item.url.startIndex, offsetBy: 4))
+            let nameStoryboard = String(item.url[..<item.url.index(item.url.startIndex, offsetBy: 4)])
+            
+            //let nameStoryboard = item.url.substring(from: item.url.index(item.url.startIndex, offsetBy: 4))
             
             let storyboard = UIStoryboard(name: nameStoryboard, bundle: nil)
             let controller = storyboard.instantiateViewController(withIdentifier: nameStoryboard)
@@ -339,11 +355,7 @@ class CCMore: UIViewController, UITableViewDelegate, UITableViewDataSource, CCLo
                 let manageAccount = CCManageAccount()
                 manageAccount.delete(self.appDelegate.activeAccount)
                 
-                self.loginWeb = CCLoginWeb()
-                self.loginWeb.delegate = self
-                self.loginWeb.loginType = loginAddForced
-                
-                self.loginWeb.presentModalWithDefaultTheme(self)
+                self.appDelegate.openLoginView(self, loginType: loginAddForced)
             }
             
             let actionNo = UIAlertAction(title: NSLocalizedString("_no_delete_", comment: ""), style: .default) { (action:UIAlertAction) in
@@ -356,7 +368,7 @@ class CCMore: UIViewController, UITableViewDelegate, UITableViewDataSource, CCLo
         }
     }
     
-    func tapLabelQuotaExternalSite() {
+    @objc func tapLabelQuotaExternalSite() {
         
         if (quotaMenu.count > 0) {
             
@@ -378,22 +390,26 @@ class CCMore: UIViewController, UITableViewDelegate, UITableViewDataSource, CCLo
         }
     }
     
-    func tapImageLogoManageAccount() {
+    @objc func tapImageLogoManageAccount() {
         
         let controller = CCManageAccount.init()
         
         self.navigationController?.pushViewController(controller, animated: true)
     }
-
+    
     func loginSuccess(_ loginType: NSInteger) {
-        
-        if (UInt32(loginType) != loginModifyPasswordUser.rawValue) {
-            NCAutoUpload.sharedInstance().alignPhotoLibrary()
-        }
         
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "initializeMain"), object: nil)
         
         appDelegate.selectedTabBarController(Int(k_tabBarApplicationIndexFile))
+    }
+    
+    func loginClose() {
+        appDelegate.activeLogin = nil
+    }
+    
+    func loginWebClose() {
+        appDelegate.activeLoginWeb = nil
     }
 }
 
@@ -408,7 +424,7 @@ extension CCMore: SwiftModalWebVCDelegate, SwiftWebVCDelegate{
         let urlString: String = url.absoluteString.lowercased()
         
         // Protocol close webVC
-        if (urlString.contains(NCBrandOptions.sharedInstance.webCloseViewProtocol) == true) {
+        if (urlString.contains(NCBrandOptions.sharedInstance.webCloseViewProtocolPersonalized) == true) {
             
             if (self.presentingViewController != nil) {
                 self.dismiss(animated: true, completion: nil)
@@ -424,6 +440,10 @@ extension CCMore: SwiftModalWebVCDelegate, SwiftWebVCDelegate{
     
     public func didFinishLoading(success: Bool, url: URL) {
         print("Finished loading. Success: \(success).")
+    }
+    
+    public func decidePolicyForNavigationAction(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        decisionHandler(.allow)
     }
 }
 

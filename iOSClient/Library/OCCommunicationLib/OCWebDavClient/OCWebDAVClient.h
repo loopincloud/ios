@@ -67,6 +67,10 @@ extern NSString * _Nullable OCWebDAVModificationDateKey;
 @property (nonatomic, strong) NSString * _Nullable originalUrlServer;
 
 @property (nonatomic, strong) NSString * _Nullable postStringForShare;
+// E2EE Metadata
+@property (nonatomic, strong) NSString * _Nullable postStringMetadata;
+// E2EE privateKey, publicKey
+@property (nonatomic, strong) NSString * _Nullable postStringKey;
 
 /**
  Sets the "Authorization" HTTP header set in request objects made by the HTTP client to a basic authentication value with Base64-encoded username and password. This overwrites any existing value for this header.
@@ -99,6 +103,11 @@ extern NSString * _Nullable OCWebDAVModificationDateKey;
  */
 - (void)setUserAgent:(NSString * _Nonnull)userAgent;
 
+
+/**
+ Add Header
+*/
+- (void)setDefaultHeader:(NSString * _Nonnull)header value:(NSString *_Nullable)value;
 
 /**
  Enqueues an operation to move the object at a path to another path using a `MOVE` request.
@@ -158,7 +167,7 @@ extern NSString * _Nullable OCWebDAVModificationDateKey;
  @see propertiesOfPath:success:failure:
  @see recursiveListPath:success:failure:
  */
-- (void)listPath:(NSString * _Nonnull)path
+- (void)listPath:(NSString * _Nonnull)path depth:(NSString * _Nonnull)depth
  onCommunication: (OCCommunication * _Nonnull)sharedOCCommunication
          success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nullable responseObject))success
          failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
@@ -178,7 +187,7 @@ extern NSString * _Nullable OCWebDAVModificationDateKey;
  @see propertiesOfPath:success:failure:
  @see recursiveListPath:success:failure:
  */
-- (void)listPath:(NSString * _Nonnull)path
+- (void)listPath:(NSString * _Nonnull)path depth:(NSString * _Nonnull)depth
  onCommunication:(OCCommunication * _Nonnull)sharedOCCommunication withUserSessionToken:(NSString * _Nonnull)token
          success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull, id  _Nonnull, NSString * _Nonnull token))success
          failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull, id  _Nullable responseObject, NSError * _Nonnull, NSString * _Nonnull token))failure;
@@ -187,7 +196,7 @@ extern NSString * _Nullable OCWebDAVModificationDateKey;
  
 */ 
 
-- (void)search:(NSString * _Nonnull)path folder:(NSString * _Nonnull)folder fileName:(NSString * _Nonnull)fileName depth:(NSString * _Nonnull)depth dateLastModified:(NSString * _Nonnull)dateLastModified user:(NSString * _Nonnull)user onCommunication:(OCCommunication * _Nonnull)sharedOCCommunication withUserSessionToken:(NSString * _Nonnull)token success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull, id  _Nonnull, NSString * _Nonnull token))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull, id  _Nullable responseObject, NSError * _Nonnull, NSString * _Nonnull token))failure;
+- (void)search:(NSString * _Nonnull)path folder:(NSString * _Nonnull)folder fileName:(NSString * _Nonnull)fileName depth:(NSString * _Nonnull)depth dateLastModified:(NSString * _Nonnull)dateLastModified contentType:(NSString * _Nonnull)contentType user:(NSString * _Nonnull)user userID:(NSString * _Nonnull)userID onCommunication:(OCCommunication * _Nonnull)sharedOCCommunication withUserSessionToken:(NSString * _Nonnull)token success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull, id  _Nonnull, NSString * _Nonnull token))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull, id  _Nullable responseObject, NSError * _Nonnull, NSString * _Nonnull token))failure;
 
 /**
  
@@ -199,7 +208,7 @@ extern NSString * _Nullable OCWebDAVModificationDateKey;
  
  */
 
-- (void)listingFavorites:(NSString * _Nonnull)path folder:(NSString * _Nonnull)folder user:(NSString * _Nonnull)user onCommunication:(OCCommunication * _Nonnull)sharedOCCommunication withUserSessionToken:(NSString * _Nonnull)token success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull, id  _Nonnull, NSString * _Nonnull token))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull, id  _Nullable responseObject, NSError * _Nonnull, NSString * _Nonnull token))failure;
+- (void)listingFavorites:(NSString * _Nonnull)path folder:(NSString * _Nonnull)folder user:(NSString * _Nonnull)user userID:(NSString * _Nonnull)userID onCommunication:(OCCommunication * _Nonnull)sharedOCCommunication withUserSessionToken:(NSString * _Nonnull)token success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull, id  _Nonnull, NSString * _Nonnull token))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull, id  _Nullable responseObject, NSError * _Nonnull, NSString * _Nonnull token))failure;
 
 
 
@@ -455,6 +464,9 @@ extern NSString * _Nullable OCWebDAVModificationDateKey;
                           success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success
                           failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
 
+- (void) getSharePermissionsFile:(NSString * _Nonnull)fileName onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success
+                         failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
 ///-----------------------------------
 /// @name Get the server capabilities
 ///-----------------------------------
@@ -592,5 +604,44 @@ extern NSString * _Nullable OCWebDAVModificationDateKey;
  */
 
 - (void) getUserProfileServer:(NSString * _Nonnull)serverPath onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+///-----------------------------------
+/// End-to-End Encryption
+///-----------------------------------
+
+- (void)getEndToEndPublicKeys:(NSString * _Nonnull)serverPath onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+- (void)getEndToEndPrivateKeyCipher:(NSString * _Nonnull)serverPath onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+- (void)getEndToEndServerPublicKey:(NSString * _Nonnull)serverPath onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+
+- (void)signEndToEndPublicKey:(NSString * _Nonnull)serverPath key:(NSString * _Nonnull)key onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+- (void)storeEndToEndPrivateKeyCipher:(NSString * _Nonnull)serverPath key:(NSString * _Nonnull)key onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+
+- (void)deleteEndToEndPublicKey:(NSString * _Nonnull)serverPath onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+- (void)deleteEndToEndPrivateKey:(NSString * _Nonnull)serverPath onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+
+- (void)markEndToEndFolderEncrypted:(NSString * _Nonnull)serverPath onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+- (void)deletemarkEndToEndFolderEncrypted:(NSString * _Nonnull)serverPath onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+
+- (void)lockEndToEndFolderEncrypted:(NSString * _Nonnull)serverPath onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+- (void)unlockEndToEndFolderEncrypted:(NSString * _Nonnull)serverPath token:(NSString * _Nonnull)token onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+
+- (void)getEndToEndMetadata:(NSString * _Nonnull)serverPath onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+- (void)storeEndToEndMetadata:(NSString * _Nonnull)serverPath metadata:(NSString * _Nonnull)metadata onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+- (void)updateEndToEndMetadata:(NSString * _Nonnull)serverPath metadata:(NSString * _Nonnull)metadata onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
+
+- (void)deleteEndToEndMetadata:(NSString * _Nonnull)serverPath onCommunication:(OCCommunication * _Nonnull)sharedOCComunication success:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id _Nonnull response))success failure:(void(^ _Nonnull)(NSHTTPURLResponse * _Nonnull operation, id  _Nullable responseObject, NSError * _Nonnull error))failure;
 
 @end

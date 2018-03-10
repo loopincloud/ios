@@ -1,6 +1,6 @@
 //
 //  CCTransfers.m
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 12/04/17.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -35,7 +35,9 @@
 #define uploadwwan 4
 
 @interface CCTransfers ()
-{    
+{
+    AppDelegate *appDelegate;
+
     // Datasource
     CCSectionDataSourceMetadata *_sectionDataSource;
 }
@@ -51,10 +53,12 @@
 {
     if (self = [super initWithCoder:aDecoder])  {
         
+        appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(triggerProgressTask:) name:@"NotificationProgressTask" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTheming) name:@"changeTheming" object:nil];
         
-        app.activeTransfers = self;
+        appDelegate.activeTransfers = self;
     }
     return self;
 }
@@ -72,7 +76,7 @@
     _tableView.emptyDataSetSource = self;
     
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _tableView.backgroundColor = [NCBrandColor sharedInstance].tableBackground;
+    _tableView.backgroundColor = [NCBrandColor sharedInstance].backgroundView;
     
     self.title = NSLocalizedString(@"_transfers_", nil);
     
@@ -85,8 +89,8 @@
     [super viewWillAppear:animated];
         
     // Color
-    [app aspectNavigationControllerBar:self.navigationController.navigationBar encrypted:NO online:[app.reachability isReachable] hidden:NO];
-    [app aspectTabBar:self.tabBarController.tabBar hidden:NO];
+    [appDelegate aspectNavigationControllerBar:self.navigationController.navigationBar online:[appDelegate.reachability isReachable] hidden:NO];
+    [appDelegate aspectTabBar:self.tabBarController.tabBar hidden:NO];
     
     [self reloadDatasource];
 }
@@ -94,7 +98,7 @@
 - (void)changeTheming
 {
     if (self.isViewLoaded && self.view.window)
-        [app changeTheming:self];
+        [appDelegate changeTheming:self];
 }
 
 #pragma --------------------------------------------------------------------------------------------
@@ -113,7 +117,7 @@
 
 - (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView
 {
-    return [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"transfersNoRecord"] color:[NCBrandColor sharedInstance].brand];
+    return [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"transfersNoRecord"] color:[NCBrandColor sharedInstance].brandElement];
 }
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
@@ -146,23 +150,20 @@
 {
     NSDictionary *dict = notification.userInfo;
     NSString *fileID = [dict valueForKey:@"fileID"];
-    BOOL cryptated = [[dict valueForKey:@"cryptated"] boolValue];
     float progress = [[dict valueForKey:@"progress"] floatValue];
     
     // Check
     if (!fileID)
         return;
     
-    [app.listProgressMetadata setObject:[NSNumber numberWithFloat:progress] forKey:fileID];
+    [appDelegate.listProgressMetadata setObject:[NSNumber numberWithFloat:progress] forKey:fileID];
     
     NSIndexPath *indexPath = [_sectionDataSource.fileIDIndexPath objectForKey:fileID];
     
     if (indexPath && indexPath.row == 0) {
         
         CCTransfersCell *cell = (CCTransfersCell *)[_tableView cellForRowAtIndexPath:indexPath];
-        
-        if (cryptated) cell.progressView.progressTintColor = [NCBrandColor sharedInstance].cryptocloud;
-        else cell.progressView.progressTintColor = [UIColor blackColor];
+        cell.progressView.progressTintColor = [UIColor blackColor];
         
         cell.progressView.hidden = NO;
         [cell.progressView setProgress:progress];
@@ -175,7 +176,7 @@
 
 - (void)reloadTaskButton:(id)sender withEvent:(UIEvent *)event
 {
-    if (app.activeMain == nil)
+    if (appDelegate.activeMain == nil)
         return;
     
     UITouch * touch = [[event allTouches] anyObject];
@@ -185,35 +186,32 @@
     if (indexPath) {
         
         NSString *fileID = [[_sectionDataSource.sectionArrayRow objectForKey:[_sectionDataSource.sections objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
-        tableMetadata *metadata = [_sectionDataSource.allRecordsDataSource objectForKey:fileID];
+        tableMetadata *metadata = [[NCManageDatabase sharedInstance] getMetadataWithPredicate:[NSPredicate predicateWithFormat:@"fileID = %@", fileID]];
         
         if (metadata)
-            [app.activeMain reloadTaskButton:metadata];
+            [appDelegate.activeMain reloadTaskButton:metadata];
     }
 }
 
 - (void)reloadAllTask
 {
-    if (app.activeMain == nil)
+    if (appDelegate.activeMain == nil)
         return;
     
     for (NSString *key in _sectionDataSource.allRecordsDataSource.allKeys) {
         
         tableMetadata *metadata = [_sectionDataSource.allRecordsDataSource objectForKey:key];
         
-        if ([metadata.session containsString:@"download"] && (metadata.sessionTaskIdentifierPlist != k_taskIdentifierDone))
-            continue;
-        
         if ([metadata.session containsString:@"upload"] && (metadata.sessionTaskIdentifier != k_taskIdentifierStop))
             continue;
         
-        [app.activeMain reloadTaskButton:metadata];
+        [appDelegate.activeMain reloadTaskButton:metadata];
     }
 }
 
 - (void)cancelTaskButton:(id)sender withEvent:(UIEvent *)event
 {
-    if (app.activeMain == nil)
+    if (appDelegate.activeMain == nil)
         return;
     
     UITouch * touch = [[event allTouches] anyObject];
@@ -223,16 +221,16 @@
     if (indexPath) {
         
         NSString *fileID = [[_sectionDataSource.sectionArrayRow objectForKey:[_sectionDataSource.sections objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
-        tableMetadata *metadata = [_sectionDataSource.allRecordsDataSource objectForKey:fileID];
+        tableMetadata *metadata = [[NCManageDatabase sharedInstance] getMetadataWithPredicate:[NSPredicate predicateWithFormat:@"fileID = %@", fileID]];
         
         if (metadata)
-            [app.activeMain cancelTaskButton:metadata reloadTable:YES];
+            [appDelegate.activeMain cancelTaskButton:metadata reloadTable:YES];
     }
 }
 
 - (void)cancelAllTask
 {
-    if (app.activeMain == nil)
+    if (appDelegate.activeMain == nil)
         return;
     
     BOOL lastAndRefresh = NO;
@@ -244,16 +242,16 @@
         
         tableMetadata *metadata = [_sectionDataSource.allRecordsDataSource objectForKey:key];
         
-        if ([metadata.session containsString:@"upload"] && metadata.cryptated && ((metadata.sessionTaskIdentifier == k_taskIdentifierDone && metadata.sessionTaskIdentifierPlist >= 0) || (metadata.sessionTaskIdentifier >= 0 && metadata.sessionTaskIdentifierPlist == k_taskIdentifierDone)))
+        if ([metadata.session containsString:@"upload"] && ((metadata.sessionTaskIdentifier == k_taskIdentifierDone) || (metadata.sessionTaskIdentifier >= 0)))
             continue;
         
-        [app.activeMain cancelTaskButton:metadata reloadTable:lastAndRefresh];
+        [appDelegate.activeMain cancelTaskButton:metadata reloadTable:lastAndRefresh];
     }
 }
 
 - (void)stopTaskButton:(id)sender withEvent:(UIEvent *)event
 {
-    if (app.activeMain == nil)
+    if (appDelegate.activeMain == nil)
         return;
     
     UITouch * touch = [[event allTouches] anyObject];
@@ -263,16 +261,16 @@
     if (indexPath) {
         
         NSString *fileID = [[_sectionDataSource.sectionArrayRow objectForKey:[_sectionDataSource.sections objectAtIndex:indexPath.section]] objectAtIndex:indexPath.row];
-        tableMetadata *metadata = [_sectionDataSource.allRecordsDataSource objectForKey:fileID];
+        tableMetadata *metadata = [[NCManageDatabase sharedInstance] getMetadataWithPredicate:[NSPredicate predicateWithFormat:@"fileID = %@", fileID]];
         
         if (metadata)
-            [app.activeMain stopTaskButton:metadata];
+            [appDelegate.activeMain stopTaskButton:metadata];
     }
 }
 
 - (void)stopAllTask
 {
-    if (app.activeMain == nil)
+    if (appDelegate.activeMain == nil)
         return;
     
     for (NSString *key in _sectionDataSource.allRecordsDataSource.allKeys) {
@@ -280,14 +278,14 @@
         tableMetadata *metadata = [_sectionDataSource.allRecordsDataSource objectForKey:key];
         
         if ([metadata.session containsString:@"download"]) {
-            [app.activeMain cancelTaskButton:metadata reloadTable:YES];
+            [appDelegate.activeMain cancelTaskButton:metadata reloadTable:YES];
             continue;
         }
         
-        if ([metadata.session containsString:@"upload"] && metadata.cryptated && ((metadata.sessionTaskIdentifier == k_taskIdentifierDone && metadata.sessionTaskIdentifierPlist >= 0) || (metadata.sessionTaskIdentifier >= 0 && metadata.sessionTaskIdentifierPlist == k_taskIdentifierDone)))
+        if ([metadata.session containsString:@"upload"] && ((metadata.sessionTaskIdentifier == k_taskIdentifierDone) || (metadata.sessionTaskIdentifier >= 0)))
             continue;
         
-        [app.activeMain stopTaskButton:metadata];
+        [appDelegate.activeMain stopTaskButton:metadata];
     }    
 }
 
@@ -297,9 +295,13 @@
 
 - (void)downloadThumbnailSuccess:(CCMetadataNet *)metadataNet
 {
+    // Check Active Account
+    if (![metadataNet.account isEqualToString:appDelegate.activeAccount])
+        return;
+    
     NSIndexPath *indexPath = [_sectionDataSource.fileIDIndexPath objectForKey:metadataNet.fileID];
     
-    if (indexPath && [[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.ico", app.directoryUser, metadataNet.fileID]]) {
+    if (indexPath && [[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.ico", appDelegate.directoryUser, metadataNet.fileID]]) {
         
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }
@@ -312,12 +314,12 @@
 - (void)reloadDatasource
 {
     // test
-    if (app.activeAccount.length == 0)
+    if (appDelegate.activeAccount.length == 0)
         return;
     
-    NSArray *recordsTableMetadata = [[NCManageDatabase sharedInstance] getMetadatasWithPredicate:[NSPredicate predicateWithFormat:@"account = %@ AND ((session CONTAINS 'upload') OR (session CONTAINS 'download' AND (sessionSelector != 'loadPlist')))", app.activeAccount] sorted:@"sessionTaskIdentifier" ascending:YES];
+    NSArray *recordsTableMetadata = [[NCManageDatabase sharedInstance] getMetadatasWithPredicate:[NSPredicate predicateWithFormat:@"account = %@ AND ((session CONTAINS 'upload') OR (session CONTAINS 'download'))", appDelegate.activeAccount] sorted:@"sessionTaskIdentifier" ascending:YES];
     
-    _sectionDataSource  = [CCSectionMetadata creataDataSourseSectionMetadata:recordsTableMetadata listProgressMetadata:app.listProgressMetadata groupByField:@"session" replaceDateToExifDate:NO activeAccount:app.activeAccount];
+    _sectionDataSource  = [CCSectionMetadata creataDataSourseSectionMetadata:recordsTableMetadata listProgressMetadata:appDelegate.listProgressMetadata e2eEncryptions:nil groupByField:@"session" activeAccount:appDelegate.activeAccount];
         
     [_tableView reloadData];    
 }
@@ -353,10 +355,11 @@
     NSString *titleSection, *numberTitle;
     NSInteger typeOfSession = 0;
     
-    NSInteger queueDownload = [app getNumberDownloadInQueues] + [[NCManageDatabase sharedInstance] countQueueUploadWithSession:k_download_session];
-    NSInteger queueDownloadWWan = [app getNumberDownloadInQueuesWWan] + [[NCManageDatabase sharedInstance] countQueueUploadWithSession:k_download_session_wwan];
-    NSInteger queueUpload = [app getNumberUploadInQueues] + [[NCManageDatabase sharedInstance] countQueueUploadWithSession:k_upload_session];
-    NSInteger queueUploadWWan = [app getNumberUploadInQueuesWWan] + [[NCManageDatabase sharedInstance] countQueueUploadWithSession:k_upload_session_wwan];
+    NSInteger queueDownload = [[CCNetworking sharedNetworking] getNumDownloadInProgressWWan:NO];
+    NSInteger queueDownloadWWan = [[CCNetworking sharedNetworking] getNumDownloadInProgressWWan:YES];
+
+    NSInteger queueUpload = [[CCNetworking sharedNetworking] getNumUploadInProgressWWan:NO];
+    NSInteger queueUploadWWan = [[CCNetworking sharedNetworking] getNumUploadInProgressWWan:YES];
     
     if ([[_sectionDataSource.sections objectAtIndex:section] isKindOfClass:[NSString class]]) titleSection = [_sectionDataSource.sections objectAtIndex:section];
     if ([[_sectionDataSource.sections objectAtIndex:section] isKindOfClass:[NSDate class]]) titleSection = [CCUtility getTitleSectionDate:[_sectionDataSource.sections objectAtIndex:section]];
@@ -393,7 +396,7 @@
     titleLabel.textAlignment = NSTextAlignmentLeft;
     titleLabel.text = titleSection;
     titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [visualEffectView addSubview:titleLabel];
+    [visualEffectView.contentView addSubview:titleLabel];
     
     // element (s) on right
     UILabel *elementLabel=[[UILabel alloc]initWithFrame:CGRectMake(-8, 3, 0, 13)];
@@ -415,7 +418,7 @@
         elementLabel.text = [NSString stringWithFormat:@"%@ %@", numberTitle, NSLocalizedString(@"_element_",nil)];
     
     // view
-    [visualEffectView addSubview:elementLabel];
+    [visualEffectView.contentView addSubview:elementLabel];
     
     return visualEffectView;
 }
@@ -438,7 +441,7 @@
     // Footer Download
     if ([titleSection containsString:@"download"] && ![titleSection containsString:@"wwan"] && titleSection != nil) {
         
-        NSInteger queueDownload = [app getNumberDownloadInQueues] + [[NCManageDatabase sharedInstance] countQueueUploadWithSession:k_download_session];
+        NSInteger queueDownload = [[CCNetworking sharedNetworking] getNumDownloadInProgressWWan:NO];
         
         // element or elements ?
         if (queueDownload > 1) element_s = NSLocalizedString(@"_elements_",nil);
@@ -455,7 +458,7 @@
     // Footer Download WWAN
     if ([titleSection containsString:@"download"] && [titleSection containsString:@"wwan"] && titleSection != nil) {
         
-        NSInteger queueDownloadWWan = [app getNumberDownloadInQueuesWWan] + [[NCManageDatabase sharedInstance] countQueueUploadWithSession:k_download_session_wwan];
+        NSInteger queueDownloadWWan = [[CCNetworking sharedNetworking] getNumDownloadInProgressWWan:YES];
         
         // element or elements ?
         if (queueDownloadWWan > 1) element_s = NSLocalizedString(@"_elements_",nil);
@@ -465,7 +468,7 @@
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
         attachment.image = [UIImage imageNamed:@"WiFiSmall"];
         NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:attachment];
-        NSMutableAttributedString *stringFooter= [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"_tite_footer_download_wwan_", nil), queueDownloadWWan, element_s]];
+        NSMutableAttributedString *stringFooter= [[NSMutableAttributedString alloc] initWithString:[@" " stringByAppendingString:[NSString stringWithFormat:NSLocalizedString(@"_tite_footer_download_wwan_", nil), queueDownloadWWan, element_s]]];
         [stringFooter insertAttributedString:attachmentString atIndex:0];
         titleFooterLabel.attributedText = stringFooter;
         
@@ -476,7 +479,7 @@
     // Footer Upload
     if ([titleSection containsString:@"upload"] && ![titleSection containsString:@"wwan"] && titleSection != nil) {
         
-        NSInteger queueUpload = [app getNumberUploadInQueues] + [[NCManageDatabase sharedInstance] countQueueUploadWithSession:k_upload_session];
+        NSInteger queueUpload = [[CCNetworking sharedNetworking] getNumUploadInProgressWWan:NO];
         
         // element or elements ?
         if (queueUpload > 1) element_s = NSLocalizedString(@"_elements_",nil);
@@ -493,8 +496,8 @@
     // Footer Upload WWAN
     if ([titleSection containsString:@"upload"] && [titleSection containsString:@"wwan"] && titleSection != nil) {
         
-        NSInteger queueUploadWWan = [app getNumberUploadInQueuesWWan] + [[NCManageDatabase sharedInstance] countQueueUploadWithSession:k_upload_session_wwan];
-        
+        NSInteger queueUploadWWan = [[CCNetworking sharedNetworking] getNumUploadInProgressWWan:YES];
+       
         // element or elements ?
         if (queueUploadWWan > 1) element_s = NSLocalizedString(@"_elements_",nil);
         else element_s = NSLocalizedString(@"_element_",nil);
@@ -503,7 +506,7 @@
         NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
         attachment.image = [UIImage imageNamed:@"WiFiSmall"];
         NSAttributedString *attachmentString = [NSAttributedString attributedStringWithAttachment:attachment];
-        NSMutableAttributedString *stringFooter= [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@"_tite_footer_upload_wwan_", nil), queueUploadWWan,element_s]];
+        NSMutableAttributedString *stringFooter= [[NSMutableAttributedString alloc] initWithString:[@" " stringByAppendingString:[NSString stringWithFormat:NSLocalizedString(@"_tite_footer_upload_wwan_", nil), queueUploadWWan,element_s]]];
         [stringFooter insertAttributedString:attachmentString atIndex:0];
         titleFooterLabel.attributedText = stringFooter;
         
@@ -563,21 +566,15 @@
     cell.reloadTaskButton.hidden = YES;
     cell.stopTaskButton.hidden = YES;
     
-    // colori e font
-    if (metadata.cryptated) {
-        cell.labelTitle.textColor = [NCBrandColor sharedInstance].cryptocloud;
-        cell.labelInfoFile.textColor = [UIColor blackColor];
-    } else {
-        cell.labelTitle.textColor = [UIColor blackColor];
-        cell.labelInfoFile.textColor = [UIColor blackColor];
-    }
+    cell.labelTitle.textColor = [UIColor blackColor];
+    cell.labelInfoFile.textColor = [UIColor blackColor];
     
     // ----------------------------------------------------------------------------------------------------------
     // File Name & Folder
     // ----------------------------------------------------------------------------------------------------------
     
     // nome del file
-    cell.labelTitle.text = metadata.fileNamePrint;
+    cell.labelTitle.text = metadata.fileNameView;
     
     // è una directory
     if (metadata.directory) {
@@ -594,13 +591,6 @@
         dataFile = [CCUtility dateDiff:metadata.date];
         lunghezzaFile = [CCUtility transformedSize:metadata.size];
         
-        // Plist ancora da scaricare
-        if (metadata.cryptated && [metadata.title length] == 0) {
-            
-            dataFile = @" ";
-            lunghezzaFile = @" ";
-        }
-        
         NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
         [dateFormatter setDateStyle:NSDateFormatterShortStyle];
         [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
@@ -613,9 +603,9 @@
     // ----------------------------------------------------------------------------------------------------------
     
     // assegnamo l'immagine anteprima se esiste, altrimenti metti quella standars
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.ico", app.directoryUser, metadata.fileID]]) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.ico", appDelegate.directoryUser, metadata.fileID]]) {
         
-        cell.file.image = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.ico", app.directoryUser, metadata.fileID]];
+        cell.file.image = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.ico", appDelegate.directoryUser, metadata.fileID]];
         
     } else {
         
@@ -626,46 +616,30 @@
     }
     
     // ----------------------------------------------------------------------------------------------------------
-    // Image Status cyptated & Lock Passcode
-    // ----------------------------------------------------------------------------------------------------------
-    
-    // File Cyptated
-    if (metadata.cryptated && metadata.directory == NO && [metadata.type isEqualToString: k_metadataType_template] == NO) {
-        
-        cell.status.image = [UIImage imageNamed:@"lock"];
-    }
-    
-    // ----------------------------------------------------------------------------------------------------------
     // downloadFile
     // ----------------------------------------------------------------------------------------------------------
     
     if ([metadata.session length] > 0 && [metadata.session rangeOfString:@"download"].location != NSNotFound) {
         
-        if (metadata.cryptated) cell.status.image = [UIImage imageNamed:@"statusdownloadcrypto"];
-        else cell.status.image = [UIImage imageNamed:@"statusdownload"];
+        cell.status.image = [UIImage imageNamed:@"statusdownload"];
         
         // Fai comparire il RELOAD e lo STOP solo se non è un Task Plist
-        if (metadata.sessionTaskIdentifierPlist == k_taskIdentifierDone) {
+        
+        [cell.cancelTaskButton setBackgroundImage:[UIImage imageNamed:@"stoptask"] forState:UIControlStateNormal];
             
-            if (metadata.cryptated)[cell.cancelTaskButton setBackgroundImage:[UIImage imageNamed:@"stoptaskcrypto"] forState:UIControlStateNormal];
-            else [cell.cancelTaskButton setBackgroundImage:[UIImage imageNamed:@"stoptask"] forState:UIControlStateNormal];
+        cell.cancelTaskButton.hidden = NO;
             
-            cell.cancelTaskButton.hidden = NO;
+        [cell.reloadTaskButton setBackgroundImage:[UIImage imageNamed:@"reloadtask"] forState:UIControlStateNormal];
             
-            if (metadata.cryptated)[cell.reloadTaskButton setBackgroundImage:[UIImage imageNamed:@"reloadtaskcrypto"] forState:UIControlStateNormal];
-            else [cell.reloadTaskButton setBackgroundImage:[UIImage imageNamed:@"reloadtask"] forState:UIControlStateNormal];
-            
-            cell.reloadTaskButton.hidden = NO;
-        }
+        cell.reloadTaskButton.hidden = NO;
+        
         
         cell.labelInfoFile.text = [NSString stringWithFormat:@"%@", lunghezzaFile];
         
-        float progress = [[app.listProgressMetadata objectForKey:metadata.fileID] floatValue];
+        float progress = [[appDelegate.listProgressMetadata objectForKey:metadata.fileID] floatValue];
         if (progress > 0) {
             
-            if (metadata.cryptated) cell.progressView.progressTintColor = [NCBrandColor sharedInstance].cryptocloud;
-            else cell.progressView.progressTintColor = [UIColor blackColor];
-            
+            cell.progressView.progressTintColor = [UIColor blackColor];
             cell.progressView.progress = progress;
             cell.progressView.hidden = NO;
         }
@@ -674,14 +648,15 @@
         // downloadFile Error
         // ----------------------------------------------------------------------------------------------------------
         
-        if (metadata.sessionTaskIdentifier == k_taskIdentifierError || metadata.sessionTaskIdentifierPlist == k_taskIdentifierError) {
+        if (metadata.sessionTaskIdentifier == k_taskIdentifierError) {
             
             cell.status.image = [UIImage imageNamed:@"statuserror"];
             
-            if ([metadata.sessionError length] == 0)
+            if ([metadata.sessionError length] == 0) {
                 cell.labelInfoFile.text = [NSString stringWithFormat:@"%@, %@", NSLocalizedString(@"_error_",nil), NSLocalizedString(@"_file_not_downloaded_",nil)];
-            else
-                cell.labelInfoFile.text = [CCError manageErrorKCF:[metadata.sessionError integerValue] withNumberError:NO];
+            } else {
+                cell.labelInfoFile.text = metadata.sessionError;
+            }
         }
     }
     
@@ -691,45 +666,39 @@
     
     if ([metadata.session length] > 0 && [metadata.session rangeOfString:@"upload"].location != NSNotFound) {
         
-        if (metadata.cryptated) cell.status.image = [UIImage imageNamed:@"statusuploadcrypto"];
-        else cell.status.image = [UIImage imageNamed:@"statusupload"];
+        cell.status.image = [UIImage imageNamed:@"statusupload"];
         
-        if (metadata.cryptated)[cell.cancelTaskButton setBackgroundImage:[UIImage imageNamed:@"removetaskcrypto"] forState:UIControlStateNormal];
-        else [cell.cancelTaskButton setBackgroundImage:[UIImage imageNamed:@"removetask"] forState:UIControlStateNormal];
+        [cell.cancelTaskButton setBackgroundImage:[UIImage imageNamed:@"removetask"] forState:UIControlStateNormal];
         cell.cancelTaskButton.hidden = NO;
         
         if (metadata.sessionTaskIdentifier == k_taskIdentifierStop) {
             
-            if (metadata.cryptated)[cell.reloadTaskButton setBackgroundImage:[UIImage imageNamed:@"reloadtaskcrypto"] forState:UIControlStateNormal];
-            else [cell.reloadTaskButton setBackgroundImage:[UIImage imageNamed:@"reloadtask"] forState:UIControlStateNormal];
+            [cell.reloadTaskButton setBackgroundImage:[UIImage imageNamed:@"reloadtask"] forState:UIControlStateNormal];
             
-            if (metadata.cryptated) cell.status.image = [UIImage imageNamed:@"statusstopcrypto"];
-            else cell.status.image = [UIImage imageNamed:@"statusstop"];
+            cell.status.image = [UIImage imageNamed:@"statusstop"];
             
             cell.reloadTaskButton.hidden = NO;
             cell.stopTaskButton.hidden = YES;
             
         } else {
             
-            if (metadata.cryptated)[cell.stopTaskButton setBackgroundImage:[UIImage imageNamed:@"stoptaskcrypto"] forState:UIControlStateNormal];
-            else [cell.stopTaskButton setBackgroundImage:[UIImage imageNamed:@"stoptask"] forState:UIControlStateNormal];
+            [cell.stopTaskButton setBackgroundImage:[UIImage imageNamed:@"stoptask"] forState:UIControlStateNormal];
             
             cell.stopTaskButton.hidden = NO;
             cell.reloadTaskButton.hidden = YES;
         }
         
         // se non c'è una preview in bianconero metti l'immagine di default
-        if ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.ico", app.directoryUser, metadata.fileID]] == NO)
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.ico", appDelegate.directoryUser, metadata.fileID]] == NO)
             cell.file.image = [UIImage imageNamed:@"uploaddisable"];
         
         cell.labelTitle.enabled = NO;
         cell.labelInfoFile.text = [NSString stringWithFormat:@"%@", lunghezzaFile];
         
-        float progress = [[app.listProgressMetadata objectForKey:metadata.fileID] floatValue];
+        float progress = [[appDelegate.listProgressMetadata objectForKey:metadata.fileID] floatValue];
         if (progress > 0) {
             
-            if (metadata.cryptated) cell.progressView.progressTintColor = [NCBrandColor sharedInstance].cryptocloud;
-            else cell.progressView.progressTintColor = [UIColor blackColor];
+            cell.progressView.progressTintColor = [UIColor blackColor];
             
             cell.progressView.progress = progress;
             cell.progressView.hidden = NO;
@@ -739,15 +708,16 @@
         // uploadFileError
         // ----------------------------------------------------------------------------------------------------------
         
-        if (metadata.sessionTaskIdentifier == k_taskIdentifierError || metadata.sessionTaskIdentifierPlist == k_taskIdentifierError) {
+        if (metadata.sessionTaskIdentifier == k_taskIdentifierError) {
             
             cell.labelTitle.enabled = NO;
             cell.status.image = [UIImage imageNamed:@"statuserror"];
             
-            if ([metadata.sessionError length] == 0)
+            if ([metadata.sessionError length] == 0) {
                 cell.labelInfoFile.text = [NSString stringWithFormat:@"%@, %@", NSLocalizedString(@"_error_",nil), NSLocalizedString(@"_file_not_uploaded_",nil)];
-            else
-                cell.labelInfoFile.text = [CCError manageErrorKCF:[metadata.sessionError integerValue] withNumberError:NO];
+            } else {
+                cell.labelInfoFile.text = metadata.sessionError;
+            }
         }
     }
     

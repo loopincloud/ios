@@ -1,6 +1,6 @@
 //
 //  CCMove.h
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 04/09/14.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -38,7 +38,7 @@
 
 @property (nonatomic, weak) id <CCMoveDelegate> delegate;
 @property (nonatomic, strong) NSOperationQueue *networkingOperationQueue;
-@property BOOL onlyClearDirectory;
+@property BOOL includeDirectoryE2EEncryption;
 
 @property (nonatomic, strong) NSString *serverUrl;
 @property (nonatomic, strong) tableMetadata *passMetadata;

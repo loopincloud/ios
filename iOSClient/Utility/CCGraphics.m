@@ -1,6 +1,6 @@
 //
 //  CCGraphics.m
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 04/02/16.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -23,9 +23,9 @@
 
 #import "CCGraphics.h"
 
-#import "AppDelegate.h"
 #import "CCUtility.h"
 #import "NSString+TruncateToWidth.h"
+#import "NCBridgeSwift.h"
 
 @implementation CCGraphics
 
@@ -145,14 +145,14 @@
 }
 
 
-+ (UIImage *)createNewImageFrom:(NSString *)fileName directoryUser:(NSString *)directoryUser fileNameTo:(NSString *)fileNameTo fileNamePrint:(NSString *)fileNamePrint size:(NSString *)size imageForUpload:(BOOL)imageForUpload typeFile:(NSString *)typeFile writePreview:(BOOL)writePreview optimizedFileName:(BOOL)optimizedFileName
++ (UIImage *)createNewImageFrom:(NSString *)fileName directoryUser:(NSString *)directoryUser fileNameTo:(NSString *)fileNameTo extension:(NSString *)extension size:(NSString *)size imageForUpload:(BOOL)imageForUpload typeFile:(NSString *)typeFile writePreview:(BOOL)writePreview optimizedFileName:(BOOL)optimizedFileName
 {
     UIImage *originalImage;
     UIImage *scaleImage;
     CGRect rect;
     CGFloat width, height;
     
-    NSString *ext = [[fileNamePrint pathExtension] lowercaseString];
+    NSString *ext = [extension lowercaseString];
     
     if ([[directoryUser substringFromIndex: [directoryUser length] - 1] isEqualToString:@"/"]) directoryUser = [directoryUser substringToIndex:[directoryUser length]-1];
     if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@", directoryUser, fileName]]) return nil;
@@ -192,7 +192,7 @@
             
             // if it is preview for Upload then trasform it in gray scale
             //TODO: Crash with swift
-            scaleImage = [scaleImage grayscale];
+            scaleImage = [self grayscale:scaleImage];
             [self saveIcoWithEtag:fileNameTo image:scaleImage writeToFile:[NSString stringWithFormat:@"%@/%@.ico", directoryUser, fileNameTo] copy:NO move:NO fromPath:nil toPath:nil];
             
         } else {
@@ -352,6 +352,121 @@ Color difference is determined by the following formula:
     } else {
         return true;
     }
+}
+
++ (UIImage *)grayscale:(UIImage *)sourceImage
+{
+    /* const UInt8 luminance = (red * 0.2126) + (green * 0.7152) + (blue * 0.0722); // Good luminance value */
+    /// Create a gray bitmap context
+    const size_t width = (size_t)sourceImage.size.width;
+    const size_t height = (size_t)sourceImage.size.height;
+    
+    const int kNyxNumberOfComponentsPerGreyPixel = 3;
+    
+    CGRect imageRect = CGRectMake(0, 0, sourceImage.size.width, sourceImage.size.height);
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    CGContextRef bmContext = CGBitmapContextCreate(NULL, width, height, 8/*Bits per component*/, width * kNyxNumberOfComponentsPerGreyPixel, colorSpace, kCGImageAlphaNone);
+    CGColorSpaceRelease(colorSpace);
+    if (!bmContext)
+        return nil;
+    
+    /// Image quality
+    CGContextSetShouldAntialias(bmContext, false);
+    CGContextSetInterpolationQuality(bmContext, kCGInterpolationHigh);
+    
+    /// Draw the image in the bitmap context
+    CGContextDrawImage(bmContext, imageRect, sourceImage.CGImage);
+    
+    /// Create an image object from the context
+    CGImageRef grayscaledImageRef = CGBitmapContextCreateImage(bmContext);
+    UIImage *grayscaled = [UIImage imageWithCGImage:grayscaledImageRef scale:sourceImage.scale orientation:sourceImage.imageOrientation];
+    
+    /// Cleanup
+    CGImageRelease(grayscaledImageRef);
+    CGContextRelease(bmContext);
+    
+    return grayscaled;
+}
+
++ (UIImage *)generateSinglePixelImageWithColor:(UIColor *)color
+{
+    CGSize imageSize = CGSizeMake(1.0f, 1.0f);
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0.0f);
+    
+    CGContextRef theContext = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(theContext, color.CGColor);
+    CGContextFillRect(theContext, CGRectMake(0.0f, 0.0f, imageSize.width, imageSize.height));
+    
+    CGImageRef theCGImage = CGBitmapContextCreateImage(theContext);
+    UIImage *theImage;
+    if ([[UIImage class] respondsToSelector:@selector(imageWithCGImage:scale:orientation:)]) {
+        theImage = [UIImage imageWithCGImage:theCGImage scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp];
+    } else {
+        theImage = [UIImage imageWithCGImage:theCGImage];
+    }
+    CGImageRelease(theCGImage);
+    
+    return theImage;
+}
+
++ (void)addImageToTitle:(NSString *)title colorTitle:(UIColor *)colorTitle imageTitle:(UIImage *)imageTitle navigationItem:(UINavigationItem *)navigationItem
+{
+    UIView *navView = [UIView new];
+    
+    UILabel *label = [UILabel new];
+    label.text = title;
+    [label sizeToFit];
+    label.center = navView.center;
+    label.textColor = colorTitle;
+    label.textAlignment = NSTextAlignmentCenter;
+    
+    CGFloat correct = 6;
+    UIImageView *image = [UIImageView new];
+    image.image = imageTitle;
+    CGFloat imageAspect = image.image.size.width/image.image.size.height;
+    image.frame = CGRectMake(label.frame.origin.x-label.frame.size.height*imageAspect, label.frame.origin.y+correct/2, label.frame.size.height*imageAspect-correct, label.frame.size.height-correct);
+    image.contentMode = UIViewContentModeScaleAspectFit;
+    
+    [navView addSubview:label];
+    [navView addSubview:image];
+    
+    navigationItem.titleView = navView;
+    [navView sizeToFit];
+}
+
++ (void)settingThemingColor:(NSString *)themingColor themingColorElement:(NSString *)themingColorElement themingColorText:(NSString *)themingColorText
+{
+    UIColor *newColor, *newColorElement, *newColorText;
+    
+    // COLOR
+    if (themingColor.length == 7) {
+        newColor = [CCGraphics colorFromHexString:themingColor];
+    } else {
+        newColor = [NCBrandColor sharedInstance].customer;
+    }
+            
+    // COLOR TEXT
+    if (themingColorText.length == 7) {
+        newColorText = [CCGraphics colorFromHexString:themingColorText];
+    } else {
+        newColorText = [NCBrandColor sharedInstance].customerText;
+    }
+            
+    // COLOR ELEMENT
+    if (themingColorElement.length == 7) {
+        newColorElement = [CCGraphics colorFromHexString:themingColorElement];
+    } else {
+        if ([themingColorText isEqualToString:@"#000000"])
+            newColorElement = [UIColor blackColor];
+        else
+            newColorElement = newColor;
+    }
+            
+    
+    [NCBrandColor sharedInstance].brand = newColor;
+    [NCBrandColor sharedInstance].brandElement = newColorElement;
+    [NCBrandColor sharedInstance].brandText = newColorText;
 }
 
 @end

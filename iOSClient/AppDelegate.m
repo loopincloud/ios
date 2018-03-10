@@ -1,6 +1,6 @@
 //
 //  AppDelegate.m
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 04/09/14.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -23,25 +23,25 @@
 
 #import "AppDelegate.h"
 
-#import <MagicalRecord/MagicalRecord.h>
-#import "CCCoreData.h"
 #import "iRate.h"
 #import "AFURLSessionManager.h"
 #import "CCNetworking.h"
-#import "CCCrypto.h"
 #import "CCGraphics.h"
 #import "CCPhotos.h"
 #import "CCSynchronize.h"
 #import "CCMain.h"
 #import "CCDetail.h"
-#import "Firebase.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import "JDStatusBarNotification.h"
 #import "NCBridgeSwift.h"
 #import "NCAutoUpload.h"
 
-@interface AppDelegate () <UNUserNotificationCenterDelegate, FIRMessagingDelegate>
+/* Remove comment for activate Firebase and push notification */
+//#import "Firebase.h"
+//@interface AppDelegate () <UNUserNotificationCenterDelegate, FIRMessagingDelegate>
+
+@interface AppDelegate () <UNUserNotificationCenterDelegate>
 {
     
 }
@@ -51,8 +51,8 @@
 
 + (void)initialize
 {
-    [iRate sharedInstance].daysUntilPrompt = 10;
-    [iRate sharedInstance].usesUntilPrompt = 10;
+    [iRate sharedInstance].daysUntilPrompt = 5;
+    [iRate sharedInstance].usesUntilPrompt = 5;
     [iRate sharedInstance].promptForNewVersionIfUserRated = true;
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:@{@"UserAgent": [CCUtility getUserAgent]}];
@@ -66,10 +66,10 @@
     // Brand
     if ([NCBrandOptions sharedInstance].use_firebase) {
     
+        /* Remove comment for activate Firebase and push notification */
+        
         /*
-         In order for this to work, proper GoogleService-Info.plist must be included
-         */
-    
+        //In order for this to work, proper GoogleService-Info.plist must be included
         @try {
             [FIRApp configure];
         } @catch (NSException *exception) {
@@ -97,6 +97,7 @@
             [FIRMessaging messaging].remoteMessageDelegate = self;
             #endif
         }
+         */
     }
 
     NSString *dir;
@@ -118,11 +119,6 @@
     if (![[NSFileManager defaultManager] fileExistsAtPath: dir] && [dir length])
         [[NSFileManager defaultManager] createDirectoryAtPath:dir withIntermediateDirectories:YES attributes:nil error:nil];
 
-    // create Crypto Cloud in Group => Library, Application Support, Crypto Cloud
-    dir = [[dirGroup URLByAppendingPathComponent:appDatabase] path];
-    if (![[NSFileManager defaultManager] fileExistsAtPath:dir])
-        [[NSFileManager defaultManager] createDirectoryAtPath:dir withIntermediateDirectories:YES attributes:nil error:nil];
-    
     // create dir Database Nextcloud
     dir = [[dirGroup URLByAppendingPathComponent:appDatabaseNextcloud] path];
     if (![[NSFileManager defaultManager] fileExistsAtPath:dir])
@@ -130,14 +126,6 @@
 
     NSError *error = nil;
     [[NSFileManager defaultManager] setAttributes:@{NSFileProtectionKey:NSFileProtectionNone} ofItemAtPath:dir error:&error];
-    
-    [MagicalRecord setupCoreDataStackWithAutoMigratingSqliteStoreNamed:(id)[dirGroup URLByAppendingPathComponent:[appDatabase stringByAppendingPathComponent:@"cryptocloud"]]];
-    
-#ifdef DEBUG
-    [MagicalRecord setLoggingLevel:MagicalRecordLoggingLevelWarn];
-#else
-    [MagicalRecord setLoggingLevel:MagicalRecordLoggingLevelOff];
-#endif
     
     // Verify upgrade
     if ([self upgrade]) {
@@ -155,7 +143,7 @@
 
         } else {
         
-            [self settingActiveAccount:account.account activeUrl:account.url activeUser:account.user activePassword:account.password];
+            [self settingActiveAccount:account.account activeUrl:account.url activeUser:account.user activeUserID:account.userID activePassword:account.password];
         }
     }
     
@@ -164,22 +152,6 @@
     _netQueue.name = k_queue;
     _netQueue.maxConcurrentOperationCount = k_maxConcurrentOperation;
    
-    _netQueueDownload = [[NSOperationQueue alloc] init];
-    _netQueueDownload.name = k_download_queue;
-    _netQueueDownload.maxConcurrentOperationCount = k_maxConcurrentOperationDownloadUpload;
-
-    _netQueueDownloadWWan = [[NSOperationQueue alloc] init];
-    _netQueueDownloadWWan.name = k_download_queuewwan;
-    _netQueueDownloadWWan.maxConcurrentOperationCount = k_maxConcurrentOperationDownloadUpload;
-    
-    _netQueueUpload = [[NSOperationQueue alloc] init];
-    _netQueueUpload.name = k_upload_queue;
-    _netQueueUpload.maxConcurrentOperationCount = k_maxConcurrentOperationDownloadUpload;
-    
-    _netQueueUploadWWan = [[NSOperationQueue alloc] init];
-    _netQueueUploadWWan.name = k_upload_queuewwan;
-    _netQueueUploadWWan.maxConcurrentOperationCount = k_maxConcurrentOperationDownloadUpload;
-    
     // Add notification change session
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sessionChanged:) name:k_networkingSessionNotification object:nil];
         
@@ -198,10 +170,6 @@
     self.listProgressMetadata = [[NSMutableDictionary alloc] init];
     self.listChangeTask = [[NSMutableDictionary alloc] init];
     self.listMainVC = [[NSMutableDictionary alloc] init];
-    
-    // Player audio
-    self.player = [LMMediaPlayerView sharedPlayerView];
-    self.player.delegate = self;
             
     // setting Reachable in back
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -218,16 +186,9 @@
     //[[AVAudioSession sharedInstance] setActive:YES error:nil];
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
     
-    UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-    //UITabBarController *tabBarController = [splitViewController.viewControllers firstObject];
-    UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-
-    navigationController.topViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem;
-    splitViewController.preferredDisplayMode = UISplitViewControllerDisplayModeAllVisible;
-    [app aspectNavigationControllerBar:navigationController.navigationBar encrypted:NO online:YES hidden:NO];
-    
-    // Settings TabBar
-    [self createTabBarController];
+    // How to hide UINavigationBar 1px bottom line < iOS 11
+    [[UINavigationBar appearance] setBackgroundImage:[[UIImage alloc] init] forBarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setShadowImage:[[UIImage alloc] init]];
     
     // passcode
     [[BKPasscodeLockScreenManager sharedManager] setDelegate:self];
@@ -247,9 +208,11 @@
             [self handleShortCutItem:shortcutItem];
     }
     
-    // Start Timer
-    self.timerProcessAutoUpload = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(processAutoUpload) userInfo:nil repeats:YES];
+    // Verify Lock
+    [self verifyLockOnLoadAutoUpload];
     
+    // Start Timer
+    self.timerProcessAutoDownloadUpload = [NSTimer scheduledTimerWithTimeInterval:k_timerProcessAutoDownloadUpload target:self selector:@selector(processAutoDownloadUpload) userInfo:nil repeats:YES];
     self.timerUpdateApplicationIconBadgeNumber = [NSTimer scheduledTimerWithTimeInterval:k_timerUpdateApplicationIconBadgeNumber target:self selector:@selector(updateApplicationIconBadgeNumber) userInfo:nil repeats:YES];
 
     // Registration Push Notification
@@ -285,8 +248,21 @@
         [_activeMain readFileReloadFolder];
     }
     
+    // refresh Photos tab
+    if (_activePhotos) {
+        [_activePhotos reloadDatasourceForced];
+    }
+    
     // Initializations
     [self applicationInitialized];
+}
+
+//
+// L' applicazione entrerà in primo piano (attivo sempre)
+//
+- (void)applicationDidBecomeActive:(UIApplication *)application
+{
+   
 }
 
 //
@@ -318,9 +294,7 @@
 //
 - (void)applicationWillTerminate:(UIApplication *)application
 {    
-    [MagicalRecord cleanUp];
-
-    NSLog(@"[LOG] bye bye, Crypto Cloud !");
+    NSLog(@"[LOG] bye bye, Nextcloud !");
 }
 
 //
@@ -335,13 +309,20 @@
     // Execute : now
     NSLog(@"[LOG] Update Folder Photo");
     NSString *autoUploadPath = [[NCManageDatabase sharedInstance] getAccountAutoUploadPath:_activeUrl];
-    if ([autoUploadPath length] > 0)
-        [[CCSynchronize sharedSynchronize] synchronizedFolder:autoUploadPath selector:selectorReadFolder];
-
-    // Execute : after 1 sec.
+    if ([autoUploadPath length] > 0) {
+        
+        NSString *fileName = [[NCManageDatabase sharedInstance] getAccountAutoUploadFileName];
+        NSString *serverUrl = [[NCManageDatabase sharedInstance] getAccountAutoUploadDirectory:_activeUrl];
+        
+        [[CCSynchronize sharedSynchronize] readFileForFolder:fileName serverUrl:serverUrl selector:selectorReadFileFolder];        
+    }
     
+    // Execute : after 1 sec.
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
         
+        // verify Upload
+        [self verifyUploadInErrorOrWait];
+
         if (_activeMain) {
             NSLog(@"[LOG] Request Server Capabilities");
             [_activeMain requestServerCapabilities];
@@ -361,43 +342,89 @@
 }
 
 #pragma --------------------------------------------------------------------------------------------
-#pragma mark ===== Process Auto Upload k_timerProcess seconds =====
+#pragma mark ===== Login =====
 #pragma --------------------------------------------------------------------------------------------
 
-- (void)processAutoUpload
+- (void)openLoginView:(id)delegate loginType:(enumLoginType)loginType
 {
-    // Test Maintenance
-    if (self.maintenanceMode)
-        return;
+    BOOL loginWeb = NO;
     
-    // BACKGROND & FOREGROUND
+    @synchronized (self) {
 
-    NSLog(@"-PROCESS-AUTO-UPLOAD-");
-    
-    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground) {
-
-        // ONLY BACKGROUND
-        [[NCAutoUpload sharedInstance] performSelectorOnMainThread:@selector(loadAutoUpload:) withObject:[NSNumber numberWithInt:k_maxConcurrentOperationDownloadUploadBackground] waitUntilDone:NO];
+        // only for personalized LoginWeb [customer]
+        if ([NCBrandOptions sharedInstance].use_login_web_personalized) {
+            
+            if (_activeLoginWeb == nil) {
+                
+                _activeLoginWeb = [CCLoginWeb new];
+                _activeLoginWeb.delegate = delegate;
+                _activeLoginWeb.loginType = loginType;
+                _activeLoginWeb.urlBase = [[NCBrandOptions sharedInstance] loginBaseUrl];
+                
+                dispatch_async(dispatch_get_main_queue(), ^ {
+                    [_activeLoginWeb presentModalWithDefaultTheme:delegate];
+                });
+            }
+            return;
+        }
         
-    } else {
+        // ------------------- Nextcloud -------------------------
+        //
+        
+        // Login flow : LoginWeb
+        if (loginType == loginModifyPasswordUser) {
+            tableAccount *account = [[NCManageDatabase sharedInstance] getAccountActive];
+            if (account.loginFlow)
+                loginWeb = YES;
+        }
+            
+        if (loginWeb) {
+            
+            if (_activeLoginWeb == nil) {
+                
+                _activeLoginWeb = [CCLoginWeb new];
+                _activeLoginWeb.delegate = delegate;
+                _activeLoginWeb.loginType = loginType;
+                _activeLoginWeb.urlBase = self.activeUrl;
 
-        // ONLY FOREFROUND
-        [[NCAutoUpload sharedInstance] performSelectorOnMainThread:@selector(loadAutoUpload:) withObject:[NSNumber numberWithInt:k_maxConcurrentOperationDownloadUpload] waitUntilDone:NO];
+                dispatch_async(dispatch_get_main_queue(), ^ {
+                    [_activeLoginWeb presentModalWithDefaultTheme:delegate];
+                });
+            }
+            
+        } else {
+            
+            if (_activeLogin == nil) {
+                
+                _activeLogin = [[UIStoryboard storyboardWithName:@"CCLogin" bundle:nil] instantiateViewControllerWithIdentifier:@"CCLoginNextcloud"];
+                _activeLogin.delegate = delegate;
+                _activeLogin.loginType = loginType;
+                
+                dispatch_async(dispatch_get_main_queue(), ^ {
+                    [delegate presentViewController:_activeLogin animated:YES completion:nil];
+                });
+            }
+        }
+        
     }
 }
 
 #pragma --------------------------------------------------------------------------------------------
-#pragma mark ===== Setting Active Account =====
+#pragma mark ===== Setting Active Account for all APP =====
 #pragma --------------------------------------------------------------------------------------------
 
-- (void)settingActiveAccount:(NSString *)activeAccount activeUrl:(NSString *)activeUrl activeUser:(NSString *)activeUser activePassword:(NSString *)activePassword
+- (void)settingActiveAccount:(NSString *)activeAccount activeUrl:(NSString *)activeUrl activeUser:(NSString *)activeUser activeUserID:(NSString *)activeUserID activePassword:(NSString *)activePassword
 {
     self.activeAccount = activeAccount;
     self.activeUrl = activeUrl;
     self.activeUser = activeUser;
+    self.activeUserID = activeUserID;
     self.activePassword = activePassword;
     
-    self.directoryUser = [CCUtility getDirectoryActiveUser:activeUser activeUrl:activeUrl];    
+    self.directoryUser = [CCUtility getDirectoryActiveUser:activeUser activeUrl:activeUrl];
+    
+    // Setting Account to CCNetworking
+    [[CCNetworking sharedNetworking] settingAccount];
 }
 
 #pragma --------------------------------------------------------------------------------------------
@@ -414,6 +441,9 @@
     [application registerForRemoteNotifications];
 }
 
+/* Remove comment for activate Firebase and push notification */
+
+/*
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     // test
@@ -426,7 +456,7 @@
     NSString *pushToken = [[FIRInstanceID instanceID] token];
     // NSString *pushToken = [[[[deviceToken description] stringByReplacingOccurrencesOfString: @"<" withString: @""] stringByReplacingOccurrencesOfString: @">" withString: @""] stringByReplacingOccurrencesOfString: @" " withString: @""];
     
-    NSString *pushTokenHash = [[CCCrypto sharedManager] createSHA512:pushToken];
+    NSString *pushTokenHash = [[NCEndToEndEncryption sharedManager] createSHA512:pushToken];
     NSDictionary *devicePushKey = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"DevicePushKey-Info" ofType:@"plist"]];
     
 #ifdef DEBUG
@@ -448,6 +478,7 @@
         [app addNetworkingOperationQueue:app.netQueue delegate:self metadataNet:metadataNet];
     }    
 }
+*/
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
@@ -481,7 +512,7 @@
 
 }
 
-- (void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 {
     UIApplicationState state = [application applicationState];
     
@@ -508,8 +539,10 @@
     }
 }
 
-#pragma FIREBASE
+/* Remove comment for activate Firebase and push notification */
 
+#pragma FIREBASE
+/*
 - (void)tokenRefreshNotification:(NSNotification *)notification {
     
     // Note that this callback will be fired everytime a new token is generated, including the first
@@ -551,6 +584,7 @@
     NSLog(@"[LOG] %@", remoteMessage.appData);
 }
 #endif
+*/
 
 #pragma --------------------------------------------------------------------------------------------
 #pragma mark ===== Quick Actions - ShotcutItem =====
@@ -562,24 +596,13 @@
 
     UIApplicationShortcutIcon *shortcutPhotosIcon = [UIApplicationShortcutIcon iconWithTemplateImageName:@"quickActionPhotos"];
     UIApplicationShortcutIcon *shortcutUploadIcon = [UIApplicationShortcutIcon iconWithTemplateImageName:@"quickActionUpload"];
-    UIApplicationShortcutIcon *shortcutUploadEncryptedIcon = [UIApplicationShortcutIcon iconWithTemplateImageName:@"quickActionUploadEncrypted"];
     
     UIApplicationShortcutItem *shortcutPhotos = [[UIApplicationShortcutItem alloc] initWithType:[NSString stringWithFormat:@"%@.photos", bundleId] localizedTitle:NSLocalizedString(@"_photo_camera_", nil) localizedSubtitle:nil icon:shortcutPhotosIcon userInfo:nil];
-
     UIApplicationShortcutItem *shortcutUpload = [[UIApplicationShortcutItem alloc] initWithType:[NSString stringWithFormat:@"%@.upload", bundleId] localizedTitle:NSLocalizedString(@"_upload_file_", nil) localizedSubtitle:nil icon:shortcutUploadIcon userInfo:nil];
-    
-    UIApplicationShortcutItem *shortcutUploadEncrypted = [[UIApplicationShortcutItem alloc] initWithType:[NSString stringWithFormat:@"%@.uploadEncrypted", bundleId] localizedTitle:NSLocalizedString(@"_upload_encrypted_file_", nil) localizedSubtitle:nil icon:shortcutUploadEncryptedIcon userInfo:nil];
-    
-    if (app.isCryptoCloudMode) {
-        
-        // add the array to our app
-        [UIApplication sharedApplication].shortcutItems = @[shortcutUploadEncrypted, shortcutUpload, shortcutPhotos];
-
-    } else {
-
-        // add the array to our app
+   
+    // add the array to our app
+    if (shortcutUpload && shortcutPhotos)
         [UIApplication sharedApplication].shortcutItems = @[shortcutUpload, shortcutPhotos];
-    }
 }
 
 - (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler
@@ -630,7 +653,7 @@
                 [_activeMain.navigationController popToRootViewControllerAnimated:NO];
 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                    [[CCQuickActions quickActionsManager] startQuickActionsEncrypted:NO viewController:_activeMain];
+                    [[CCQuickActions quickActionsManager] startQuickActionsViewController:_activeMain];
                 });
             }
         });
@@ -669,7 +692,7 @@
                 [_activeMain.navigationController popToRootViewControllerAnimated:NO];
                 
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.2 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-                    [[CCQuickActions quickActionsManager] startQuickActionsEncrypted:YES viewController:_activeMain];
+                    [[CCQuickActions quickActionsManager] startQuickActionsViewController:_activeMain];
                 });
             }
         });
@@ -725,7 +748,7 @@
             if (errorcode == kCFURLErrorNotConnectedToInternet || errorcode == k_CCErrorNetworkNowAvailable) {
                 
                 if (errorCodePrev != errorcode)
-                    [JDStatusBarNotification showWithStatus:NSLocalizedString(title, nil) dismissAfter:delay styleName:JDStatusBarStyleDefault];
+                    [JDStatusBarNotification showWithStatus:NSLocalizedString(@"_network_available_", nil) dismissAfter:delay styleName:JDStatusBarStyleDefault];
                 
                 errorCodePrev = errorcode;
                 
@@ -805,19 +828,54 @@
     return iconImage;
 }
 
+- (void)updateApplicationIconBadgeNumber
+{
+    // Test Maintenance
+    if (self.maintenanceMode)
+        return;
+    
+    NSInteger total = 0;
+    
+    // Total
+    total = [[CCNetworking sharedNetworking] getNumDownloadInProgressWWan:NO] + [[CCNetworking sharedNetworking] getNumDownloadInProgressWWan:YES] + [[CCNetworking sharedNetworking] getNumUploadInProgressWWan:NO] + [[CCNetworking sharedNetworking] getNumUploadInProgressWWan:YES];
+    
+    [UIApplication sharedApplication].applicationIconBadgeNumber = total;
+    
+    UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+    
+    if ([[splitViewController.viewControllers firstObject] isKindOfClass:[UITabBarController class]]) {
+        
+        UITabBarController *tbc = [splitViewController.viewControllers firstObject];
+        
+        UITabBarItem *tbItem = [tbc.tabBar.items objectAtIndex:0];
+        
+        if (total > 0) {
+            [tbItem setBadgeValue:[NSString stringWithFormat:@"%li", (unsigned long)total]];
+        } else {
+            [tbItem setBadgeValue:nil];
+            
+            NSDictionary* userInfo = @{@"fileID": @"", @"serverUrl": @"", @"progress": [NSNumber numberWithFloat:0]};
+            [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadName:@"NotificationProgressTask" object:nil userInfo:userInfo];
+        }
+    }
+}
+
 #pragma --------------------------------------------------------------------------------------------
 #pragma mark ===== TabBarController =====
 #pragma --------------------------------------------------------------------------------------------
 
-- (void)createTabBarController
+- (void)createTabBarController:(UITabBarController *)tabBarController
 {
     UITabBarItem *item;
     NSLayoutConstraint *constraint;
+    CGFloat multiplier = 0;
+    CGFloat safeAreaBottom = 0;
     
-    UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-    UITabBarController *tabBarController = [splitViewController.viewControllers firstObject];
+    if (@available(iOS 11, *)) {
+        safeAreaBottom = [UIApplication sharedApplication].delegate.window.safeAreaInsets.bottom/2;
+    }
     
-    [app aspectTabBar:tabBarController.tabBar hidden:NO];
+    [self aspectTabBar:tabBarController.tabBar hidden:NO];
     
     // File
     item = [tabBarController.tabBar.items objectAtIndex: k_tabBarApplicationIndexFile];
@@ -833,8 +891,8 @@
     
     // (PLUS)
     item = [tabBarController.tabBar.items objectAtIndex: k_tabBarApplicationIndexPlusHide];
-    item.title = nil;
-    item.image = nil;
+    item.title = @"";
+    item.image = [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"tabBarPlus"] color:[UIColor clearColor]];
     item.enabled = false;
     
     // Photos
@@ -850,35 +908,40 @@
     item.selectedImage = [UIImage imageNamed:@"tabBarMore"];
     
     // Plus Button
-    UIImage *buttonImage = [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"tabBarPlus"] color:[NCBrandColor sharedInstance].brand];
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    button.tag = 99;
-    button.frame = CGRectMake(0.0, 0.0, buttonImage.size.width, buttonImage.size.height);
-    [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
-    [button setBackgroundImage:buttonImage forState:UIControlStateHighlighted];
-    [button addTarget:self action:@selector(handleTouchTabbarCenter:) forControlEvents:UIControlEventTouchUpInside];
+    UIImage *buttonImage = [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"tabBarPlus"] color:[NCBrandColor sharedInstance].brandElement];
+    UIButton *buttonPlus = [UIButton buttonWithType:UIButtonTypeCustom];
+    buttonPlus.tag = 99;
+    [buttonPlus setBackgroundImage:buttonImage forState:UIControlStateNormal];
+    [buttonPlus setBackgroundImage:buttonImage forState:UIControlStateHighlighted];
+    [buttonPlus addTarget:self action:@selector(handleTouchTabbarCenter:) forControlEvents:UIControlEventTouchUpInside];
     
-    [button setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [tabBarController.view addSubview:button];
+    [buttonPlus setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [tabBarController.tabBar addSubview:buttonPlus];
     
-    constraint =[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:tabBarController.view attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
-    
+    constraint =[NSLayoutConstraint constraintWithItem:buttonPlus attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:tabBarController.tabBar attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
     [tabBarController.view addConstraint:constraint];
     
-    constraint =[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:tabBarController.view attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-5];
+    multiplier = 1 * (tabBarController.tabBar.frame.size.height - safeAreaBottom) / tabBarController.tabBar.frame.size.height;
+    constraint =[NSLayoutConstraint constraintWithItem:buttonPlus attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:tabBarController.tabBar attribute:NSLayoutAttributeCenterY multiplier:multiplier constant:0];
+    [tabBarController.view addConstraint:constraint];
     
+    multiplier = 0.8 * (tabBarController.tabBar.frame.size.height - safeAreaBottom) / tabBarController.tabBar.frame.size.height;
+    
+    constraint =[NSLayoutConstraint constraintWithItem:buttonPlus attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:tabBarController.tabBar attribute:NSLayoutAttributeHeight multiplier:multiplier constant:0];
+    [tabBarController.view addConstraint:constraint];
+    
+    constraint =[NSLayoutConstraint constraintWithItem:buttonPlus attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:tabBarController.tabBar attribute:NSLayoutAttributeHeight multiplier:multiplier constant:0];
     [tabBarController.view addConstraint:constraint];
 }
 
-- (void)aspectNavigationControllerBar:(UINavigationBar *)nav encrypted:(BOOL)encrypted online:(BOOL)online hidden:(BOOL)hidden
+- (void)aspectNavigationControllerBar:(UINavigationBar *)nav online:(BOOL)online hidden:(BOOL)hidden
 {
     nav.translucent = NO;
     nav.barTintColor = [NCBrandColor sharedInstance].brand;
-    nav.tintColor = [NCBrandColor sharedInstance].navigationBarText;
-    [nav setTitleTextAttributes:@{NSForegroundColorAttributeName : [NCBrandColor sharedInstance].navigationBarText}];
-    
-    if (encrypted)
-        [nav setTitleTextAttributes:@{NSForegroundColorAttributeName : [NCBrandColor sharedInstance].cryptocloud}];
+    nav.tintColor = [NCBrandColor sharedInstance].brandText;
+    [nav setTitleTextAttributes:@{NSForegroundColorAttributeName : [NCBrandColor sharedInstance].brandText}];
+    // Change bar bottom line shadow
+    nav.shadowImage = [CCGraphics generateSinglePixelImageWithColor:[NCBrandColor sharedInstance].brand];
     
     if (!online)
         [nav setTitleTextAttributes:@{NSForegroundColorAttributeName : [NCBrandColor sharedInstance].connectionNo}];
@@ -892,7 +955,7 @@
 {
     tab.translucent = NO;
     tab.barTintColor = [NCBrandColor sharedInstance].tabBar;
-    tab.tintColor = [NCBrandColor sharedInstance].brand;
+    tab.tintColor = [NCBrandColor sharedInstance].brandElement;
     
     tab.hidden = hidden;
     
@@ -906,7 +969,7 @@
     
     UIButton *buttonPlus = [tabBarController.view viewWithTag:99];
     
-    UIImage *buttonImage = [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"tabBarPlus"] color:[NCBrandColor sharedInstance].brand];
+    UIImage *buttonImage = [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"tabBarPlus"] color:[NCBrandColor sharedInstance].brandElement];
     [buttonPlus setBackgroundImage:buttonImage forState:UIControlStateNormal];
     [buttonPlus setBackgroundImage:buttonImage forState:UIControlStateHighlighted];
     
@@ -929,45 +992,10 @@
     if (self.maintenanceMode)
         return;
     
-    CreateMenuAdd *menuAdd = [[CreateMenuAdd alloc] initWithThemingColor:[NCBrandColor sharedInstance].brand];
+    UIView *view = [[(UIButton *)sender superview] superview];
     
-    if ([CCUtility getCreateMenuEncrypted])
-        [menuAdd createMenuEncryptedWithView:self.window.rootViewController.view];
-    else
-        [menuAdd createMenuPlainWithView:self.window.rootViewController.view];
-}
-
-- (void)updateApplicationIconBadgeNumber
-{
-    // Test Maintenance
-    if (self.maintenanceMode)
-        return;
-
-    NSInteger queueDownload = [self getNumberDownloadInQueues] + [self getNumberDownloadInQueuesWWan];
-    NSInteger queueUpload = [self getNumberUploadInQueues] + [self getNumberUploadInQueuesWWan];
-    
-    // Total
-    NSInteger total = queueDownload + queueUpload + [[NCManageDatabase sharedInstance] countQueueUploadWithSession:nil];
-    
-    [UIApplication sharedApplication].applicationIconBadgeNumber = total;
-    
-    UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
-    
-    if ([[splitViewController.viewControllers firstObject] isKindOfClass:[UITabBarController class]]) {
-        
-        UITabBarController *tbc = [splitViewController.viewControllers firstObject];
-        
-        UITabBarItem *tbItem = [tbc.tabBar.items objectAtIndex:0];
-        
-        if (total > 0) {
-            [tbItem setBadgeValue:[NSString stringWithFormat:@"%li", (unsigned long)total]];
-        } else {
-            [tbItem setBadgeValue:nil];
-            
-            NSDictionary* userInfo = @{@"fileID": @"", @"serverUrl": @"", @"cryptated": [NSNumber numberWithFloat:0], @"progress": [NSNumber numberWithFloat:0]};
-            [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadName:@"NotificationProgressTask" object:nil userInfo:userInfo];
-        }
-    }
+    CreateMenuAdd *menuAdd = [[CreateMenuAdd alloc] initWithThemingColor:[NCBrandColor sharedInstance].brandElement];
+    [menuAdd createMenuWithView:view];
 }
 
 - (void)selectedTabBarController:(NSInteger)index
@@ -995,118 +1023,72 @@
     }
 }
 
+- (NSString *)getTabBarControllerActiveServerUrl
+{
+    UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
+    UITabBarController *tabBarController = [splitViewController.viewControllers firstObject];
+
+    NSString *serverUrl = [CCUtility getHomeServerUrlActiveUrl:self.activeUrl];
+    NSInteger index = tabBarController.selectedIndex;
+    
+    // select active serverUrl
+    if (index == k_tabBarApplicationIndexFile) {
+        serverUrl = self.activeMain.serverUrl;
+    } else if (index == k_tabBarApplicationIndexFavorite) {
+        if (self.activeFavorites.serverUrl)
+            serverUrl = self.activeFavorites.serverUrl;
+    } else if (index == k_tabBarApplicationIndexPhotos) {
+        serverUrl = [[NCManageDatabase sharedInstance] getAccountAutoUploadPath:self.activeUrl];
+    }
+    
+    return serverUrl;
+}
+
 #pragma --------------------------------------------------------------------------------------------
 #pragma mark ===== Theming Color =====
 #pragma --------------------------------------------------------------------------------------------
 
 - (void)settingThemingColorBrand
 {
-    UIColor* newColor;
+    if (self.activeAccount.length == 0 || self.maintenanceMode)
+        return;
     
-    if (self.activeAccount.length > 0) {
-    
+    if ([NCBrandOptions sharedInstance].use_themingColor) {
+        
         tableCapabilities *capabilities = [[NCManageDatabase sharedInstance] getCapabilites];
-    
-        if ([NCBrandOptions sharedInstance].use_themingColor && capabilities.themingColor.length == 7) {
-        
-            BOOL isLight = [CCGraphics isLight:[CCGraphics colorFromHexString:capabilities.themingColor]];
+
+        [CCGraphics settingThemingColor:capabilities.themingColor themingColorElement:capabilities.themingColorElement themingColorText:capabilities.themingColorText];
             
-            if (isLight) {
-                
-                // Activity
-                [[NCManageDatabase sharedInstance] addActivityClient:@"" fileID:@"" action:k_activityDebugActionCapabilities selector:@"Server Theming" note:NSLocalizedString(@"_theming_is_light_", nil) type:k_activityTypeFailure verbose:k_activityVerboseDefault activeUrl:_activeUrl];
-                
-                [NCBrandColor sharedInstance].brand = [NCBrandColor sharedInstance].customer;
-                
-            } else {
-                
-                newColor = [CCGraphics colorFromHexString:capabilities.themingColor];
-            }
-            
-        } else {
-            
-            newColor = [NCBrandColor sharedInstance].customer;
-        }
-        
     } else {
-        
-        newColor = [NCBrandColor sharedInstance].customer;
+    
+        [NCBrandColor sharedInstance].brand = [NCBrandColor sharedInstance].customer;
+        [NCBrandColor sharedInstance].brandElement = [NCBrandColor sharedInstance].customer;
+        [NCBrandColor sharedInstance].brandText = [NCBrandColor sharedInstance].customerText;
     }
     
-    if (self.activeAccount.length > 0 && ![newColor isEqual:[NCBrandColor sharedInstance].brand] && newColor) {
-        
-        [NCBrandColor sharedInstance].brand = newColor;
-        [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadName:@"changeTheming" object:nil];
-    }
+    [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadName:@"changeTheming" object:nil];
 }
 
 - (void)changeTheming:(UIViewController *)vc
 {
-    UIColor *color = [NCBrandColor sharedInstance].brand;
-    
     // Change Navigation & TabBar color
-    vc.navigationController.navigationBar.barTintColor = color;
-    vc.tabBarController.tabBar.tintColor = color;
+    vc.navigationController.navigationBar.barTintColor = [NCBrandColor sharedInstance].brand;
+    vc.tabBarController.tabBar.tintColor = [NCBrandColor sharedInstance].brandElement;
+    // Change bar bottom line shadow
+    vc.navigationController.navigationBar.shadowImage = [CCGraphics generateSinglePixelImageWithColor:[NCBrandColor sharedInstance].brand];
     
     // Change button Plus
     UISplitViewController *splitViewController = (UISplitViewController *)self.window.rootViewController;
     UITabBarController *tabBarController = [splitViewController.viewControllers firstObject];
     
     UIButton *button = [tabBarController.view viewWithTag:99];
-    UIImage *buttonImage = [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"tabBarPlus"] color:color];
+    UIImage *buttonImage = [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"tabBarPlus"] color:[NCBrandColor sharedInstance].brandElement];
     
     [button setBackgroundImage:buttonImage forState:UIControlStateNormal];
     [button setBackgroundImage:buttonImage forState:UIControlStateHighlighted];
     
     // Tint Color GLOBAL WINDOW
-    [self.window setTintColor:[NCBrandColor sharedInstance].brand];
-}
-
-#pragma --------------------------------------------------------------------------------------------
-#pragma mark ===== Media Player Control =====
-#pragma --------------------------------------------------------------------------------------------
-
-- (void)remoteControlReceivedWithEvent:(UIEvent *)event
-{
-    switch (event.subtype) {
-            
-        case UIEventSubtypeRemoteControlPlay:
-            
-            if (self.player.mediaPlayer) {
-                
-                NSMutableDictionary *songInfo = [[NSMutableDictionary alloc] init];
-                
-                if (self.player.mediaPlayer.nowPlayingItem.title)
-                    [songInfo setObject:self.player.mediaPlayer.nowPlayingItem.title forKey:MPMediaItemPropertyTitle];
-                
-                if (self.player.mediaPlayer.nowPlayingItem.artist)
-                    [songInfo setObject:self.player.mediaPlayer.nowPlayingItem.artist forKey:MPMediaItemPropertyArtist];
-                
-                [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:songInfo];
-                
-                [self.player.mediaPlayer play];
-            }
-            break;
-        
-        case UIEventSubtypeRemoteControlPause:
-            
-            if (self.player.mediaPlayer) {
-                [self.player.mediaPlayer pause];
-            }
-            break;
-            
-        case UIEventSubtypeRemoteControlNextTrack:
-            // handle it break;
-        case UIEventSubtypeRemoteControlPreviousTrack:
-            // handle it break;
-        default:
-            break;
-    }
-}
-
-- (BOOL)mediaPlayerViewWillStartPlaying:(LMMediaPlayerView *)playerView media:(LMMediaItem *)media
-{
-    return YES;
+    [self.window setTintColor:[NCBrandColor sharedInstance].textView];
 }
 
 #pragma --------------------------------------------------------------------------------------------
@@ -1265,6 +1247,9 @@
 {
     NSLog(@"[LOG] Start perform Fetch With Completion Handler");
     
+    // verify Upload
+    [self verifyUploadInErrorOrWait];
+    
     // Verify new photo
     [[NCAutoUpload sharedInstance] initStateAutoUpload];
     
@@ -1290,7 +1275,7 @@
 //
 // Method called by the system when all the background task has end
 //
-- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler
 {
     NSLog(@"[LOG] Start handle Events For Background URLSession: %@", identifier);
     
@@ -1306,92 +1291,15 @@
     });
 }
 
-- (void)cancelAllOperations
-{
-    [_netQueue cancelAllOperations];
-    
-    [_netQueueDownload cancelAllOperations];
-    [_netQueueDownloadWWan cancelAllOperations];
-    [_netQueueUpload cancelAllOperations];
-    [_netQueueUploadWWan cancelAllOperations];
-}
-
 - (void)addNetworkingOperationQueue:(NSOperationQueue *)netQueue delegate:(id)delegate metadataNet:(CCMetadataNet *)metadataNet
 {
     id operation;
     
-    operation = [[OCnetworking alloc] initWithDelegate:delegate metadataNet:metadataNet withUser:_activeUser withPassword:_activePassword withUrl:_activeUrl isCryptoCloudMode:_isCryptoCloudMode];
+    operation = [[OCnetworking alloc] initWithDelegate:delegate metadataNet:metadataNet withUser:_activeUser withUserID:_activeUserID withPassword:_activePassword withUrl:_activeUrl];
         
     [operation setQueuePriority:metadataNet.priority];
     
     [netQueue addOperation:operation];
-}
-
-- (NSMutableArray *)verifyExistsInQueuesDownloadSelector:(NSString *)selector
-{
-    NSMutableArray *metadatasNet = [[NSMutableArray alloc] init];
-    
-    for (OCnetworking *operation in [self.netQueueDownload operations])
-        if ([operation.metadataNet.selector isEqualToString:selector])
-            [metadatasNet addObject:[operation.metadataNet copy]];
-        
-    for (OCnetworking *operation in [self.netQueueDownloadWWan operations])
-        if ([operation.metadataNet.selector isEqualToString:selector])
-            [metadatasNet addObject:[operation.metadataNet copy]];
-    
-    return metadatasNet;
-}
-
-- (NSInteger)getNumberDownloadInQueues
-{
-    NSArray *results = [[NCManageDatabase sharedInstance] getTableMetadataDownload];
-    
-    NSInteger queueNunDownload = [results count];
-    
-    // netQueueDownload
-    for (NSOperation *operation in [self.netQueueDownload operations])
-        if (((OCnetworking *)operation).isExecuting == NO) queueNunDownload++;
-    
-    return queueNunDownload;
-}
-
-- (NSInteger)getNumberDownloadInQueuesWWan
-{
-    NSArray *results = [[NCManageDatabase sharedInstance] getTableMetadataDownloadWWan];
-    
-    NSInteger queueNumDownloadWWan = [results count];
-    
-    // netQueueDownloadWWan
-    for (NSOperation *operation in [self.netQueueDownloadWWan operations])
-        if (((OCnetworking *)operation).isExecuting == NO) queueNumDownloadWWan++;
-    
-    return queueNumDownloadWWan;
-}
-
-- (NSInteger)getNumberUploadInQueues
-{
-    NSArray *results = [[NCManageDatabase sharedInstance] getTableMetadataUpload];
-    
-    NSInteger queueNumUpload = [results count];
-    
-    // netQueueUpload
-    for (NSOperation *operation in [self.netQueueUpload operations])
-        if (((OCnetworking *)operation).isExecuting == NO) queueNumUpload++;
-    
-    return queueNumUpload;
-}
-
-- (NSInteger)getNumberUploadInQueuesWWan
-{
-    NSArray *results = [[NCManageDatabase sharedInstance] getTableMetadataUploadWWan];
-    
-    NSInteger queueNumUploadWWan = [results count];
-    
-    // netQueueUploadWWan
-    for (NSOperation *operation in [self.netQueueUploadWWan operations])
-        if (((OCnetworking *)operation).isExecuting == NO) queueNumUploadWWan++;
-    
-    return queueNumUploadWWan;
 }
 
 // Notification change session
@@ -1445,7 +1353,7 @@
     
     if ([[_listChangeTask objectForKey:fileID] isEqualToString:@"stopUpload"]) {
         
-        [[NCManageDatabase sharedInstance] setMetadataSession:nil sessionError:@"" sessionSelector:nil sessionSelectorPost:nil sessionTaskIdentifier:k_taskIdentifierStop sessionTaskIdentifierPlist:k_taskIdentifierDone predicate:[NSPredicate predicateWithFormat:@"fileID = %@", fileID]];
+        [[NCManageDatabase sharedInstance] setMetadataSession:nil sessionError:@"" sessionSelector:nil sessionSelectorPost:nil sessionTaskIdentifier:k_taskIdentifierStop predicate:[NSPredicate predicateWithFormat:@"fileID = %@", fileID]];
         
     }
     else if ([[_listChangeTask objectForKey:fileID] isEqualToString:@"reloadUpload"]) {
@@ -1458,27 +1366,22 @@
     }
     else if ([[_listChangeTask objectForKey:fileID] isEqualToString:@"reloadDownload"]) {
         
-        BOOL downloadData = NO, downloadPlist = NO;
-            
-        if (metadata.sessionTaskIdentifier != k_taskIdentifierDone) downloadData = YES;
-        if (metadata.sessionTaskIdentifierPlist != k_taskIdentifierDone) downloadPlist = YES;
-        
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
-            [[CCNetworking sharedNetworking] downloadFile:fileID serverUrl:serverUrl downloadData:downloadData downloadPlist:downloadPlist selector:metadata.sessionSelector selectorPost:metadata.sessionSelectorPost session:k_download_session taskStatus:k_taskStatusResume delegate:nil];
+            [[CCNetworking sharedNetworking] downloadFile:metadata.fileName fileID:fileID serverUrl:serverUrl selector:metadata.sessionSelector selectorPost:metadata.sessionSelectorPost session:k_download_session taskStatus:k_taskStatusResume delegate:self.activeMain];
         });
     }
     else if ([[_listChangeTask objectForKey:metadata.fileID] isEqualToString:@"cancelUpload"]) {
         
         // remove the file
         
-        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@", app.directoryUser, fileID] error:nil];
-        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@.ico", app.directoryUser, fileID] error:nil];
+        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@", self.directoryUser, fileID] error:nil];
+        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@.ico", self.directoryUser, fileID] error:nil];
         
         [[NCManageDatabase sharedInstance] deleteMetadataWithPredicate:[NSPredicate predicateWithFormat:@"fileID = %@", fileID] clearDateReadDirectoryID:nil];
     }
     else if ([[_listChangeTask objectForKey:fileID] isEqualToString:@"cancelDownload"]) {
         
-        [[NCManageDatabase sharedInstance] setMetadataSession:@"" sessionError:@"" sessionSelector:@"" sessionSelectorPost:@"" sessionTaskIdentifier:k_taskIdentifierDone sessionTaskIdentifierPlist:k_taskIdentifierDone predicate:[NSPredicate predicateWithFormat:@"fileID = %@", fileID]];
+        [[NCManageDatabase sharedInstance] setMetadataSession:@"" sessionError:@"" sessionSelector:@"" sessionSelectorPost:@"" sessionTaskIdentifier:k_taskIdentifierDone predicate:[NSPredicate predicateWithFormat:@"fileID = %@", fileID]];
     }
     
     // remove ChangeTask (fileID) from the list
@@ -1498,6 +1401,175 @@
     }
 }
 
+#pragma --------------------------------------------------------------------------------------------
+#pragma mark ===== Process Auto Upload < k_timerProcess seconds > =====
+#pragma --------------------------------------------------------------------------------------------
+
+- (void)processAutoDownloadUpload
+{
+    // Test Maintenance
+    if (self.maintenanceMode)
+        return;
+    
+    // BACKGROND & FOREGROUND
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground) {
+        
+        // ONLY BACKGROUND
+        NSLog(@"[LOG] -PROCESS-AUTO-UPLOAD-");
+        [self performSelectorOnMainThread:@selector(loadAutoDownloadUpload:) withObject:[NSNumber numberWithInt:k_maxConcurrentOperationDownloadUploadBackground] waitUntilDone:NO];
+        
+    } else {
+        
+        // ONLY FOREFROUND
+        NSLog(@"[LOG] -PROCESS-AUTO-UPLOAD-");
+        [self performSelectorOnMainThread:@selector(loadAutoDownloadUpload:) withObject:[NSNumber numberWithInt:k_maxConcurrentOperationDownloadUpload] waitUntilDone:NO];
+    }
+}
+
+- (void)loadAutoDownloadUpload:(NSNumber *)maxConcurrent
+{
+    CCMetadataNet *metadataNet;
+    
+    // E2EE : not in background
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground) {
+        metadataNet = [[NCManageDatabase sharedInstance] getQueueUploadLock];
+        if (metadataNet) {
+            tableDirectory *directory = [[NCManageDatabase sharedInstance] getTableDirectoryWithPredicate:[NSPredicate predicateWithFormat:@"account = %@ AND serverUrl = %@ AND e2eEncrypted = 1", self.activeAccount, metadataNet.serverUrl]];
+            if (directory != nil)
+                return;
+        }
+    }
+    
+    // Stop Timer
+    [_timerProcessAutoDownloadUpload invalidate];
+    
+    NSInteger maxConcurrentDownloadUpload = [maxConcurrent integerValue];
+    
+    NSInteger counterDownloadInSession = [[[NCManageDatabase sharedInstance] getTableMetadataDownload] count] + [[[NCManageDatabase sharedInstance] getTableMetadataDownloadWWan] count];
+    NSInteger counterUploadInSessionAndInLock = [[[NCManageDatabase sharedInstance] getTableMetadataUpload] count] + [[[NCManageDatabase sharedInstance] getTableMetadataUploadWWan] count] + [[[NCManageDatabase sharedInstance] getLockQueueUpload] count];
+    NSInteger counterUploadInLock = [[[NCManageDatabase sharedInstance] getQueueUploadWithPredicate:[NSPredicate predicateWithFormat:@"account = %@ AND lock = true", self.activeAccount]] count];
+
+    NSInteger counterNewUpload = 0;
+    
+    // ------------------------- <selector Auto Download> -------------------------
+    
+    while (counterDownloadInSession < maxConcurrentDownloadUpload) {
+        
+        metadataNet = [[NCManageDatabase sharedInstance] getQueueDownload];
+        if (metadataNet) {
+            
+            [[CCNetworking sharedNetworking] downloadFile:metadataNet.fileName fileID:metadataNet.fileID serverUrl:metadataNet.serverUrl selector:metadataNet.selector selectorPost:metadataNet.selectorPost session:metadataNet.session taskStatus:metadataNet.taskStatus delegate:self.activeMain];
+            
+        } else
+            break;
+        
+        counterDownloadInSession = [[[NCManageDatabase sharedInstance] getTableMetadataDownload] count] + [[[NCManageDatabase sharedInstance] getTableMetadataDownloadWWan] count];
+    }
+    
+    // ------------------------- <selector Auto Upload> -------------------------
+    
+    if (counterUploadInSessionAndInLock < maxConcurrentDownloadUpload && counterUploadInLock < 1) {
+        
+        metadataNet = [[NCManageDatabase sharedInstance] getQueueUploadLockWithSelector:selectorUploadAutoUpload];
+        if (metadataNet) {
+            
+            [[CCNetworking sharedNetworking] uploadFileFromAssetLocalIdentifier:metadataNet delegate:_activeMain];
+            
+            counterNewUpload++;
+        }
+        
+        counterUploadInSessionAndInLock = [[[NCManageDatabase sharedInstance] getTableMetadataUpload] count] + [[[NCManageDatabase sharedInstance] getTableMetadataUploadWWan] count] + [[[NCManageDatabase sharedInstance] getLockQueueUpload] count];
+    }
+    
+    // ------------------------- <selector Auto Upload All> ----------------------
+    
+    // Verify num error k_maxErrorAutoUploadAll after STOP (100)
+    NSArray *metadatas = [[NCManageDatabase sharedInstance] getMetadatasWithPredicate:[NSPredicate predicateWithFormat:@"account = %@ AND sessionSelector = %@ AND sessionTaskIdentifier = %i", _activeAccount, selectorUploadAutoUploadAll, k_taskIdentifierError] sorted:nil ascending:NO];
+    
+    NSInteger errorCount = [metadatas count];
+    
+    if (errorCount >= k_maxErrorAutoUploadAll) {
+        
+        [self messageNotification:@"_error_" description:@"_too_errors_automatic_all_" visible:YES delay:k_dismissAfterSecond type:TWMessageBarMessageTypeError errorCode:0];
+        
+        [[NCManageDatabase sharedInstance] addActivityClient:@"" fileID:@"" action:k_activityDebugActionAutoUpload selector:selectorUploadAutoUploadAll note:@"_too_errors_automatic_all_" type:k_activityTypeFailure verbose:k_activityVerboseDefault activeUrl:_activeUrl];
+
+    } else {
+        
+        if (counterUploadInSessionAndInLock < maxConcurrentDownloadUpload && counterUploadInLock < 1) {
+            
+            metadataNet = [[NCManageDatabase sharedInstance] getQueueUploadLockWithSelector:selectorUploadAutoUploadAll];
+            if (metadataNet) {
+                
+                [[CCNetworking sharedNetworking] uploadFileFromAssetLocalIdentifier:metadataNet delegate:_activeMain];
+                
+                counterNewUpload++;
+            }
+            
+            counterUploadInSessionAndInLock = [[[NCManageDatabase sharedInstance] getTableMetadataUpload] count] + [[[NCManageDatabase sharedInstance] getTableMetadataUploadWWan] count] + [[[NCManageDatabase sharedInstance] getLockQueueUpload] count];
+        }
+    }
+    
+    // ------------------------- <selector Upload File> -------------------------
+    
+    if (counterUploadInSessionAndInLock < maxConcurrentDownloadUpload && counterUploadInLock < 1) {
+        
+        metadataNet = [[NCManageDatabase sharedInstance] getQueueUploadLockWithSelector:selectorUploadFile];
+        if (metadataNet) {
+            
+            [[CCNetworking sharedNetworking] uploadFileFromAssetLocalIdentifier:metadataNet delegate:_activeMain];
+            
+            counterNewUpload++;
+        }
+        
+        counterUploadInSessionAndInLock = [[[NCManageDatabase sharedInstance] getTableMetadataUpload] count] + [[[NCManageDatabase sharedInstance] getTableMetadataUploadWWan] count] + [[[NCManageDatabase sharedInstance] getLockQueueUpload] count];
+    }
+    
+    // Start Timer
+    _timerProcessAutoDownloadUpload = [NSTimer scheduledTimerWithTimeInterval:k_timerProcessAutoDownloadUpload target:self selector:@selector(processAutoDownloadUpload) userInfo:nil repeats:YES];
+}
+
+#pragma --------------------------------------------------------------------------------------------
+#pragma mark ===== Process Verify =====
+#pragma --------------------------------------------------------------------------------------------
+
+- (void)verifyLockOnLoadAutoUpload
+{
+    // Test Maintenance
+    if (self.maintenanceMode || self.activeAccount.length == 0)
+        return;
+    
+    NSInteger counterUploadInSession = [[[NCManageDatabase sharedInstance] getTableMetadataUpload] count] + [[[NCManageDatabase sharedInstance] getTableMetadataUploadWWan] count];
+    NSArray *tableMetadatasInLock = [[NCManageDatabase sharedInstance] getLockQueueUpload];
+     
+     if (counterUploadInSession == 0 && [tableMetadatasInLock count] > 0) {
+     
+         // Unlock
+         for (tableMetadata *metadata in tableMetadatasInLock) {
+     
+             if ([[NCManageDatabase sharedInstance] isTableInvalidated:metadata] == NO)
+                 [[NCManageDatabase sharedInstance] unlockQueueUploadWithAssetLocalIdentifier:metadata.assetLocalIdentifier];
+         }
+     }
+}
+
+- (void)verifyUploadInErrorOrWait
+{
+    NSMutableSet *directoryIDs = [NSMutableSet new];
+    
+    NSArray *metadatas = [[NCManageDatabase sharedInstance] getMetadatasWithPredicate:[NSPredicate predicateWithFormat:@"account = %@ AND session CONTAINS 'upload' AND (sessionTaskIdentifier = %i OR sessionTaskIdentifier = %i)", _activeAccount, k_taskIdentifierError, k_taskIdentifierWaitStart] sorted:nil ascending:NO];
+    
+    NSLog(@"[LOG] Verify re upload in error n. %lu", (unsigned long)[metadatas count]);
+    
+    for (tableMetadata *metadata in metadatas) {
+        
+        [[CCNetworking sharedNetworking] uploadFileMetadata:metadata taskStatus: k_taskStatusResume];
+        
+        [directoryIDs addObject:metadata.directoryID];
+        
+        NSLog(@"[LOG] Re upload file : %@", metadata.fileName);
+    }
+}
 #pragma --------------------------------------------------------------------------------------------
 #pragma mark ===== Open CCUploadFromOtherUpp  =====
 #pragma --------------------------------------------------------------------------------------------
@@ -1547,7 +1619,7 @@
 }
 
 #pragma --------------------------------------------------------------------------------------------
-#pragma mark ===== maintenance Mode =====
+#pragma mark ===== Maintenance Mode =====
 #pragma --------------------------------------------------------------------------------------------
 
 - (void)maintenanceMode:(BOOL)mode
@@ -1566,66 +1638,35 @@
 #endif
     
     NSString *actualVersion = [CCUtility getVersion];
-    //NSString *actualBuild = [CCUtility getBuild];
+    NSString *actualBuild = [CCUtility getBuild];
     
     /* ---------------------- UPGRADE VERSION ----------------------- */
     
-    if (([actualVersion compare:@"2.17.3" options:NSNumericSearch] == NSOrderedAscending)) {
-    
-        // Migrate Certificates Table From CoreData to Realm
+    // VERSION < 2.17.6
+
+    if (([actualVersion compare:@"2.17.6" options:NSNumericSearch] == NSOrderedAscending)) {
         
-        NSArray *listCertificateLocation = [CCCoreData migrateCertificatesLocation];
-        
-        for (NSString *certificateLocation in listCertificateLocation)
-            [[NCManageDatabase sharedInstance] addCertificates:certificateLocation];
+        // Remove All old Photo Library
+        [[NCManageDatabase sharedInstance] clearTable:[tablePhotoLibrary class] account:nil];
     }
     
-    // VERSION < 2.17.4
-    
-    if (([actualVersion compare:@"2.17.4" options:NSNumericSearch] == NSOrderedAscending)) {
+    // VERSION == 2.17.6
+    if ([actualVersion isEqualToString:@"2.17.6"]) {
         
-        [self maintenanceMode:YES];
-        
-        // Change type order
-        [CCUtility setOrderSettings:@"fileName"];
-        
-        // Migrate Account Table From CoreData to Realm
-        
-        NSArray *listAccount = [CCCoreData migrateAccount];
-        for (TableAccount *account in listAccount)
-            [[NCManageDatabase sharedInstance] addTableAccountFromCoredata:account];
-        
-        // Align Photo Library
-        [[NCAutoUpload sharedInstance] alignPhotoLibrary];
-        
-        // Most important is done
-        [CCUtility setVersion];
-        [CCUtility setBuild];
-
-        // Directories + LocalFile
-        NSArray *listDirectories = [CCCoreData migrateDirectories];
-        for (TableDirectory *directory in listDirectories)
-            [[NCManageDatabase sharedInstance] addTableDirectoryFromCoredata:directory];
-        
-        NSArray *listLocalFile = [CCCoreData migrateLocalFile];
-        for (TableLocalFile *localFile in listLocalFile)
-            [[NCManageDatabase sharedInstance] addTableLocalFileFromCoredata:localFile];
-        
-        [self maintenanceMode:NO];
-    }
-    
-    // VERSION == 2.17.4
-
-    if ([actualVersion isEqualToString:@"2.17.4"]) {
-        
-        // Build < 37 (example)
-        /*
-        if (([actualBuild compare:@"37" options:NSNumericSearch] == NSOrderedAscending) || actualBuild == nil) {
+        // Build < 10
+        if (([actualBuild compare:@"10" options:NSNumericSearch] == NSOrderedAscending) || actualBuild == nil) {
             
-            [CCUtility setOrderSettings:@"fileName"];
-            [CCUtility setBuild];
+            // Remove All old Photo Library
+            //[[NCManageDatabase sharedInstance] clearTable:[tablePhotoLibrary class] account:nil];
         }
-        */ 
+    }
+    
+    // VERSION < 2.19.1
+    
+    if (([actualVersion compare:@"2.19.1" options:NSNumericSearch] == NSOrderedAscending)) {
+
+        [[NCManageDatabase sharedInstance] clearTable:[tableMetadata class] account:nil];
+        [[NCManageDatabase sharedInstance] setClearAllDateReadDirectory];
     }
     
     return YES;

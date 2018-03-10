@@ -1,6 +1,6 @@
 //
 //  CCPhotos.h
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 29/07/15.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -28,7 +28,6 @@
 #import "UIScrollView+EmptyDataSet.h"
 #import "OCErrorMsg.h"
 #import "TWMessageBarManager.h"
-#import "UINavigationController+CCProgress.h"
 #import "CCManageLocation.h"
 #import "CCDetail.h"
 #import "CCUtility.h"
@@ -41,9 +40,9 @@
 @interface CCPhotos: UICollectionViewController <UICollectionViewDataSource, UICollectionViewDelegate, UIActionSheetDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, OCNetworkingDelegate>
 
 @property (nonatomic, weak) CCDetail *detailViewController;
+@property (nonatomic, strong) NSString *directoryStartDatasource;
 
-- (void)downloadFileSuccess:(tableMetadata *)metadata;
-- (void)downloadFileFailure:(NSInteger)errorCode;
+- (void)downloadFileSuccessFailure:(NSString *)fileName fileID:(NSString *)fileID serverUrl:(NSString *)serverUrl selector:(NSString *)selector selectorPost:(NSString *)selectorPost errorMessage:(NSString *)errorMessage errorCode:(NSInteger)errorCode;
 
 - (void)reloadDatasourceForced;
 

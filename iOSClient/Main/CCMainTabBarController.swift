@@ -1,6 +1,6 @@
 //
 //  CCMainTabBarController.swift
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 30/03/17.
 //  Copyright © 2017 TWS. All rights reserved.
@@ -85,6 +85,19 @@ class CCMainTabBarController : UITabBarController, UITabBarControllerDelegate {
             self.view.isUserInteractionEnabled = true
         })
     }
+}
 
+//
+// https://stackoverflow.com/questions/44822558/ios-11-uitabbar-uitabbaritem-positioning-issue/46348796#46348796
+//
+extension UITabBar {
+    // Workaround for iOS 11's new UITabBar behavior where on iPad, the UITabBar inside
+    // the Master view controller shows the UITabBarItem icon next to the text
+    override open var traitCollection: UITraitCollection {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            return UITraitCollection(horizontalSizeClass: .compact)
+        }
+        return super.traitCollection
+    }
 }
 

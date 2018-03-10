@@ -1,6 +1,6 @@
 //
 //  ShareViewController.m
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 26/01/16.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -32,13 +32,9 @@
     NSUInteger totalSize;
     
     NSExtensionItem *inputItem;
-    tableMetadata *saveMetadataPlist;
     
     UIColor *barTintColor;
     UIColor *tintColor;
-    
-    NSMutableArray *_filesSendCryptated;
-    BOOL _isCryptoCloudMode;
 }
 @end
 
@@ -65,57 +61,41 @@
         _activePassword = recordAccount.password;
         _activeUrl = recordAccount.url;
         _activeUser = recordAccount.user;
+        _activeUserID = recordAccount.userID;
         _directoryUser = [CCUtility getDirectoryActiveUser:self.activeUser activeUrl:self.activeUrl];
         
-        if ([[CCUtility getKeyChainPasscodeForUUID:[CCUtility getUUID]] length] == 0) {
-            
-            _isCryptoCloudMode = NO;
-            
-        } else {
-            
-            _isCryptoCloudMode = YES;
-        }
-
-        
-        if ([_activeAccount isEqualToString:[CCUtility getActiveAccountShareExt]]) {
+        if ([_activeAccount isEqualToString:[CCUtility getActiveAccountExt]]) {
             
             // load
             
-            _serverUrl = [CCUtility getServerUrlShareExt];
+            _serverUrl = [CCUtility getServerUrlExt];
             
-            _destinyFolderButton.title = [NSString stringWithFormat:NSLocalizedString(@"_destiny_folder_", nil), [CCUtility getTitleServerUrlShareExt]];
-            
-            if (_isCryptoCloudMode)
-                _localCryptated = [CCUtility getCryptatedShareExt];
+            _destinyFolderButton.title = [NSString stringWithFormat:NSLocalizedString(@"_destiny_folder_", nil), [CCUtility getTitleServerUrlExt]];
             
         } else {
             
             // Default settings
             
-            [CCUtility setActiveAccountShareExt:self.activeAccount];
+            [CCUtility setActiveAccountExt:self.activeAccount];
 
             _serverUrl  = [CCUtility getHomeServerUrlActiveUrl:self.activeUrl];
-            [CCUtility setServerUrlShareExt:_serverUrl];
+            [CCUtility setServerUrlExt:_serverUrl];
 
             _destinyFolderButton.title = [NSString stringWithFormat:NSLocalizedString(@"_destiny_folder_", nil), NSLocalizedString(@"_home_", nil)];
-            [CCUtility setTitleServerUrlShareExt:NSLocalizedString(@"_home_", nil)];
-
-            _localCryptated = NO;
-            [CCUtility setCryptatedShareExt:NO];
+            [CCUtility setTitleServerUrlExt:NSLocalizedString(@"_home_", nil)];
         }
     }
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(triggerProgressTask:) name:@"NotificationProgressTask" object:nil];
     
     _filesName = [[NSMutableArray alloc] init];
-    _filesSendCryptated = [[NSMutableArray alloc] init];
     _hud = [[CCHud alloc] initWithView:self.navigationController.view];
     
     _networkingOperationQueue = [NSOperationQueue new];
     _networkingOperationQueue.name = k_queue;
     _networkingOperationQueue.maxConcurrentOperationCount = 1;
     
-    [[CCNetworking sharedNetworking] settingDelegate:self];
+    [CCNetworking sharedNetworking].delegate = self;
         
     [self.shareTable registerNib:[UINib nibWithNibName:@"CCCellShareExt" bundle:nil] forCellReuseIdentifier:@"ShareExtCell"];
     
@@ -152,7 +132,7 @@
 //
 - (void)applicationWillTerminate:(UIApplication *)application
 {    
-    NSLog(@"[LOG] bye bye, Crypto Cloud Share Extension!");
+    NSLog(@"[LOG] bye bye, Nextcloud Share Extension!");
 }
 
 #pragma --------------------------------------------------------------------------------------------
@@ -161,38 +141,21 @@
 
 - (void)navigationBarToolBar
 {    
-    UIBarButtonItem *rightButtonUpload, *rightButtonEncrypt, *leftButtonCancel;
+    UIBarButtonItem *rightButtonUpload, *leftButtonCancel;
 
     // Theming
-    tableCapabilities *capabilities = [[NCManageDatabase sharedInstance] getCapabilites];
-    if ([NCBrandOptions sharedInstance].use_themingColor && capabilities.themingColor.length > 0) {
-        UIColor *newColor = [CCGraphics colorFromHexString:capabilities.themingColor];
-        if (newColor)
-            [NCBrandColor sharedInstance].brand = newColor;
+    if ([NCBrandOptions sharedInstance].use_themingColor) {
+        tableCapabilities *capabilities = [[NCManageDatabase sharedInstance] getCapabilites];
+        [CCGraphics settingThemingColor:capabilities.themingColor themingColorElement:capabilities.themingColorElement themingColorText:capabilities.themingColorText];
     }
     self.navigationController.navigationBar.barTintColor = [NCBrandColor sharedInstance].brand;
-    self.navigationController.navigationBar.tintColor = [NCBrandColor sharedInstance].navigationBarText;
+    self.navigationController.navigationBar.tintColor = [NCBrandColor sharedInstance].brandText;
     
     self.toolBar.barTintColor = [NCBrandColor sharedInstance].tabBar;
-    self.toolBar.tintColor = [NCBrandColor sharedInstance].brand;
+    self.toolBar.tintColor = [NCBrandColor sharedInstance].brandElement;
     
     // Upload
-    if (self.localCryptated && _isCryptoCloudMode) {
-        
-        rightButtonUpload = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"_save_encrypted_", nil) style:UIBarButtonItemStylePlain target:self action:@selector(selectPost)];
-        [rightButtonUpload setTintColor:[NCBrandColor sharedInstance].cryptocloud];
-        
-    } else {
-        
-        rightButtonUpload = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"_save_", nil) style:UIBarButtonItemStylePlain target:self action:@selector(selectPost)];
-    }
-    
-    // Encrypt ICON
-    if (_isCryptoCloudMode) {
-        UIImage *icon = [[UIImage imageNamed:@"shareExtEncrypt"] imageWithRenderingMode:UIImageRenderingModeAutomatic];
-        rightButtonEncrypt = [[UIBarButtonItem alloc] initWithImage:icon style:UIBarButtonItemStylePlain target:self action:@selector(changeEncrypt)];
-        if (self.localCryptated) [rightButtonEncrypt setTintColor:[NCBrandColor sharedInstance].cryptocloud];
-    }
+    rightButtonUpload = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"_save_", nil) style:UIBarButtonItemStylePlain target:self action:@selector(selectPost)];
     
     // Cancel
     leftButtonCancel = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"_cancel_", nil) style:UIBarButtonItemStylePlain target:self action:@selector(cancelPost)];
@@ -202,25 +165,30 @@
     
     self.navigationItem.title = [NCBrandOptions sharedInstance].brand;
     self.navigationItem.leftBarButtonItem = leftButtonCancel;
-    self.navigationItem.rightBarButtonItems = [[NSArray alloc] initWithObjects:rightButtonUpload, rightButtonEncrypt, nil];
+    self.navigationItem.rightBarButtonItems = [[NSArray alloc] initWithObjects:rightButtonUpload, nil];
     self.navigationItem.hidesBackButton = YES;
 }
 
 - (void)moveServerUrlTo:(NSString *)serverUrlTo title:(NSString *)title
 {
+    // DENIED e2e
+    if ([CCUtility isFolderEncrypted:serverUrlTo account:self.activeAccount]) {
+        return;
+    }
+    
     if (serverUrlTo)
         _serverUrl = serverUrlTo;
     
     if (title) {
         self.destinyFolderButton.title = [NSString stringWithFormat:NSLocalizedString(@"_destiny_folder_", nil), title];
-        [CCUtility setTitleServerUrlShareExt:title];
+        [CCUtility setTitleServerUrlExt:title];
     } else {
         self.destinyFolderButton.title = [NSString stringWithFormat:NSLocalizedString(@"_destiny_folder_", nil), NSLocalizedString(@"_home_", nil)];
-        [CCUtility setTitleServerUrlShareExt:NSLocalizedString(@"_home_", nil)];
+        [CCUtility setTitleServerUrlExt:NSLocalizedString(@"_home_", nil)];
     }
     
-    [CCUtility setActiveAccountShareExt:self.activeAccount];
-    [CCUtility setServerUrlShareExt:_serverUrl];
+    [CCUtility setActiveAccountExt:self.activeAccount];
+    [CCUtility setServerUrlExt:_serverUrl];
 }
 
 - (IBAction)destinyFolderButtonTapped:(UIBarButtonItem *)sender
@@ -235,6 +203,8 @@
     viewController.barTintColor = barTintColor;
     viewController.tintColorTitle = tintColor;
     viewController.networkingOperationQueue = _networkingOperationQueue;
+    // E2EE
+    viewController.includeDirectoryE2EEncryption = NO;
 
     [navigationController setModalPresentationStyle:UIModalPresentationFormSheet];
     [self presentViewController:navigationController animated:YES completion:nil];
@@ -246,19 +216,9 @@
     
         NSString *fileName = [self.filesName objectAtIndex:0];
         
-        CCMetadataNet *metadataNet = [[CCMetadataNet alloc] initWithAccount:_activeAccount];
-            
-        metadataNet.action = actionUploadFile;
-        metadataNet.cryptated = _localCryptated;
-        metadataNet.fileName = fileName;
-        metadataNet.fileNamePrint = fileName;
-        metadataNet.serverUrl = _serverUrl;
-        metadataNet.session = k_upload_session_foreground;
-        metadataNet.taskStatus = k_taskStatusResume;
+        [[CCNetworking sharedNetworking] uploadFile:fileName serverUrl:_serverUrl session:k_upload_session_foreground taskStatus:k_taskStatusResume selector:@"" selectorPost:@"" errorCode:0 delegate:self];
         
-        [self addNetworkingQueue:metadataNet];
-        
-        [self.hud visibleHudTitle:NSLocalizedString(@"_uploading_", nil) mode:MBProgressHUDModeDeterminate color:[NCBrandColor sharedInstance].brand];
+        [self.hud visibleHudTitle:NSLocalizedString(@"_uploading_", nil) mode:MBProgressHUDModeDeterminate color:[NCBrandColor sharedInstance].brandElement];
     }
     else
         [self closeShareViewController];
@@ -276,16 +236,6 @@
     [self closeShareViewController];
 }
 
-- (void)changeEncrypt
-{
-    if (self.localCryptated) self.localCryptated = NO;
-    else self.localCryptated = YES;
-    
-    [CCUtility setCryptatedShareExt:self.localCryptated];
-
-    [self navigationBarToolBar];
-}
-
 #pragma --------------------------------------------------------------------------------------------
 #pragma mark ======================= NetWorking ==================================
 #pragma --------------------------------------------------------------------------------------------
@@ -298,49 +248,49 @@
     [self.hud progress:progress];
 }
 
-- (void)uploadFileFailure:(CCMetadataNet *)metadataNet fileID:(NSString *)fileID serverUrl:(NSString *)serverUrl selector:(NSString *)selector message:(NSString *)message errorCode:(NSInteger)errorCode
+- (void)uploadFileSuccessFailure:(NSString *)fileName fileID:(NSString *)fileID assetLocalIdentifier:(NSString *)assetLocalIdentifier serverUrl:(NSString *)serverUrl selector:(NSString *)selector selectorPost:(NSString *)selectorPost errorMessage:(NSString *)errorMessage errorCode:(NSInteger)errorCode
 {
     [self.hud hideHud];
-    
-    // remove file
-    [[NCManageDatabase sharedInstance] deleteMetadataWithPredicate:[NSPredicate predicateWithFormat:@"fileID = %@", fileID] clearDateReadDirectoryID:nil];
-    
-    [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@", _directoryUser, fileID] error:nil];
-    [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@.ico", _directoryUser, fileID] error:nil];
 
-    // message error
-    if (errorCode != kCFURLErrorCancelled) {
+    if (errorCode == 0) {
         
-        UIAlertController * alert= [UIAlertController alertControllerWithTitle:NSLocalizedString(@"_error_", nil) message:message preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
-                                                   handler:^(UIAlertAction * action) {
-                                                       [alert dismissViewControllerAnimated:YES completion:nil];
-                                                       [self closeShareViewController];
-                                                   }];
-        [alert addAction:ok];
-        [self presentViewController:alert animated:YES completion:nil];
+        tableMetadata *metadata = [[NCManageDatabase sharedInstance] getMetadataWithPredicate:[NSPredicate predicateWithFormat:@"fileID = %@", fileID]];
+        
+        [self.filesName removeObject:metadata.fileName];
+        [self.shareTable performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
+        
+        [self performSelector:@selector(selectPost) withObject:nil afterDelay:0.1];
+        
+    } else {
+        
+        // remove file
+        [[NCManageDatabase sharedInstance] deleteMetadataWithPredicate:[NSPredicate predicateWithFormat:@"fileID = %@", fileID] clearDateReadDirectoryID:nil];
+        
+        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@", _directoryUser, fileID] error:nil];
+        [[NSFileManager defaultManager] removeItemAtPath:[NSString stringWithFormat:@"%@/%@.ico", _directoryUser, fileID] error:nil];
+        
+        // message error
+        if (errorCode != kCFURLErrorCancelled) {
+            
+            UIAlertController * alert= [UIAlertController alertControllerWithTitle:NSLocalizedString(@"_error_", nil) message:errorMessage preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction* ok = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                       handler:^(UIAlertAction * action) {
+                                                           [alert dismissViewControllerAnimated:YES completion:nil];
+                                                           [self closeShareViewController];
+                                                       }];
+            [alert addAction:ok];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+        else
+            [self closeShareViewController];
     }
-    else
-        [self closeShareViewController];
-}
-
-- (void)uploadFileSuccess:(CCMetadataNet *)metadataNet fileID:(NSString *)fileID serverUrl:(NSString *)serverUrl selector:(NSString *)selector selectorPost:(NSString *)selectorPost
-{
-    [self.hud hideHud];
-    
-    tableMetadata *metadata = [[NCManageDatabase sharedInstance] getMetadataWithPredicate:[NSPredicate predicateWithFormat:@"fileID = %@", fileID]];
-    
-    [self.filesName removeObject:metadata.fileNamePrint];
-    [self.shareTable performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
-    
-    [self performSelector:@selector(selectPost) withObject:nil afterDelay:0.1];
 }
 
 - (void)addNetworkingQueue:(CCMetadataNet *)metadataNet
 {
     id operation;
    
-    operation = [[OCnetworking alloc] initWithDelegate:self metadataNet:metadataNet withUser:_activeUser withPassword:_activePassword withUrl:_activeUrl isCryptoCloudMode:_isCryptoCloudMode];
+    operation = [[OCnetworking alloc] initWithDelegate:self metadataNet:metadataNet withUser:_activeUser withUserID:_activeUserID withPassword:_activePassword withUrl:_activeUrl];
     
     [operation setQueuePriority:metadataNet.priority];
     
@@ -374,7 +324,7 @@
     viewController.touchIDManager = touchIDManager;
     viewController.title = [NCBrandOptions sharedInstance].brand;
     viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(passcodeViewCloseButtonPressed:)];
-    viewController.navigationItem.leftBarButtonItem.tintColor = [NCBrandColor sharedInstance].cryptocloud;
+    viewController.navigationItem.leftBarButtonItem.tintColor = [UIColor blackColor];
     
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
     [self presentViewController:navController animated:YES completion:nil];
@@ -461,7 +411,7 @@
             if (UTTypeConformsTo(fileUTI, kUTTypeImage)) typeFile = k_metadataTypeFile_image;
             if (UTTypeConformsTo(fileUTI, kUTTypeMovie)) typeFile = k_metadataTypeFile_video;
             
-            [CCGraphics createNewImageFrom:file directoryUser:self.directoryUser fileNameTo:file fileNamePrint:nil size:@"m" imageForUpload:NO typeFile:typeFile writePreview:YES optimizedFileName:NO];
+            [CCGraphics createNewImageFrom:file directoryUser:self.directoryUser fileNameTo:file extension:nil size:@"m" imageForUpload:NO typeFile:typeFile writePreview:YES optimizedFileName:NO];
         }
     }
     

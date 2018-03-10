@@ -1,6 +1,6 @@
 //
 //  CCSection.h
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 04/02/16.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -42,7 +42,7 @@
 
 @interface CCSectionMetadata : NSObject
 
-+ (CCSectionDataSourceMetadata *)creataDataSourseSectionMetadata:(NSArray *)records listProgressMetadata:(NSMutableDictionary *)listProgressMetadata groupByField:(NSString *)groupByField replaceDateToExifDate:(BOOL)replaceDateToExifDate activeAccount:(NSString *)activeAccount;
++ (CCSectionDataSourceMetadata *)creataDataSourseSectionMetadata:(NSArray *)records listProgressMetadata:(NSMutableDictionary *)listProgressMetadata e2eEncryptions:(NSArray *)e2eEncryptions groupByField:(NSString *)groupByField activeAccount:(NSString *)activeAccount;
 
 + (void)removeAllObjectsSectionDataSource:(CCSectionDataSourceMetadata *)sectionDataSource;
 

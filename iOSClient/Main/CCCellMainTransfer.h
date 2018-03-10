@@ -1,6 +1,6 @@
 //
 //  CCCellMainTransfer.h
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 05/05/15.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -39,6 +39,8 @@
 @property(nonatomic, weak) IBOutlet UIButton *cancelTaskButton;
 @property(nonatomic, weak) IBOutlet UIButton *reloadTaskButton;
 @property(nonatomic, weak) IBOutlet UIButton *stopTaskButton;
+
+@property(nonatomic, strong) UIImage *imageTitleSegue;
 
 //Last position of the scroll of the swipe
 @property (nonatomic, assign) CGFloat lastContentOffset;

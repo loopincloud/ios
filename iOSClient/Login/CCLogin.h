@@ -1,6 +1,6 @@
 //
 //  CCLogin.h
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 09/04/15.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -27,9 +27,12 @@
 #import "CCCertificate.h"
 #import "OCNetworking.h"
 
+@class CCLoginWeb;
+
 @protocol CCLoginDelegate <NSObject>
 
 - (void) loginSuccess:(NSInteger)loginType;
+- (void) loginClose;
 
 @end
 
@@ -60,6 +63,8 @@ typedef enum {
 @property (nonatomic, weak) IBOutlet UIButton *login;
 @property (nonatomic, weak) IBOutlet UIButton *annulla;
 @property (nonatomic, weak) IBOutlet UIButton *toggleVisiblePassword;
+@property (nonatomic, weak) IBOutlet UIButton *loginTypeView;
+
 
 @property enumLoginType loginType;
 

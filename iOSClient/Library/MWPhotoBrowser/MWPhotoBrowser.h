@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import <AVKit/AVKit.h>
 #import "MWPhoto.h"
 #import "MWPhotoProtocol.h"
 #import "MWCaptionView.h"
@@ -28,7 +29,6 @@
 
 @optional
 
-- (id <MWPhoto>)photoBrowser:(MWPhotoBrowser *)photoBrowser thumbPhotoAtIndex:(NSUInteger)index;
 - (MWCaptionView *)photoBrowser:(MWPhotoBrowser *)photoBrowser captionViewForPhotoAtIndex:(NSUInteger)index;
 - (NSString *)photoBrowser:(MWPhotoBrowser *)photoBrowser titleForPhotoAtIndex:(NSUInteger)index;
 - (void)photoBrowser:(MWPhotoBrowser *)photoBrowser didDisplayPhotoAtIndex:(NSUInteger)index;
@@ -37,10 +37,8 @@
 - (void)photoBrowser:(MWPhotoBrowser *)photoBrowser deleteButtonPressedForPhotoAtIndex:(NSUInteger)index deleteButton:(UIBarButtonItem *)deleteButton;
 - (BOOL)photoBrowser:(MWPhotoBrowser *)photoBrowser isPhotoSelectedAtIndex:(NSUInteger)index;
 - (void)photoBrowser:(MWPhotoBrowser *)photoBrowser photoAtIndex:(NSUInteger)index selectedChanged:(BOOL)selected;
-- (void)photoBrowserDidFinishModalPresentation:(MWPhotoBrowser *)photoBrowser;
+- (void)photoBrowserDidFinishPresentation:(MWPhotoBrowser *)photoBrowser;
 
-- (void)gridWillAppear:(MWPhotoBrowser *)photoBrowser; //TWS
-- (void)gridWillDisappear:(MWPhotoBrowser *)photoBrowser; //TWS
 - (void)setControlsHidden:(BOOL)hidden animated:(BOOL)animated permanent:(BOOL)permanent;
 
 @end
@@ -56,9 +54,7 @@
 @property (nonatomic) BOOL displaySelectionButtons;
 @property (nonatomic) BOOL displayPopoverButton;    //TWS
 @property (nonatomic) BOOL alwaysShowControls;
-@property (nonatomic) BOOL enableGrid;
 @property (nonatomic) BOOL enableSwipeToDismiss;
-@property (nonatomic) BOOL startOnGrid;
 @property (nonatomic) BOOL autoPlayOnAppear;
 @property (nonatomic) NSUInteger delayToHideElements;
 @property (nonatomic, readonly) NSUInteger currentIndex;
@@ -70,13 +66,11 @@
 
 @property (nonatomic, strong) UIBarButtonItem *previousButton, *nextButton, *actionButton, *doneButton, *popoverButton, *deleteButton, *shareButton; //TWS
 
-//TWS Video
-@property (nonatomic, strong) MPMoviePlayerViewController *currentVideoPlayerViewController;
-@property NSUInteger currentVideoIndex;
-@property (nonatomic, strong) UIActivityIndicatorView *currentVideoLoadingIndicator;
-
 //TWS Navigation & controls
 @property (nonatomic, strong) UIToolbar *toolbar;
+
+// Video
+@property (nonatomic, strong) AVPlayer *currentVideoPlayer;
 
 // Init
 - (id)initWithPhotos:(NSArray *)photosArray;
@@ -84,7 +78,6 @@
 
 // Reloads the photo browser and refetches data
 - (void)reloadData;
-- (void)reloadDataGridAtIndex:(NSArray *)indexPaths;
 
 // Set page that photo browser starts on
 - (void)setCurrentPhotoIndex:(NSUInteger)index;
@@ -95,9 +88,5 @@
 
 - (void)hideControls;
 - (void)showControls;
-
-//TWS
-- (BOOL)isGridReload:(NSUInteger)index;
-- (BOOL)isGridController;
 
 @end

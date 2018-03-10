@@ -13,6 +13,8 @@ public protocol SwiftWebVCDelegate: class {
     func didReceiveServerRedirectForProvisionalNavigation(url: URL)
     func didFinishLoading(success: Bool)
     func didFinishLoading(success: Bool, url: URL)
+    func loginWebClose()
+    func decidePolicyForNavigationAction(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void)
 }
 
 public class SwiftWebVC: UIViewController {
@@ -101,6 +103,9 @@ public class SwiftWebVC: UIViewController {
     public convenience init(aRequest: URLRequest, hideToolbar: Bool) {
         self.init()
         self.request = aRequest
+        self.request.addValue("true", forHTTPHeaderField: "OCS-APIRequest")
+        let language = NSLocale.preferredLanguages[0] as String
+        self.request.addValue(language, forHTTPHeaderField: "Accept-Language")
         self.hideToolbar = hideToolbar
     }
     
@@ -108,12 +113,8 @@ public class SwiftWebVC: UIViewController {
         
         let userAgent : String = CCUtility.getUserAgent()
         
-        if #available(iOS 9.0, *) {
-            webView.customUserAgent = userAgent
-        } else {
-            // Fallback on earlier versions
-            UserDefaults.standard.register(defaults: ["UserAgent": userAgent])
-        }
+        webView.customUserAgent = userAgent
+       
         webView.load(request)
     }
     
@@ -137,7 +138,7 @@ public class SwiftWebVC: UIViewController {
         navBarTitle.backgroundColor = UIColor.clear
         if presentingViewController == nil {
             if let titleAttributes = navigationController!.navigationBar.titleTextAttributes {
-                navBarTitle.textColor = titleAttributes["NSColor"] as! UIColor
+                navBarTitle.textColor = titleAttributes[NSAttributedStringKey.foregroundColor] as! UIColor //[titleAttributes:"NSColor"] // ["NSColor"] as! UIColor
             }
         }
         else {
@@ -172,6 +173,13 @@ public class SwiftWebVC: UIViewController {
         super.viewDidDisappear(true)
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
+    
+    override public func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        super.dismiss(animated: flag, completion: {
+            self.delegate!.loginWebClose()
+        })        
+    }
+    
     
     ////////////////////////////////////////////////
     // Toolbar
@@ -228,24 +236,24 @@ public class SwiftWebVC: UIViewController {
     ////////////////////////////////////////////////
     // Target Actions
     
-    func goBackTapped(_ sender: UIBarButtonItem) {
+    @objc func goBackTapped(_ sender: UIBarButtonItem) {
         webView.goBack()
     }
     
-    func goForwardTapped(_ sender: UIBarButtonItem) {
+    @objc func goForwardTapped(_ sender: UIBarButtonItem) {
         webView.goForward()
     }
     
-    func reloadTapped(_ sender: UIBarButtonItem) {
+    @objc func reloadTapped(_ sender: UIBarButtonItem) {
         webView.reload()
     }
     
-    func stopTapped(_ sender: UIBarButtonItem) {
+    @objc func stopTapped(_ sender: UIBarButtonItem) {
         webView.stopLoading()
         updateToolbarItems()
     }
     
-    func actionButtonTapped(_ sender: AnyObject) {
+    @objc func actionButtonTapped(_ sender: AnyObject) {
         
         if let url: URL = ((webView.url != nil) ? webView.url : request.url) {
             let activities: NSArray = [SwiftWebVCActivitySafari(), SwiftWebVCActivityChrome()]
@@ -270,7 +278,7 @@ public class SwiftWebVC: UIViewController {
     
     ////////////////////////////////////////////////
     
-    func doneButtonTapped() {
+    @objc func doneButtonTapped() {
         closing = true
         UINavigationBar.appearance().barStyle = storedStatusColor!
         self.dismiss(animated: true, completion: nil)
@@ -314,16 +322,21 @@ extension SwiftWebVC: WKNavigationDelegate {
         self.delegate?.didFinishLoading(success: true, url: webView.url!)
         UIApplication.shared.isNetworkActivityIndicatorVisible = false
         
-        
-        webView.evaluateJavaScript("document.title", completionHandler: {(response, error) in
-            self.navBarTitle.text = response as! String?
-            self.navBarTitle.sizeToFit()
-            self.updateToolbarItems()
-        })
-        
+        webView.evaluateJavaScript("document.title") { (result, error) -> Void in
+            if error == nil {
+                self.navBarTitle.text = String(describing: result!)
+                self.navBarTitle.sizeToFit()
+                self.updateToolbarItems()
+            }
+        }
     }
     
     public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        
+        self.delegate?.decidePolicyForNavigationAction(webView, decidePolicyFor: navigationAction, decisionHandler: decisionHandler)
+        
+        /*
+        let url = navigationAction.request.url
         
         if #available(iOS 9.0, *) {
             decisionHandler(.allow)
@@ -340,6 +353,7 @@ extension SwiftWebVC: WKNavigationDelegate {
                 webView.load(newRequest as URLRequest)
             }
         }
+        */
     }
     
     public func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
@@ -349,5 +363,13 @@ extension SwiftWebVC: WKNavigationDelegate {
         updateToolbarItems()
     }
     
+    public func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        
+        if let serverTrust = challenge.protectionSpace.serverTrust {
+            completionHandler(Foundation.URLSession.AuthChallengeDisposition.useCredential, URLCredential(trust: serverTrust))
+        } else {
+            completionHandler(URLSession.AuthChallengeDisposition.useCredential, nil);
+        }
+    }
     
 }

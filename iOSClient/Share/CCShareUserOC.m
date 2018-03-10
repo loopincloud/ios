@@ -1,6 +1,6 @@
 //
 //  CCShareUserOC.m
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 30/11/15.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -26,7 +26,9 @@
 #import "NCBridgeSwift.h"
 
 @interface CCShareUserOC ()
-
+{
+    AppDelegate *appDelegate;
+}
 @end
 
 @implementation CCShareUserOC
@@ -36,6 +38,8 @@
     self = [super initWithCoder:coder];
     if (self) {
         
+        appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
         self.directUser = @"";
         
         [self initializeForm];
@@ -96,12 +100,12 @@
     
     self.selectedItems = [[NSMutableArray alloc] init];
     
-    self.view.backgroundColor = [NCBrandColor sharedInstance].tableBackground;
+    self.view.backgroundColor = [NCBrandColor sharedInstance].backgroundView;
     
     [self.endButton setTitle:NSLocalizedString(@"_done_", nil) forState:UIControlStateNormal];
-    self.endButton.tintColor = [NCBrandColor sharedInstance].brand;
+    self.endButton.tintColor = [UIColor blackColor];
     
-    self.tableView.backgroundColor = [NCBrandColor sharedInstance].tableBackground;
+    self.tableView.backgroundColor = [NCBrandColor sharedInstance].backgroundView;
 }
 
 #pragma --------------------------------------------------------------------------------------------
@@ -118,15 +122,18 @@
     // start share of select users
     for (NSString *num in self.selectedItems) {
         
-        OCShareUser *item = [self.users objectAtIndex:[num integerValue]];
-        
-        [self.delegate shareUserAndGroup:item.name shareeType:item.shareeType permission:permission];
+        // fix #166 Crashlytics
+        if (self.users.count > 0 && [num integerValue] < self.users.count) {
+            
+            OCShareUser *item = [self.users objectAtIndex:[num integerValue]];
+            [self.delegate shareUserAndGroup:item.name shareeType:item.shareeType permission:permission];
+        }
     }
     
     // start share with a user if not be i 
     if ([self.directUser isEqual:[NSNull null]] == NO) {
     
-        if ([self.directUser length] > 0 && [self.directUser isEqualToString:app.activeUser] == NO) {
+        if ([self.directUser length] > 0 && [self.directUser isEqualToString:appDelegate.activeUser] == NO) {
         
             // User/Group/Federate
             [self.delegate shareUserAndGroup:self.directUser shareeType:self.shareType permission:permission];
@@ -198,7 +205,7 @@
             if ([item.shareWith isEqualToString:user.name] && ((item.shareType == shareTypeGroup && user.shareeType == 1) || (item.shareType != shareTypeGroup && user.shareeType == 0)))
                 [self.users removeObject:user];
         
-        if ([self.itemsShareWith containsObject:user.name] || [user.name isEqualToString:app.activeUser])
+        if ([self.itemsShareWith containsObject:user.name] || [user.name isEqualToString:appDelegate.activeUser])
             [self.users removeObject:user];
     }
     
@@ -211,12 +218,21 @@
         
         NSString *title;
         
-        if (item.shareeType == 1) title = [item.name stringByAppendingString:NSLocalizedString(@"_user_is_group_", nil)];
-        else title = item.name;
+        if (item.shareeType == 1) {
+            if (item.displayName)
+                title = [item.displayName stringByAppendingString:NSLocalizedString(@"_user_is_group_", nil)];
+            else
+                title = [item.name stringByAppendingString:NSLocalizedString(@"_user_is_group_", nil)];
+        } else {
+            if (item.displayName)
+                title = item.displayName;
+            else
+                title = item.name;
+        }
         
         XLFormRowDescriptor *row = [XLFormRowDescriptor formRowDescriptorWithTag:[@(num) stringValue] rowType:XLFormRowDescriptorTypeBooleanCheck title:title];
         [row.cellConfig setObject:[UIFont systemFontOfSize:15.0]forKey:@"textLabel.font"];
-        [row.cellConfig setObject:[NCBrandColor sharedInstance].brand forKey:@"self.tintColor"];
+        [row.cellConfig setObject:[NCBrandColor sharedInstance].brandElement forKey:@"self.tintColor"];
         
         [section addFormRow:row];
     }

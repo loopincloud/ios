@@ -1,6 +1,6 @@
 //
 //  CCManageAccount.m
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 12/03/15.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -23,6 +23,7 @@
 
 #import "CCManageAccount.h"
 #import "AppDelegate.h"
+#import "JDStatusBarNotification.h"
 #import "CCLogin.h"
 #import "NCAutoUpload.h"
 #import "NCBridgeSwift.h"
@@ -31,10 +32,8 @@
 
 @interface CCManageAccount () <CCLoginDelegate, CCLoginDelegateWeb>
 {
+    AppDelegate *appDelegate;
     tableAccount *_tableAccount;
-
-    CCLoginWeb *_loginWeb;
-    CCLogin *_loginVC;
 }
 @end
 
@@ -46,6 +45,8 @@
     XLFormSectionDescriptor *section;
     XLFormRowDescriptor *row;
     
+    appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTheming) name:@"changeTheming" object:nil];
     
     NSArray *listAccount = [[NCManageDatabase sharedInstance] getAccounts];
@@ -59,7 +60,7 @@
     row = [XLFormRowDescriptor formRowDescriptorWithTag:@"pickerAccount" rowType:XLFormRowDescriptorTypePicker];
     row.height = 100;
     row.selectorOptions = listAccount;
-    row.value = app.activeAccount;
+    row.value = appDelegate.activeAccount;
     [section addFormRow:row];
 
     // Section : USER INFORMATION -------------------------------------------
@@ -153,19 +154,19 @@
 {
     [super viewWillAppear:animated];
  
-    self.tableView.backgroundColor = [NCBrandColor sharedInstance].tableBackground;
+    self.tableView.backgroundColor = [NCBrandColor sharedInstance].backgroundView;
+    self.tableView.showsVerticalScrollIndicator = NO;
 
     // Color
-    [app aspectNavigationControllerBar:self.navigationController.navigationBar encrypted:NO online:[app.reachability isReachable] hidden:NO];
-    [app aspectTabBar:self.tabBarController.tabBar hidden:NO];
+    [appDelegate aspectNavigationControllerBar:self.navigationController.navigationBar online:[appDelegate.reachability isReachable] hidden:NO];
+    [appDelegate aspectTabBar:self.tabBarController.tabBar hidden:NO];
     
     [self UpdateForm];
 }
 
 - (void)changeTheming
 {
-    if (self.isViewLoaded && self.view.window)
-        [app changeTheming:self];
+    [appDelegate changeTheming:self];
 }
 
 #pragma --------------------------------------------------------------------------------------------
@@ -176,10 +177,18 @@
 {
     [super formRowDescriptorValueHasChanged:rowDescriptor oldValue:oldValue newValue:newValue];
     
-    if ([rowDescriptor.tag isEqualToString:@"pickerAccount"]){
+    if ([rowDescriptor.tag isEqualToString:@"pickerAccount"] && oldValue && newValue) {
         
-        // cambiamo default account se oldvalue != newValue
-        if (![newValue isEqualToString:oldValue]) [self ChangeDefaultAccount:newValue];
+        if (![newValue isEqualToString:oldValue] && ![newValue isEqualToString:@""] && ![newValue isEqualToString:appDelegate.activeAccount])
+            [self ChangeDefaultAccount:newValue];
+        
+        if ([newValue isEqualToString:@""]) {
+            
+            NSArray *listAccount = [[NCManageDatabase sharedInstance] getAccounts];
+
+            if ([listAccount count] > 0)
+                [self ChangeDefaultAccount:listAccount[0]];
+        }
     }
 }
 
@@ -189,12 +198,17 @@
 
 - (void)loginSuccess:(NSInteger)loginType
 {
-    // Align Photo Library
-    if (loginType != loginModifyPasswordUser)
-        [[NCAutoUpload sharedInstance] alignPhotoLibrary];
+    [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadName:@"initializeMain" object:nil];
+}
 
-    if (loginType == loginAddForced)
-        [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadName:@"initializeMain" object:nil];
+- (void)loginClose
+{
+    appDelegate.activeLogin = nil;
+}
+
+- (void)loginWebClose
+{
+    appDelegate.activeLoginWeb = nil;
 }
 
 #pragma --------------------------------------------------------------------------------------------
@@ -205,51 +219,22 @@
 {
     [self deselectFormRow:sender];
     
-    [app cancelAllOperations];
-    [[CCNetworking sharedNetworking] settingSessionsDownload:YES upload:YES taskStatus:k_taskStatusCancel activeAccount:app.activeAccount activeUser:app.activeUser activeUrl:app.activeUrl];
-    
-    // Brand
-    if ([NCBrandOptions sharedInstance].use_login_web) {
-    
-        _loginWeb = [CCLoginWeb new];
-        _loginWeb.delegate = self;
-        _loginWeb.loginType = loginAdd;
-    
-        [_loginWeb presentModalWithDefaultTheme:self];
-        
-    } else {
-  
-        _loginVC = [[UIStoryboard storyboardWithName:@"CCLogin" bundle:nil] instantiateViewControllerWithIdentifier:@"CCLoginNextcloud"];
-        _loginVC.delegate = self;
-        _loginVC.loginType = loginAdd;
-    
-        [self presentViewController:_loginVC animated:YES completion:nil];
+    // Verify session in progress
+    if ([[[NCManageDatabase sharedInstance] getMetadatasWithPredicate:[NSPredicate predicateWithFormat:@"account = %@ AND sessionTaskIdentifier > 0", appDelegate.activeAccount] sorted:nil ascending:NO] count] > 0) {
+        [JDStatusBarNotification showWithStatus:NSLocalizedString(@"_transfers_in_queue_", nil) dismissAfter:k_dismissAfterSecond styleName:JDStatusBarStyleDefault];
+        return;
     }
+    
+    [appDelegate.netQueue cancelAllOperations];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [appDelegate openLoginView:self loginType:loginAdd];
+    });
 }
 
-- (void)addAccountFoced
+- (void)addAccountForced
 {
-    // Brand
-    if ([NCBrandOptions sharedInstance].use_login_web) {
-    
-        _loginWeb = [CCLoginWeb new];
-        _loginWeb.delegate = self;
-        _loginWeb.loginType = loginAddForced;
-    
-        dispatch_async(dispatch_get_main_queue(), ^ {
-            [_loginWeb presentModalWithDefaultTheme:self];
-        });
-        
-    } else {
-        
-        _loginVC = [[UIStoryboard storyboardWithName:@"CCLogin" bundle:nil] instantiateViewControllerWithIdentifier:@"CCLoginNextcloud"];
-        _loginVC.delegate = self;
-        _loginVC.loginType = loginAddForced;
-        
-        dispatch_async(dispatch_get_main_queue(), ^ {
-            [self presentViewController:_loginVC animated:YES completion:nil];
-        });
-    }
+    [appDelegate openLoginView:self loginType:loginAddForced];
 }
 
 #pragma --------------------------------------------------------------------------------------------
@@ -260,32 +245,17 @@
 {    
     [self deselectFormRow:sender];
     
-    [app cancelAllOperations];
-    [[CCNetworking sharedNetworking] settingSessionsDownload:YES upload:YES taskStatus:k_taskStatusCancel activeAccount:app.activeAccount activeUser:app.activeUser activeUrl:app.activeUrl];
-    
-    // Brand
-    if ([NCBrandOptions sharedInstance].use_login_web) {
-    
-        _loginWeb = [CCLoginWeb new];
-        _loginWeb.delegate = self;
-        _loginWeb.loginType = loginModifyPasswordUser;
-    
-        dispatch_async(dispatch_get_main_queue(), ^ {
-            [_loginWeb presentModalWithDefaultTheme:self];
-        });
-
-    } else {
-        
-        _loginVC = [[UIStoryboard storyboardWithName:@"CCLogin" bundle:nil] instantiateViewControllerWithIdentifier:@"CCLoginNextcloud"];
-        _loginVC.delegate = self;
-        _loginVC.loginType = loginModifyPasswordUser;
-    
-        dispatch_async(dispatch_get_main_queue(), ^ {
-            [self presentViewController:_loginVC animated:YES completion:nil];
-        });
+    // Verify session in progress
+    if ([[[NCManageDatabase sharedInstance] getMetadatasWithPredicate:[NSPredicate predicateWithFormat:@"account = %@ AND sessionTaskIdentifier > 0", appDelegate.activeAccount] sorted:nil ascending:NO] count] > 0) {
+        [JDStatusBarNotification showWithStatus:NSLocalizedString(@"_transfers_in_queue_", nil) dismissAfter:k_dismissAfterSecond styleName:JDStatusBarStyleDefault];
+        return;
     }
     
-    [self UpdateForm];
+    [appDelegate.netQueue cancelAllOperations];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+        [appDelegate openLoginView:self loginType:loginModifyPasswordUser];
+    });
 }
 
 #pragma --------------------------------------------------------------------------------------------
@@ -305,30 +275,42 @@
         [self deleteAccount:accountNow];
         
         NSArray *listAccount = [[NCManageDatabase sharedInstance] getAccounts];
-        if ([listAccount count] > 0) [self ChangeDefaultAccount:listAccount[0]];
+        if ([listAccount count] > 0)
+            [self ChangeDefaultAccount:listAccount[0]];
         else {
-            [self addAccountFoced];
+            [self addAccountForced];
         }
     }
 }
 
 - (void)deleteAccount:(NSString *)account
 {
-    [app cancelAllOperations];
-    [[CCNetworking sharedNetworking] settingSessionsDownload:YES upload:YES taskStatus:k_taskStatusCancel activeAccount:app.activeAccount activeUser:app.activeUser activeUrl:app.activeUrl];
+    // Verify session in progress
+    if ([[[NCManageDatabase sharedInstance] getMetadatasWithPredicate:[NSPredicate predicateWithFormat:@"account = %@ AND sessionTaskIdentifier > 0", appDelegate.activeAccount] sorted:nil ascending:NO] count] > 0) {
+        [JDStatusBarNotification showWithStatus:NSLocalizedString(@"_transfers_in_queue_", nil) dismissAfter:k_dismissAfterSecond styleName:JDStatusBarStyleDefault];
+        return;
+    }
     
-    [[NCManageDatabase sharedInstance] clearTable:[tableAccount class] account:account];
-    [[NCManageDatabase sharedInstance] clearTable:[tableActivity class] account:account];
-    [[NCManageDatabase sharedInstance] clearTable:[tableQueueUpload class] account:account];
-    [[NCManageDatabase sharedInstance] clearTable:[tableCapabilities class] account:account];
-    [[NCManageDatabase sharedInstance] clearTable:[tableDirectory class] account:app.activeAccount];
-    [[NCManageDatabase sharedInstance] clearTable:[tableExternalSites class] account:account];
-    [[NCManageDatabase sharedInstance] clearTable:[tableLocalFile class] account:app.activeAccount];
-    [[NCManageDatabase sharedInstance] clearTable:[tableMetadata class] account:account];
-    [[NCManageDatabase sharedInstance] clearTable:[tableShare class] account:account];
+    [appDelegate.netQueue cancelAllOperations];
     
-    // Clear active user
-    [app settingActiveAccount:nil activeUrl:nil activeUser:nil activePassword:nil];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+
+        [[NCManageDatabase sharedInstance] clearTable:[tableAccount class] account:account];
+        [[NCManageDatabase sharedInstance] clearTable:[tableActivity class] account:account];
+        [[NCManageDatabase sharedInstance] clearTable:[tableCapabilities class] account:account];
+        [[NCManageDatabase sharedInstance] clearTable:[tableDirectory class] account:account];
+        [[NCManageDatabase sharedInstance] clearTable:[tableE2eEncryption class] account:account];
+        [[NCManageDatabase sharedInstance] clearTable:[tableExternalSites class] account:account];
+        [[NCManageDatabase sharedInstance] clearTable:[tableLocalFile class] account:account];
+        [[NCManageDatabase sharedInstance] clearTable:[tableMetadata class] account:account];
+        [[NCManageDatabase sharedInstance] clearTable:[tablePhotoLibrary class] account:account];
+        [[NCManageDatabase sharedInstance] clearTable:[tableQueueDownload class] account:account];
+        [[NCManageDatabase sharedInstance] clearTable:[tableQueueUpload class] account:account];
+        [[NCManageDatabase sharedInstance] clearTable:[tableShare class] account:account];
+    
+        // Clear active user
+        [appDelegate settingActiveAccount:nil activeUrl:nil activeUser:nil activeUserID:nil activePassword:nil];        
+    });
 }
 
 - (void)answerDelAccount:(XLFormRowDescriptor *)sender
@@ -351,27 +333,27 @@
 
 - (void)ChangeDefaultAccount:(NSString *)account
 {
-    if ([app.netQueue operationCount] > 0 || [app.netQueueDownload operationCount] > 0 || [app.netQueueDownloadWWan operationCount] > 0 || [app.netQueueUpload operationCount] > 0 || [app.netQueueUploadWWan operationCount] > 0 || [[NCManageDatabase sharedInstance] countQueueUploadWithSession:nil] > 0) {
-        
-        [app messageNotification:@"_transfers_in_queue_" description:nil visible:YES delay:k_dismissAfterSecond type:TWMessageBarMessageTypeInfo errorCode:0];
-        [self UpdateForm];
+    // Verify session in progress
+    if ([[[NCManageDatabase sharedInstance] getMetadatasWithPredicate:[NSPredicate predicateWithFormat:@"account = %@ AND sessionTaskIdentifier > 0", appDelegate.activeAccount] sorted:nil ascending:NO] count] > 0) {
+        [JDStatusBarNotification showWithStatus:NSLocalizedString(@"_transfers_in_queue_", nil) dismissAfter:k_dismissAfterSecond styleName:JDStatusBarStyleDefault];
         return;
     }
-
-    // removed  this -> ?????
-    [app cancelAllOperations];
-    [[CCNetworking sharedNetworking] settingSessionsDownload:YES upload:YES taskStatus:k_taskStatusCancel activeAccount:app.activeAccount activeUser:app.activeUser activeUrl:app.activeUrl];
-    // removed  this -> ?????
     
-    // change account
-    tableAccount *tableAccount = [[NCManageDatabase sharedInstance] setAccountActive:account];
-    if (tableAccount)
-        [app settingActiveAccount:tableAccount.account activeUrl:tableAccount.url activeUser:tableAccount.user activePassword:tableAccount.password];
- 
-    // Init home
-    [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadName:@"initializeMain" object:nil];
+    [appDelegate.netQueue cancelAllOperations];
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+
+        tableAccount *tableAccount = [[NCManageDatabase sharedInstance] setAccountActive:account];
+        if (tableAccount) {
         
-    [self UpdateForm];
+            [appDelegate settingActiveAccount:tableAccount.account activeUrl:tableAccount.url activeUser:tableAccount.user activeUserID:tableAccount.userID activePassword:tableAccount.password];
+ 
+            // Init home
+            [[NSNotificationCenter defaultCenter] postNotificationOnMainThreadName:@"initializeMain" object:nil];
+            
+            [self UpdateForm];
+        }
+    });
 }
 
 #pragma --------------------------------------------------------------------------------------------
@@ -383,16 +365,16 @@
     NSArray *listAccount = [[NCManageDatabase sharedInstance] getAccounts];
     
     if (listAccount == nil) {
-        [self addAccountFoced];
+        [self addAccountForced];
         return;
     }
     
     XLFormPickerCell *pickerAccount = (XLFormPickerCell *)[[self.form formRowWithTag:@"pickerAccount"] cellForFormController:self];
     
     pickerAccount.rowDescriptor.selectorOptions = listAccount;
-    pickerAccount.rowDescriptor.value = app.activeAccount;
+    pickerAccount.rowDescriptor.value = appDelegate.activeAccount;
     
-    UIImage *avatar = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/avatar.png", app.directoryUser]];
+    UIImage *avatar = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/avatar.png", appDelegate.directoryUser]];
     if (avatar) {
     
         avatar = [CCGraphics scaleImage:avatar toSize:CGSizeMake(40, 40) isAspectRation:YES];
@@ -458,17 +440,5 @@
 {
     [self.tableView reloadData];
 }
-
-/*
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    XLFormRowDescriptor *row = [self.form formRowAtIndex:indexPath];
-    
-    if ([row.tag isEqualToString:@"pickerAccount"]) {
-        // set background color in here
-        
-    }
-}
-*/
 
 @end

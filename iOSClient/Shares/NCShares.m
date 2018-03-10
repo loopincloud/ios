@@ -1,6 +1,6 @@
 //
 //  NCShares.m
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 05/06/17.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -29,9 +29,7 @@
 @interface NCShares ()
 {
     AppDelegate *appDelegate;
-    NSArray *_dataSource;
-    
-    CCHud *_hudDeterminate;
+    NSArray *_dataSource;    
 }
 @end
 
@@ -45,6 +43,8 @@
 {
     if (self = [super initWithCoder:aDecoder])  {
         
+        appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(triggerProgressTask:) name:@"NotificationProgressTask" object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTheming) name:@"changeTheming" object:nil];
         
@@ -56,8 +56,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     // Custom Cell
     [self.tableView registerNib:[UINib nibWithNibName:@"NCSharesCell" bundle:nil] forCellReuseIdentifier:@"Cell"];
@@ -81,11 +79,11 @@
     [super viewWillAppear:animated];
     
     // Color
-    [app aspectNavigationControllerBar:self.navigationController.navigationBar encrypted:NO online:[appDelegate.reachability isReachable] hidden:NO];
-    [app aspectTabBar:self.tabBarController.tabBar hidden:NO];
+    [appDelegate aspectNavigationControllerBar:self.navigationController.navigationBar online:[appDelegate.reachability isReachable] hidden:NO];
+    [appDelegate aspectTabBar:self.tabBarController.tabBar hidden:NO];
     
     // Plus Button
-    [app plusButtonVisibile:true];
+    [appDelegate plusButtonVisibile:true];
     
     [self reloadDatasource];
 }
@@ -93,7 +91,7 @@
 - (void)changeTheming
 {
     if (self.isViewLoaded && self.view.window)
-        [app changeTheming:self];
+        [appDelegate changeTheming:self];
     
     // Reload Table View
     [self.tableView reloadData];
@@ -101,13 +99,8 @@
 
 - (void)triggerProgressTask:(NSNotification *)notification
 {
-    NSDictionary *dict = notification.userInfo;
-    float progress = [[dict valueForKey:@"progress"] floatValue];
-    
-    if (progress == 0)
-        [self.navigationController cancelCCProgress];
-    else
-        [self.navigationController setCCProgressPercentage:progress*100 andTintColor:[NCBrandColor sharedInstance].navigationBarProgress];
+    //NSDictionary *dict = notification.userInfo;
+    //float progress = [[dict valueForKey:@"progress"] floatValue];
 }
 
 #pragma --------------------------------------------------------------------------------------------
@@ -121,7 +114,7 @@
 
 - (UIImage *)imageForEmptyDataSet:(UIScrollView *)scrollView
 {
-    return [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"sharesNoFiles"] color:[NCBrandColor sharedInstance].brand];
+    return [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"sharesNoFiles"] color:[NCBrandColor sharedInstance].brandElement];
 }
 
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
@@ -161,7 +154,7 @@
 
 - (void)readFileFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode
 {
-    NSLog(@"Failure");
+    NSLog(@"[LOG] Read file failure error %d, %@", (int)errorCode, message);
 }
 
 - (void)readFileSuccess:(CCMetadataNet *)metadataNet metadata:(tableMetadata *)metadata
@@ -187,12 +180,11 @@
 
 - (void)removeShares:(tableMetadata *)metadata tableShare:(tableShare *)tableShare
 {
-    CCMetadataNet *metadataNet = [[CCMetadataNet alloc] initWithAccount:app.activeAccount];
+    CCMetadataNet *metadataNet = [[CCMetadataNet alloc] initWithAccount:appDelegate.activeAccount];
  
     metadataNet.action = actionUnShare;
     metadataNet.fileID = metadata.fileID;
     metadataNet.fileName = metadata.fileName;
-    metadataNet.fileNamePrint = metadata.fileNamePrint;
     metadataNet.selector = selectorUnshare;
     metadataNet.serverUrl = tableShare.serverUrl;
     
@@ -200,7 +192,7 @@
     if (tableShare.shareLink.length > 0) {
    
         metadataNet.share = tableShare.shareLink;
-        [app addNetworkingOperationQueue:app.netQueue delegate:self metadataNet:metadataNet];
+        [appDelegate addNetworkingOperationQueue:appDelegate.netQueue delegate:self metadataNet:metadataNet];
     }
     
     // Unshare User&Group
@@ -208,7 +200,7 @@
     for (NSString *share in shareUserAndGroup) {
         
         metadataNet.share = [share stringByReplacingOccurrencesOfString:@" " withString:@""];
-        [app addNetworkingOperationQueue:app.netQueue delegate:self metadataNet:metadataNet];
+        [appDelegate addNetworkingOperationQueue:appDelegate.netQueue delegate:self metadataNet:metadataNet];
     }
 }
 
@@ -320,7 +312,7 @@
         
         if (metadata.directory) {
             
-            cell.fileImageView.image = [CCGraphics changeThemingColorImage:[UIImage imageNamed:metadata.iconName] color:[NCBrandColor sharedInstance].brand];
+            cell.fileImageView.image = [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"folder"] color:[NCBrandColor sharedInstance].brandElement];
         
         } else {
             
@@ -337,13 +329,12 @@
         
     } else {
         
-        cell.fileImageView.image = [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"file"] color:[NCBrandColor sharedInstance].brand];
+        cell.fileImageView.image = [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"file"] color:[NCBrandColor sharedInstance].brandElement];
         
         CCMetadataNet *metadataNet = [[CCMetadataNet alloc] initWithAccount:appDelegate.activeAccount];
             
         metadataNet.action = actionReadFile;
         metadataNet.fileName = table.fileName;
-        metadataNet.fileNamePrint = table.fileName;
         metadataNet.serverUrl = table.serverUrl;
         
         [appDelegate addNetworkingOperationQueue:appDelegate.netQueue delegate:self metadataNet:metadataNet];

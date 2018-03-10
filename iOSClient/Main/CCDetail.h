@@ -1,6 +1,6 @@
 //
 //  CCDetail.h
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 16/01/15.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -26,11 +26,9 @@
 #import <WebKit/WebKit.h>
 
 #import "UIImage+animatedGIF.h"
-#import "LMMediaPlayerView.h"
 #import "TWMessageBarManager.h"
 #import "MWPhotoBrowser.h"
 #import "ReaderViewController.h"
-#import "UINavigationController+CCProgress.h"
 #import "CCGraphics.h"
 
 @class tableMetadata;
@@ -38,7 +36,6 @@
 @interface CCDetail : UIViewController <UIDocumentInteractionControllerDelegate, MWPhotoBrowserDelegate, ReaderViewControllerDelegate>
 
 @property (nonatomic, strong) tableMetadata *metadataDetail;
-@property BOOL sourceDirectoryLocal;
 @property (nonatomic, strong) NSDate *dateFilterQuery;
 
 // Document
@@ -49,7 +46,6 @@
 
 @property (nonatomic, strong) MWPhotoBrowser *photoBrowser;
 @property (nonatomic, strong) NSMutableArray *photos;
-@property (nonatomic, strong) NSMutableArray *thumbs;
 
 // PDF
 @property (nonatomic, strong) ReaderViewController *readerPDFViewController;
@@ -64,8 +60,7 @@
 
 - (void)changeToDisplayMode;
 
-- (void)downloadPhotoBrowserFailure:(NSInteger)errorCode;
-- (void)downloadPhotoBrowserSuccess:(tableMetadata *)metadataVar selector:(NSString *)selector;
+- (void)downloadPhotoBrowserSuccessFailure:(tableMetadata *)metadata selector:(NSString *)selector errorCode:(NSInteger)errorCode;
 
 @end
 

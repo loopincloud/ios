@@ -23,10 +23,14 @@
         
         self.themingBackground = @"";
         self.themingColor = @"";
+        self.themingColorElement = @"";
+        self.themingColorText = @"";
         self.themingLogo = @"";
         self.themingName = @"";
         self.themingSlogan = @"";
         self.themingUrl = @"";
+        
+        self.endToEndEncryptionVersion = @"";
     }
     return self;
 }

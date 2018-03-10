@@ -84,6 +84,10 @@
         
         //If has lenght, there are an item
         if ([_xmlChars length]) {
+            
+            //BUG ?? https://github.com/nextcloud/server/issues/6925
+            _xmlChars = (NSMutableString *)[_xmlChars stringByReplacingOccurrencesOfString:@"//" withString:@"/"];
+            
             //Create FileDto
             _currentFile = [OCFileDto new];
              _currentFile.isDirectory = NO;
@@ -126,11 +130,8 @@
             [_xmlBucket setObject:lastBit forKey:@"href"];
             _currentFile.fileName = lastBit;
             
-            NSString *decodedFileName = [self decodeFromPercentEscapeString:self.currentFile.fileName];
-            NSString *decodedFilePath = [self decodeFromPercentEscapeString:self.currentFile.filePath];
-            
-            self.currentFile.fileName = [decodedFileName encodeString:NSUTF8StringEncoding];
-            self.currentFile.filePath = [decodedFilePath encodeString:NSUTF8StringEncoding];
+            self.currentFile.fileName = [self.currentFile.fileName stringByRemovingPercentEncoding];
+            self.currentFile.filePath = [self.currentFile.filePath stringByRemovingPercentEncoding];
         }
         
     } else if ([elementName isEqualToString:@"d:getlastmodified"]) {
@@ -190,12 +191,10 @@
         _currentFile = [OCFileDto new];
 
         _xmlBucket = nil;
-    } else if ([elementName isEqualToString:@"d:quota-used-bytes"]) {
-        _currentFile.quotaUsed = (double)[_xmlChars doubleValue];
-    } else if ([elementName isEqualToString:@"d:quota-available-bytes"]) {
-        _currentFile.quotaAvailable = (double)[_xmlChars doubleValue];
     } else if ([elementName isEqualToString:@"oc:favorite"]) {
         _currentFile.isFavorite = [_xmlChars boolValue];
+    } else if ([elementName isEqualToString:@"nc:is-encrypted"]) {
+        _currentFile.isEncrypted = [_xmlChars boolValue];
     }
 }
 
@@ -207,15 +206,5 @@
     
     NSLog(@"Finish xml directory list parse");
 }
-
-// Decode a percent escape encoded string.
-- (NSString*) decodeFromPercentEscapeString:(NSString *) string {
-    return (__bridge_transfer NSString *) CFURLCreateStringByReplacingPercentEscapesUsingEncoding(NULL,
-                                                                                         (__bridge CFStringRef) string,
-                                                                                         CFSTR(""),
-                                                                                         kCFStringEncodingUTF8);
-}
-
-
 
 @end

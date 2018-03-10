@@ -1,6 +1,6 @@
 //
 //  CCNotification.swift
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 27/01/17.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -34,13 +34,16 @@ class CCNotification: UITableViewController, OCNetworkingDelegate {
         
         self.navigationController?.navigationBar.topItem?.title = NSLocalizedString("_notification_", comment: "")
         self.navigationController?.navigationBar.barTintColor = NCBrandColor.sharedInstance.brand
-        self.navigationController?.navigationBar.tintColor = NCBrandColor.sharedInstance.navigationBarText
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: NCBrandColor.sharedInstance.navigationBarText]
+        self.navigationController?.navigationBar.tintColor = NCBrandColor.sharedInstance.brandText
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: NCBrandColor.sharedInstance.brandText]
+        self.navigationController?.navigationBar.isTranslucent = false
 
         self.navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(viewClose)), animated: true)
         
         self.tableView.separatorColor = NCBrandColor.sharedInstance.seperator
         self.tableView.tableFooterView = UIView()
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.estimatedRowHeight = 50.0
 
         // Register to receive notification reload data
         NotificationCenter.default.addObserver(self, selector: #selector(self.tableView.reloadData), name: Notification.Name("notificationReloadData"), object: nil)
@@ -52,7 +55,7 @@ class CCNotification: UITableViewController, OCNetworkingDelegate {
         super.didReceiveMemoryWarning()
     }
 
-    func viewClose() {
+    @objc func viewClose() {
         
         // Stop listening notification reload data
         NotificationCenter.default.removeObserver(self, name: Notification.Name("notificationReloadData"), object: nil);
@@ -130,20 +133,6 @@ class CCNotification: UITableViewController, OCNetworkingDelegate {
         }
     }
     
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        let notification = appDelegate.listOfNotifications.object(at: indexPath.row) as! OCNotifications
-        
-        if notification.message.characters.count > 0 {
-            
-            return 160
-            
-        } else {
-            
-            return 120
-        }
-    }
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if self.resultSearchController.isActive {
@@ -178,7 +167,7 @@ class CCNotification: UITableViewController, OCNetworkingDelegate {
             if let image = image {
                 cell.icon.image = image
             } else {
-                cell.icon.image = CCGraphics.changeThemingColorImage(#imageLiteral(resourceName: "notification"), color: NCBrandColor.sharedInstance.brand)
+                cell.icon.image = CCGraphics.changeThemingColorImage(#imageLiteral(resourceName: "notification"), color: NCBrandColor.sharedInstance.brandElement)
             }
             
             //
@@ -205,6 +194,11 @@ class CCNotification: UITableViewController, OCNetworkingDelegate {
     }
     
     func setNotificationServerSuccess(_ metadataNet: CCMetadataNet!) {
+        
+        // Check Active Account
+        if (metadataNet.account != appDelegate.activeAccount) {
+            return
+        }
         
         let listOfNotifications = appDelegate.listOfNotifications as NSArray as! [OCNotifications]
         

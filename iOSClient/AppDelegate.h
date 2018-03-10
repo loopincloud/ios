@@ -1,6 +1,6 @@
 //
 //  AppDelegate.h
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 04/09/14.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -22,12 +22,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
 #import <UserNotifications/UserNotifications.h>
 
 #import "BKPasscodeLockScreenManager.h"
 #import "REMenu.h"
-#import "LMMediaPlayerView.h"
 #import "Reachability.h"
 #import "TWMessageBarManager.h"
 #import "CCBKPasscode.h"
@@ -41,10 +39,12 @@
 #import "CCSettings.h"
 #import "CCFavorites.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, BKPasscodeLockScreenManagerDelegate, BKPasscodeViewControllerDelegate, LMMediaPlayerViewDelegate, TWMessageBarStyleSheet, CCNetworkingDelegate>
+@class CCLoginWeb;
+
+@interface AppDelegate : UIResponder <UIApplicationDelegate, BKPasscodeLockScreenManagerDelegate, BKPasscodeViewControllerDelegate, TWMessageBarStyleSheet, CCNetworkingDelegate>
 
 // Timer Process
-@property (nonatomic, strong) NSTimer *timerProcessAutoUpload;
+@property (nonatomic, strong) NSTimer *timerProcessAutoDownloadUpload;
 @property (nonatomic, strong) NSTimer *timerUpdateApplicationIconBadgeNumber;
 
 // For LMMediaPlayerView
@@ -54,6 +54,7 @@
 @property (nonatomic, strong) NSString *activeAccount;
 @property (nonatomic, strong) NSString *activeUrl;
 @property (nonatomic, strong) NSString *activeUser;
+@property (nonatomic, strong) NSString *activeUserID;
 @property (nonatomic, strong) NSString *activePassword;
 @property (nonatomic, strong) NSString *directoryUser;
 @property (nonatomic, strong) NSString *activeEmail;
@@ -67,11 +68,6 @@
 
 // Network Operation
 @property (nonatomic, strong) NSOperationQueue *netQueue;
-
-@property (nonatomic, strong) NSOperationQueue *netQueueDownload;
-@property (nonatomic, strong) NSOperationQueue *netQueueDownloadWWan;
-@property (nonatomic, strong) NSOperationQueue *netQueueUpload;
-@property (nonatomic, strong) NSOperationQueue *netQueueUploadWWan;
 
 // Networking 
 @property (nonatomic, copy) void (^backgroundSessionCompletionHandler)(void);
@@ -108,9 +104,6 @@
 // List Change Task
 @property (nonatomic, retain) NSMutableDictionary *listChangeTask;
 
-// Player Audio
-@property (nonatomic, strong) LMMediaPlayerView *player;
-
 // Reachability
 @property (nonatomic, strong) Reachability *reachability;
 @property BOOL lastReachability;
@@ -123,47 +116,50 @@
 @property (nonatomic, retain) CCSettings *activeSettings;
 @property (nonatomic, retain) CCActivity *activeActivity;
 @property (nonatomic, retain) CCTransfers *activeTransfers;
+@property (nonatomic, retain) CCLogin *activeLogin;
+@property (nonatomic, retain) CCLoginWeb *activeLoginWeb;
 
 @property (nonatomic, strong) NSMutableDictionary *listMainVC;
 @property (nonatomic, strong) NSMutableDictionary *listProgressMetadata;
 
-// Is in Crypto Mode
-@property BOOL isCryptoCloudMode;
-
 // Maintenance Mode
 @property BOOL maintenanceMode;
 
+// Login View
+- (void)openLoginView:(id)delegate loginType:(enumLoginType)loginType;
+
 // Setting Active Account
-- (void)settingActiveAccount:(NSString *)activeAccount activeUrl:(NSString *)activeUrl activeUser:(NSString *)activeUser activePassword:(NSString *)activePassword;
+- (void)settingActiveAccount:(NSString *)activeAccount activeUrl:(NSString *)activeUrl activeUser:(NSString *)activeUser activeUserID:(NSString *)activeUserID activePassword:(NSString *)activePassword;
 
 // initializations 
 - (void)applicationInitialized;
 
-- (void)maintenanceMode:(BOOL)mode;
-
+// Quick Actions - ShotcutItem
 - (void)configDynamicShortcutItems;
+- (BOOL)handleShortCutItem:(UIApplicationShortcutItem *)shortcutItem;
 
+// StatusBar & ApplicationIconBadgeNumber
 - (void)messageNotification:(NSString *)title description:(NSString *)description visible:(BOOL)visible delay:(NSTimeInterval)delay type:(TWMessageBarMessageType)type errorCode:(NSInteger)errorcode;
 - (void)updateApplicationIconBadgeNumber;
-- (BOOL)handleShortCutItem:(UIApplicationShortcutItem *)shortcutItem;
-- (void)aspectNavigationControllerBar:(UINavigationBar *)nav encrypted:(BOOL)encrypted online:(BOOL)online hidden:(BOOL)hidden;
+
+// TabBarController
+- (void)createTabBarController:(UITabBarController *)tabBarController;
+- (void)aspectNavigationControllerBar:(UINavigationBar *)nav online:(BOOL)online hidden:(BOOL)hidden;
 - (void)aspectTabBar:(UITabBar *)tab hidden:(BOOL)hidden;
 - (void)plusButtonVisibile:(BOOL)visible;
 - (void)selectedTabBarController:(NSInteger)index;
+- (NSString *)getTabBarControllerActiveServerUrl;
 
+// Theming Color
 - (void)settingThemingColorBrand;
 - (void)changeTheming:(UIViewController *)vc;
 
-// Operation Networking
-- (void)cancelAllOperations;
+// Task Networking
 - (void)addNetworkingOperationQueue:(NSOperationQueue *)netQueue delegate:(id)delegate metadataNet:(CCMetadataNet *)metadataNet;
+- (void)loadAutoDownloadUpload:(NSNumber *)maxConcurrent;
 
-- (NSMutableArray *)verifyExistsInQueuesDownloadSelector:(NSString *)selector;
-
-- (NSInteger)getNumberDownloadInQueues;
-- (NSInteger)getNumberDownloadInQueuesWWan;
-- (NSInteger)getNumberUploadInQueues;
-- (NSInteger)getNumberUploadInQueuesWWan;
+// Maintenance Mode
+- (void)maintenanceMode:(BOOL)mode;
 
 @end
 

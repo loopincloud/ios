@@ -59,10 +59,18 @@
 
 // Theming
 @property (nonatomic, strong) NSString *themingBackground;
+@property (nonatomic) BOOL themingBackgroundDefault;
+@property (nonatomic) BOOL themingBackgroundPlain;
 @property (nonatomic, strong) NSString *themingColor;
+@property (nonatomic, strong) NSString *themingColorElement;
+@property (nonatomic, strong) NSString *themingColorText;
 @property (nonatomic, strong) NSString *themingLogo;
 @property (nonatomic, strong) NSString *themingName;
 @property (nonatomic, strong) NSString *themingSlogan;
 @property (nonatomic, strong) NSString *themingUrl;
+
+// End to End Encryption
+@property (nonatomic) BOOL isEndToEndEncryptionEnabled;
+@property (nonatomic, strong) NSString *endToEndEncryptionVersion;
 
 @end

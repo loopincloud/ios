@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MBProgressHUD.h"
+#import <AVKit/AVKit.h>
 #import <MediaPlayer/MediaPlayer.h>
-#import "MWGridViewController.h"
 #import "MWZoomingScrollView.h"
+#import "MBProgressHUD.h"
 
 // Declare private methods of browser
 @interface MWPhotoBrowser () {
@@ -35,11 +35,6 @@
 	NSTimer *_controlVisibilityTimer;
     MBProgressHUD *_progressHUD;
     
-    // Grid
-    MWGridViewController *_gridController;
-    UIBarButtonItem *_gridPreviousLeftNavItem;
-    UIBarButtonItem *_gridPreviousRightNavItem;
-    
     // Appearance
     BOOL _previousNavBarHidden;
     BOOL _previousNavBarTranslucent;
@@ -50,20 +45,23 @@
     UIImage *_previousNavigationBarBackgroundImageDefault;
     UIImage *_previousNavigationBarBackgroundImageLandscapePhone;
     
+    // Video
+    AVPlayerViewController *_currentVideoPlayerViewController;
+    AVPlayerItem *_currentVideoPlayerItem;
+    NSUInteger _currentVideoIndex;
+    UIActivityIndicatorView *_currentVideoLoadingIndicator;
+    
     // Misc
     BOOL _hasBelongedToViewController;
     BOOL _isVCBasedStatusBarAppearance;
     BOOL _statusBarShouldBeHidden;
     BOOL _displayActionButton;
-    BOOL _leaveStatusBarAlone;
 	BOOL _performingLayout;
 	BOOL _rotating;
     BOOL _viewIsActive; // active as in it's in the view heirarchy
     BOOL _didSavePreviousStateOfNavBar;
     BOOL _skipNextPagingScrollViewPositioning;
     BOOL _viewHasAppearedInitially;
-    CGPoint _currentGridContentOffset;
-    
 }
 
 // Properties
@@ -98,10 +96,6 @@
 - (void)gotoPreviousPage;
 - (void)gotoNextPage;
 
-// Grid
-- (void)showGrid:(BOOL)animated;
-- (void)hideGrid;
-
 // Controls
 - (void)cancelControlHiding;
 - (void)hideControlsAfterDelay;
@@ -112,7 +106,6 @@
 // Data
 - (NSUInteger)numberOfPhotos;
 - (id<MWPhoto>)photoAtIndex:(NSUInteger)index;
-- (id<MWPhoto>)thumbPhotoAtIndex:(NSUInteger)index;
 - (UIImage *)imageForPhoto:(id<MWPhoto>)photo;
 - (BOOL)photoIsSelectedAtIndex:(NSUInteger)index;
 - (void)setPhotoSelected:(BOOL)selected atIndex:(NSUInteger)index;

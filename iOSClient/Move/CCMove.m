@@ -1,6 +1,6 @@
 //
 //  CCMove.m
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 04/09/14.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -30,11 +30,14 @@
     NSString *activePassword;
     NSString *activeUrl;
     NSString *activeUser;
+    NSString *activeUserID;
     NSString *directoryUser;
     
-    BOOL _isCryptoCloudMode;
-    
     BOOL _loadingFolder;
+    
+    // Automatic Upload Folder
+    NSString *_autoUploadFileName;
+    NSString *_autoUploadDirectory;
 }
 @end
 
@@ -54,17 +57,8 @@
         activePassword = recordAccount.password;
         activeUrl = recordAccount.url;
         activeUser = recordAccount.user;
+        activeUserID = recordAccount.userID;
         directoryUser = [CCUtility getDirectoryActiveUser:activeUser activeUrl:activeUrl];
-        
-        // Crypto Mode
-        if ([[CCUtility getKeyChainPasscodeForUUID:[CCUtility getUUID]] length] == 0) {
-            
-            _isCryptoCloudMode = NO;
-            
-        } else {
-            
-            _isCryptoCloudMode = YES;
-        }
         
     } else {
         
@@ -81,18 +75,25 @@
 
     if (![_serverUrl length]) {
         
+        UIImageView *image;
+        
         _serverUrl = [CCUtility getHomeServerUrlActiveUrl:activeUrl];
-        UIImageView *image = [[UIImageView alloc] initWithImage:[UIImage imageNamed: @"navigationLogo"]];
+        
+        tableCapabilities *capabilities = [[NCManageDatabase sharedInstance] getCapabilites];
+        if ([capabilities.themingColor isEqualToString:@"#FFFFFF"])
+            image = [[UIImageView alloc] initWithImage:[CCGraphics changeThemingColorImage:[UIImage imageNamed:@"navigationLogo"] color:[UIColor blackColor]]];
+        else
+            image = [[UIImageView alloc] initWithImage:[CCGraphics changeThemingColorImage:[UIImage imageNamed:@"navigationLogo"] color:[UIColor whiteColor]]];
+
         [self.navigationController.navigationBar.topItem setTitleView:image];
         self.title = @"Home";
         
     } else {
         
         UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(0,0, self.navigationItem.titleView.frame.size.width, 40)];
-        label.text = self.passMetadata.fileNamePrint;
+        label.text = self.passMetadata.fileNameView;
         
-        if (self.passMetadata.cryptated) label.textColor = NCBrandColor.sharedInstance.cryptocloud;
-        else label.textColor = NCBrandColor.sharedInstance.navigationBarText;
+        label.textColor = NCBrandColor.sharedInstance.brandText;
         
         label.backgroundColor =[UIColor clearColor];
         label.textAlignment = NSTextAlignmentCenter;
@@ -115,10 +116,10 @@
     [super viewWillAppear:animated];
     
     self.navigationController.navigationBar.barTintColor = NCBrandColor.sharedInstance.brand;
-    self.navigationController.navigationBar.tintColor = NCBrandColor.sharedInstance.navigationBarText;
+    self.navigationController.navigationBar.tintColor = NCBrandColor.sharedInstance.brandText;
     
     self.navigationController.toolbar.barTintColor = NCBrandColor.sharedInstance.tabBar;
-    self.navigationController.toolbar.tintColor = NCBrandColor.sharedInstance.brand;
+    self.navigationController.toolbar.tintColor = NCBrandColor.sharedInstance.brandElement;
 }
 
 #pragma --------------------------------------------------------------------------------------------
@@ -149,7 +150,7 @@
         
         UIActivityIndicatorView *activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         activityView.transform = CGAffineTransformMakeScale(1.5f, 1.5f);
-        activityView.color = [NCBrandColor sharedInstance].brand;
+        activityView.color = [NCBrandColor sharedInstance].brandElement;
         [activityView startAnimating];
         
         return activityView;
@@ -175,7 +176,7 @@
     if ([self.delegate respondsToSelector:@selector(dismissMove)])
         [self.delegate dismissMove];
     
-    [self.delegate moveServerUrlTo:_serverUrl title:self.passMetadata.fileNamePrint];
+    [self.delegate moveServerUrlTo:_serverUrl title:self.passMetadata.fileNameView];
         
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -264,39 +265,10 @@
 
 - (void)addNetworkingQueue:(CCMetadataNet *)metadataNet
 {
-    OCnetworking *operation = [[OCnetworking alloc] initWithDelegate:self metadataNet:metadataNet withUser:activeUser withPassword:activePassword withUrl:activeUrl isCryptoCloudMode:_isCryptoCloudMode];
+    OCnetworking *operation = [[OCnetworking alloc] initWithDelegate:self metadataNet:metadataNet withUser:activeUser withUserID:activeUserID withPassword:activePassword withUrl:activeUrl];
         
     _networkingOperationQueue.maxConcurrentOperationCount = k_maxConcurrentOperation;
     [_networkingOperationQueue addOperation:operation];
-}
-
-// MARK: - Download File
-
-- (void)downloadFileSuccess:(NSString *)fileID serverUrl:(NSString *)serverUrl selector:(NSString *)selector selectorPost:(NSString *)selectorPost
-{
-    if ([selector isEqualToString:selectorLoadPlist]) {
-
-        NSString *autoUploadFileName = [[NCManageDatabase sharedInstance] getAccountAutoUploadFileName];
-        NSString *autoUploadDirectory = [[NCManageDatabase sharedInstance] getAccountAutoUploadDirectory:activeUrl];
-        
-        tableMetadata *metadata = [[NCManageDatabase sharedInstance] getMetadataWithPredicate:[NSPredicate predicateWithFormat:@"fileID = %@", fileID]];
-        
-        metadata = [CCUtility insertInformationPlist:metadata directoryUser:directoryUser];
-        metadata = [CCUtility insertTypeFileIconName:metadata serverUrl:serverUrl autoUploadFileName:autoUploadFileName autoUploadDirectory:autoUploadDirectory];
-        metadata = [[NCManageDatabase sharedInstance] updateMetadata:metadata activeUrl:activeUrl];
-        
-        // se è un template aggiorniamo anche nel FileSystem
-        if ([metadata.type isEqualToString: k_metadataType_template]) {
-            [[NCManageDatabase sharedInstance] setLocalFileWithFileID:metadata.fileID date:metadata.date exifDate:nil exifLatitude:nil exifLongitude:nil fileName:nil fileNamePrint:metadata.fileNamePrint];
-        }
-
-        [self.tableView reloadData];
-    }
-}
-
-- (void)downloadFileFailure:(NSString *)fileID serverUrl:(NSString *)serverUrl selector:(NSString *)selector message:(NSString *)message errorCode:(NSInteger)errorCode
-{
-    self.move.enabled = NO;
 }
 
 // MARK: - Read Folder
@@ -353,33 +325,10 @@
     NSMutableArray *metadatasToInsertInDB = [NSMutableArray new];
  
     // Update directory etag
-    [[NCManageDatabase sharedInstance] setDirectoryWithServerUrl:metadataNet.serverUrl serverUrlTo:nil etag:metadataFolder.etag];
+    [[NCManageDatabase sharedInstance] setDirectoryWithServerUrl:metadataNet.serverUrl serverUrlTo:nil etag:metadataFolder.etag fileID:metadataFolder.fileID encrypted:metadataFolder.e2eEncrypted];
     
     for (tableMetadata *metadata in metadatas) {
         
-        // type of file
-        NSInteger typeFilename = [CCUtility getTypeFileName:metadata.fileName];
-        
-        // do not insert crypto file
-        if (typeFilename == k_metadataTypeFilenameCrypto) continue;
-        
-        // verify if the record encrypted has plist + crypto
-        if (typeFilename == k_metadataTypeFilenamePlist && metadata.directory == NO) {
-            
-            BOOL isCryptoComplete = NO;
-            NSString *fileNameCrypto = [CCUtility trasformedFileNamePlistInCrypto:metadata.fileName];
-            
-            for (tableMetadata *completeMetadata in metadatas) {
-                
-                if (completeMetadata.cryptated == NO) continue;
-                else  if ([completeMetadata.fileName isEqualToString:fileNameCrypto]) {
-                    isCryptoComplete = YES;
-                    break;
-                }
-            }
-            if (isCryptoComplete == NO) continue;
-        }
-    
         // Insert in Array
         [metadatasToInsertInDB addObject:metadata];
     }
@@ -387,30 +336,12 @@
     // insert in Database
     metadatas = [[NCManageDatabase sharedInstance] addMetadatas:metadatasToInsertInDB serverUrl:metadataNet.serverUrl];
 
-    // Plist MULTI THREAD
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), ^{
-        
-        for (tableMetadata *metadata in metadatas) {
-        
-            if ([CCUtility isCryptoPlistString:metadata.fileName] && [[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@", directoryUser, metadata.fileName]] == NO) {
-                
-                CCMetadataNet *metadataNet = [[CCMetadataNet alloc] initWithAccount:activeAccount];
-                    
-                metadataNet.action = actionDownloadFile;
-                metadataNet.downloadData = NO;
-                metadataNet.downloadPlist = YES;
-                metadataNet.fileID = metadata.fileID;
-                metadataNet.selector = selectorLoadPlist;
-                metadataNet.serverUrl = _serverUrl;
-                metadataNet.session = k_download_session_foreground;
-                metadataNet.taskStatus = k_taskStatusResume;
-                    
-                [self addNetworkingQueue:metadataNet];
-            }
-        }
-    });    
+    // get auto upload folder
+    _autoUploadFileName = [[NCManageDatabase sharedInstance] getAccountAutoUploadFileName];
+    _autoUploadDirectory = [[NCManageDatabase sharedInstance] getAccountAutoUploadDirectory:activeUrl];
     
     _loadingFolder = NO;
+    
     [self.tableView reloadData];
 }
 
@@ -419,9 +350,10 @@
     CCMetadataNet *metadataNet = [[CCMetadataNet alloc] initWithAccount:activeAccount];
     
     metadataNet.action = actionReadFolder;
-    metadataNet.serverUrl = _serverUrl;
-    metadataNet.selector = selectorReadFolder;
     metadataNet.date = nil;
+    metadataNet.depth = @"1";
+    metadataNet.selector = selectorReadFolder;
+    metadataNet.serverUrl = _serverUrl;
     
     [self addNetworkingQueue:metadataNet];
     
@@ -443,9 +375,7 @@
 }
 
 - (void)createFolderSuccess:(CCMetadataNet *)metadataNet
-{
-    (void)[[NCManageDatabase sharedInstance] addDirectoryWithServerUrl:[NSString stringWithFormat:@"%@/%@", metadataNet.serverUrl, metadataNet.fileName] permissions:@""];
-    
+{    
     // Load Folder or the Datasource
     [self readFolder];
 }
@@ -479,8 +409,8 @@
     if (!directoryID) return 0;
     NSPredicate *predicate;
     
-    if (self.onlyClearDirectory) predicate = [NSPredicate predicateWithFormat:@"account = %@ AND directoryID = %@ AND directory = true AND cryptated = false", activeAccount, directoryID];
-    else predicate = [NSPredicate predicateWithFormat:@"account == %@ AND directoryID = %@ AND directory = true", activeAccount, directoryID];
+    if (self.includeDirectoryE2EEncryption) predicate = [NSPredicate predicateWithFormat:@"account = %@ AND directoryID = %@ AND directory = true", activeAccount, directoryID];
+    else predicate = [NSPredicate predicateWithFormat:@"account == %@ AND directoryID = %@ AND directory = true AND e2eEncrypted = false", activeAccount, directoryID];
     
     NSArray *result = [[NCManageDatabase sharedInstance] getMetadatasWithPredicate:predicate sorted:nil ascending:NO];
     
@@ -505,21 +435,24 @@
     if (!directoryID)
         return cell;
     
-    if (self.onlyClearDirectory) predicate = [NSPredicate predicateWithFormat:@"account = %@ AND directoryID = %@ AND directory = true AND cryptated = false", activeAccount, directoryID];
-    else predicate = [NSPredicate predicateWithFormat:@"account = %@ AND directoryID = %@ AND directory = true", activeAccount, directoryID];
+    if (self.includeDirectoryE2EEncryption) predicate = [NSPredicate predicateWithFormat:@"account = %@ AND directoryID = %@ AND directory = true", activeAccount, directoryID];
+    else predicate = [NSPredicate predicateWithFormat:@"account = %@ AND directoryID = %@ AND directory = true AND e2eEncrypted = false", activeAccount, directoryID];
     
-    tableMetadata *metadata = [[NCManageDatabase sharedInstance] getMetadataAtIndexWithPredicate:predicate sorted:@"fileNamePrint" ascending:YES index:indexPath.row];
+    tableMetadata *metadata = [[NCManageDatabase sharedInstance] getMetadataAtIndexWithPredicate:predicate sorted:@"fileName" ascending:YES index:indexPath.row];
     
     // colors
-    if (metadata.cryptated) {
-        cell.textLabel.textColor = NCBrandColor.sharedInstance.cryptocloud;
-    } else {
-        cell.textLabel.textColor = [UIColor blackColor];
-    }
+    cell.textLabel.textColor = [UIColor blackColor];
     
     cell.detailTextLabel.text = @"";
-    cell.imageView.image = [CCGraphics changeThemingColorImage:[UIImage imageNamed:metadata.iconName] color:[NCBrandColor sharedInstance].brand];
-    cell.textLabel.text = metadata.fileNamePrint;
+    
+    if (metadata.e2eEncrypted)
+        cell.imageView.image = [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"folderEncrypted"] color:[NCBrandColor sharedInstance].brandElement];
+    else if ([metadata.fileName isEqualToString:_autoUploadFileName] && [self.serverUrl isEqualToString:_autoUploadDirectory])
+        cell.imageView.image = [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"folderphotocamera"] color:[NCBrandColor sharedInstance].brandElement];
+    else
+        cell.imageView.image = [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"folder"] color:[NCBrandColor sharedInstance].brandElement];
+    
+    cell.textLabel.text = metadata.fileNameView;
     
     return cell;
 }
@@ -540,68 +473,64 @@
     NSString *directoryID = [[NCManageDatabase sharedInstance] getDirectoryID:_serverUrl];
     if (!directoryID) return;
     
-    if (self.onlyClearDirectory) predicate = [NSPredicate predicateWithFormat:@"account = %@ AND directoryID = %@ AND directory = true AND cryptated = false", activeAccount, directoryID];
-    else predicate = [NSPredicate predicateWithFormat:@"account = %@ AND directoryID == %@ AND directory = true", activeAccount, directoryID];
+    if (self.includeDirectoryE2EEncryption) predicate = [NSPredicate predicateWithFormat:@"account = %@ AND directoryID = %@ AND directory = true", activeAccount, directoryID];
+    else predicate = [NSPredicate predicateWithFormat:@"account = %@ AND directoryID == %@ AND directory = true AND e2eEncrypted = false", activeAccount, directoryID];
     
-    tableMetadata *metadata = [[NCManageDatabase sharedInstance] getMetadataAtIndexWithPredicate:predicate sorted:@"fileNamePrint" ascending:YES index:index.row];
+    tableMetadata *metadata = [[NCManageDatabase sharedInstance] getMetadataAtIndexWithPredicate:predicate sorted:@"fileName" ascending:YES index:index.row];
     
-    if (metadata.errorPasscode == NO) {
-    
-        // lockServerUrl
-        NSString *lockServerUrl = [CCUtility stringAppendServerUrl:_serverUrl addFileName:metadata.fileNameData];
+    // lockServerUrl
+    NSString *lockServerUrl = [CCUtility stringAppendServerUrl:_serverUrl addFileName:metadata.fileName];
         
-        // Se siamo in presenza di una directory bloccata E è attivo il block E la sessione PASSWORD Lock è senza data ALLORA chiediamo la password per procedere
+    // Se siamo in presenza di una directory bloccata E è attivo il block E la sessione PASSWORD Lock è senza data ALLORA chiediamo la password per procedere
         
-        tableDirectory *directory = [[NCManageDatabase sharedInstance] getTableDirectoryWithPredicate:[NSPredicate predicateWithFormat:@"account = %@ AND serverUrl = %@", activeAccount, lockServerUrl]];
+    tableDirectory *directory = [[NCManageDatabase sharedInstance] getTableDirectoryWithPredicate:[NSPredicate predicateWithFormat:@"account = %@ AND serverUrl = %@", activeAccount, lockServerUrl]];
         
-        if (directory.lock && [[CCUtility getBlockCode] length] && controlPasscode) {
+    if (directory.lock && [[CCUtility getBlockCode] length] && controlPasscode) {
             
-            CCBKPasscode *viewController = [[CCBKPasscode alloc] initWithNibName:nil bundle:nil];
-            viewController.delegate = self;
-            //viewController.fromType = CCBKPasscodeFromLockDirectory;
-            viewController.type = BKPasscodeViewControllerCheckPasscodeType;
-            viewController.inputViewTitlePassword = YES;
+        CCBKPasscode *viewController = [[CCBKPasscode alloc] initWithNibName:nil bundle:nil];
+        viewController.delegate = self;
+        //viewController.fromType = CCBKPasscodeFromLockDirectory;
+        viewController.type = BKPasscodeViewControllerCheckPasscodeType;
+        viewController.inputViewTitlePassword = YES;
             
-            if ([CCUtility getSimplyBlockCode]) {
+        if ([CCUtility getSimplyBlockCode]) {
                 
-                viewController.passcodeStyle = BKPasscodeInputViewNumericPasscodeStyle;
-                viewController.passcodeInputView.maximumLength = 6;
+            viewController.passcodeStyle = BKPasscodeInputViewNumericPasscodeStyle;
+            viewController.passcodeInputView.maximumLength = 6;
                 
-            } else {
+        } else {
                 
-                viewController.passcodeStyle = BKPasscodeInputViewNormalPasscodeStyle;
-                viewController.passcodeInputView.maximumLength = 64;
-            }
-            
-            BKTouchIDManager *touchIDManager = [[BKTouchIDManager alloc] initWithKeychainServiceName:k_serviceShareKeyChain];
-            touchIDManager.promptText = NSLocalizedString(@"_scan_fingerprint_", nil);
-            viewController.touchIDManager = touchIDManager;
-            
-            viewController.title = NSLocalizedString(@"_folder_blocked_", nil);
-            viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(passcodeViewCloseButtonPressed:)];
-            viewController.navigationItem.leftBarButtonItem.tintColor = NCBrandColor.sharedInstance.cryptocloud;
-            
-            UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
-            [self presentViewController:navController animated:YES completion:nil];
-            
-            return;
+            viewController.passcodeStyle = BKPasscodeInputViewNormalPasscodeStyle;
+            viewController.passcodeInputView.maximumLength = 64;
         }
+            
+        BKTouchIDManager *touchIDManager = [[BKTouchIDManager alloc] initWithKeychainServiceName:k_serviceShareKeyChain];
+        touchIDManager.promptText = NSLocalizedString(@"_scan_fingerprint_", nil);
+        viewController.touchIDManager = touchIDManager;
         
-        if (metadata.cryptated) nomeDir = [metadata.fileName substringToIndex:[metadata.fileName length]-6];
-        else nomeDir = metadata.fileName;
-    
-        CCMove *viewController = [[UIStoryboard storyboardWithName:@"CCMove" bundle:nil] instantiateViewControllerWithIdentifier:@"CCMoveVC"];
-    
-        viewController.delegate = self.delegate;
-        viewController.onlyClearDirectory = self.onlyClearDirectory;
-        viewController.move.title = self.move.title;
-        viewController.networkingOperationQueue = _networkingOperationQueue;
-
-        viewController.passMetadata = metadata;
-        viewController.serverUrl = [CCUtility stringAppendServerUrl:_serverUrl addFileName:nomeDir];
-    
-        [self.navigationController pushViewController:viewController animated:YES];
+        viewController.title = NSLocalizedString(@"_folder_blocked_", nil);
+        viewController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(passcodeViewCloseButtonPressed:)];
+        viewController.navigationItem.leftBarButtonItem.tintColor = [UIColor blackColor];
+        
+        UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:viewController];
+        [self presentViewController:navController animated:YES completion:nil];
+            
+        return;
     }
+        
+    nomeDir = metadata.fileName;
+    
+    CCMove *viewController = [[UIStoryboard storyboardWithName:@"CCMove" bundle:nil] instantiateViewControllerWithIdentifier:@"CCMoveVC"];
+    
+    viewController.delegate = self.delegate;
+    viewController.includeDirectoryE2EEncryption = self.includeDirectoryE2EEncryption;
+    viewController.move.title = self.move.title;
+    viewController.networkingOperationQueue = _networkingOperationQueue;
+
+    viewController.passMetadata = metadata;
+    viewController.serverUrl = [CCUtility stringAppendServerUrl:_serverUrl addFileName:nomeDir];
+    
+    [self.navigationController pushViewController:viewController animated:YES];
 }
 
 @end

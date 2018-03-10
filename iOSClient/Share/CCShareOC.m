@@ -1,6 +1,6 @@
 //
 //  CCShareOC.m
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 13/11/15.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -26,7 +26,9 @@
 #import "NCBridgeSwift.h"
 
 @interface CCShareOC ()
-
+{
+    AppDelegate *appDelegate;
+}
 @end
 
 @implementation CCShareOC
@@ -36,6 +38,8 @@
     self = [super initWithCoder:coder];
     if (self) {
         
+        appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
         self.itemsShareWith = [[NSMutableArray alloc] init];
         
         [self initializeForm];
@@ -113,27 +117,27 @@
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [NCBrandColor sharedInstance].tableBackground;
+    self.view.backgroundColor = [NCBrandColor sharedInstance].backgroundView;
     
     [self.endButton setTitle:NSLocalizedString(@"_done_", nil) forState:UIControlStateNormal];
-    self.endButton.tintColor = [NCBrandColor sharedInstance].brand;
+    self.endButton.tintColor = [UIColor blackColor];
     
     [self reloadData];
     
-    if ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.ico", app.directoryUser, self.metadata.fileID]]) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@/%@.ico", appDelegate.directoryUser, self.metadata.fileID]]) {
         
-        self.fileImageView.image = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.ico", app.directoryUser, self.metadata.fileID]];
+        self.fileImageView.image = [UIImage imageWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.ico", appDelegate.directoryUser, self.metadata.fileID]];
         
     } else {
         
         if (self.metadata.directory)
-            self.fileImageView.image = [CCGraphics changeThemingColorImage:[UIImage imageNamed:self.metadata.iconName] color:[NCBrandColor sharedInstance].brand];
+            self.fileImageView.image = [CCGraphics changeThemingColorImage:[UIImage imageNamed:@"folder"] color:[NCBrandColor sharedInstance].brandElement];
         else
             self.fileImageView.image = [UIImage imageNamed:self.metadata.iconName];
 
     }
     
-    self.labelTitle.text = self.metadata.fileNamePrint;
+    self.labelTitle.text = self.metadata.fileNameView;
     self.labelTitle.textColor = [UIColor blackColor];
     
     self.tableView.tableHeaderView = ({UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 0.1 / UIScreen.mainScreen.scale)];
@@ -141,7 +145,7 @@
         line;
     });
     
-    self.tableView.backgroundColor = [NCBrandColor sharedInstance].tableBackground;
+    self.tableView.backgroundColor = [NCBrandColor sharedInstance].backgroundView;
 }
 
 #pragma --------------------------------------------------------------------------------------------
@@ -149,8 +153,16 @@
 #pragma --------------------------------------------------------------------------------------------
 
 - (void)reloadData
-{
-    AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+{    
+    // bugfix
+    if (!self.serverUrl || !self.metadata) {
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.1 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+            [self dismissViewControllerAnimated:YES completion:nil];
+        });
+        
+        return;
+    }
     
     self.shareLink = [appDelegate.sharesLink objectForKey:[self.serverUrl stringByAppendingString:self.metadata.fileName]];
     self.shareUserAndGroup = [appDelegate.sharesUserAndGroup objectForKey:[self.serverUrl stringByAppendingString:self.metadata.fileName]];
@@ -221,13 +233,13 @@
     
         for (NSString *idRemoteShared in self.itemsUserAndGroupLink) {
             
-            OCSharedDto *item = [app.sharesID objectForKey:idRemoteShared];
+            OCSharedDto *item = [appDelegate.sharesID objectForKey:idRemoteShared];
             
             XLFormRowDescriptor *row = [XLFormRowDescriptor formRowDescriptorWithTag:idRemoteShared rowType:XLFormRowDescriptorTypeButton];
 
             [row.cellConfig setObject:[UIFont systemFontOfSize:15.0]forKey:@"textLabel.font"];
             //[row.cellConfig setObject:@(UITableViewCellAccessoryDisclosureIndicator) forKey:@"accessoryType"];
-            [row.cellConfig setObject:[NCBrandColor sharedInstance].brand forKey:@"textLabel.textColor"];
+            [row.cellConfig setObject:[NCBrandColor sharedInstance].brandElement forKey:@"textLabel.textColor"];
             row.action.formSelector = @selector(sharePermissionButton:);
                 
             if (item.shareType == shareTypeGroup) row.title = [item.shareWithDisplayName stringByAppendingString:NSLocalizedString(@"_user_is_group_", nil)];
@@ -271,7 +283,7 @@
         
     } else {
 
-        url = [NSString stringWithFormat:@"%@/%@%@", app.activeUrl, k_share_link_middle_part_url_after_version_8, sharedLink];
+        url = [NSString stringWithFormat:@"%@/%@%@", appDelegate.activeUrl, k_share_link_middle_part_url_after_version_8, sharedLink];
 
     }
 
@@ -325,7 +337,7 @@
 {
     [super formRowDescriptorValueHasChanged:rowDescriptor oldValue:oldValue newValue:newValue];
     
-    OCSharedDto *shareDto = [app.sharesID objectForKey:self.shareLink];
+    OCSharedDto *shareDto = [appDelegate.sharesID objectForKey:self.shareLink];
     
     if ([rowDescriptor.tag isEqualToString:@"shareLinkSwitch"]) {
         
@@ -390,7 +402,7 @@
 {
     [super endEditing:rowDescriptor];
     
-    OCSharedDto *shareDto = [app.sharesID objectForKey:self.shareLink];
+    OCSharedDto *shareDto = [appDelegate.sharesID objectForKey:self.shareLink];
     
     if ([rowDescriptor.tag isEqualToString:@"expirationDate"]) {
         

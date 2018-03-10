@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>TechSize Cloud</string>
+	<string>Nextcloud</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -46,7 +46,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.17.5</string>
+	<string>2.20.5</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -69,7 +69,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>00005</string>
+	<string>00002</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -85,7 +85,9 @@
 		</array>
 	</dict>
 	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
+	<true/>
+	<key>ITSEncryptionExportComplianceCode</key>
+	<string>3b2bb0b1-fa12-43cb-a78f-0f7e1afd33df</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>dbapi-1</string>
@@ -99,10 +101,16 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>The use of GPS is used to detect new photos from camera roll, continued use of GPS running in the background can dramatically decrease battery life.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>The use of GPS is used to detect new photos from camera roll, continued use of GPS running in the background can dramatically decrease battery life.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The use of GPS is used to detect new photos from camera roll on background, the use of GPS only when the App is in use is useless</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>$(PRODUCT_NAME) requires access to the photo library</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>$(PRODUCT_NAME)</string>
+	<string>$(PRODUCT_NAME) requires access to the photo library</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
@@ -120,7 +128,7 @@
 		<string>armv7</string>
 	</array>
 	<key>UIRequiresFullScreen</key>
-	<true/>
+	<false/>
 	<key>UIStatusBarHidden</key>
 	<false/>
 	<key>UIStatusBarStyle</key>

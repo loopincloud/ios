@@ -1,6 +1,6 @@
 //
 //  CCManageAutoUpload.m
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 01/09/15.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -26,6 +26,12 @@
 #import "AppDelegate.h"
 #import "NCBridgeSwift.h"
 
+@interface CCManageAutoUpload ()
+{
+    AppDelegate *appDelegate;
+}
+@end
+
 @implementation CCManageAutoUpload
 
 //  From Settings
@@ -33,6 +39,8 @@
 {
     if (self = [super initWithCoder:aDecoder])  {
         
+        appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
         [self initializeForm];
     }
     
@@ -46,6 +54,8 @@
     
     if (self) {
         
+        appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
         UIBarButtonItem *doneButton = [[UIBarButtonItem alloc ] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(done:)];
         self.navigationItem.rightBarButtonItem = doneButton;
         
@@ -60,7 +70,7 @@
     XLFormDescriptor *form ;
     XLFormSectionDescriptor *section;
     XLFormRowDescriptor *row;
-    
+ 
     tableAccount *tableAccount = [[NCManageDatabase sharedInstance] getAccountActive];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeTheming) name:@"changeTheming" object:nil];
@@ -154,7 +164,7 @@
     else row.value = @0;
     [row.cellConfig setObject:[UIFont systemFontOfSize:15.0]forKey:@"textLabel.font"];
     [section addFormRow:row];
-
+    
     // Auto Upload file name
     
     section = [XLFormSectionDescriptor formSection];
@@ -177,11 +187,12 @@
 {
     [super viewWillAppear:animated];
     
-    self.tableView.backgroundColor = [NCBrandColor sharedInstance].tableBackground;
+    self.tableView.backgroundColor = [NCBrandColor sharedInstance].backgroundView;
+    self.tableView.showsVerticalScrollIndicator = NO;
 
     // Color
-    [app aspectNavigationControllerBar:self.navigationController.navigationBar encrypted:NO online:[app.reachability isReachable] hidden:NO];
-    [app aspectTabBar:self.tabBarController.tabBar hidden:NO];
+    [appDelegate aspectNavigationControllerBar:self.navigationController.navigationBar online:[appDelegate.reachability isReachable] hidden:NO];
+    [appDelegate aspectTabBar:self.tabBarController.tabBar hidden:NO];
     
     // Request permission for camera roll access
     [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
@@ -203,7 +214,7 @@
 - (void)changeTheming
 {
     if (self.isViewLoaded && self.view.window)
-        [app changeTheming:self];
+        [appDelegate changeTheming:self];
 }
 
 -(void)formRowDescriptorValueHasChanged:(XLFormRowDescriptor *)rowDescriptor oldValue:(id)oldValue newValue:(id)newValue
@@ -220,7 +231,7 @@
             
             // Default
             [[NCManageDatabase sharedInstance] setAccountAutoUploadFileName:nil];
-            [[NCManageDatabase sharedInstance] setAccountAutoUploadDirectory:nil activeUrl:app.activeUrl];
+            [[NCManageDatabase sharedInstance] setAccountAutoUploadDirectory:nil activeUrl:appDelegate.activeUrl];
             
             // verifichiamo che almeno uno dei servizi (foto video) siano attivi, in caso contrario attiviamo le foto
             if (account.autoUploadImage == NO && account.autoUploadVideo == NO) {
@@ -228,7 +239,9 @@
                 [[NCManageDatabase sharedInstance] setAccountAutoUploadProperty:@"autoUploadVideo" state:YES];
             }
             
-            [[NCAutoUpload sharedInstance] alignPhotoLibrary];
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                [[NCAutoUpload sharedInstance] alignPhotoLibrary];
+            });
             
         } else {
             
@@ -236,7 +249,7 @@
             [[NCManageDatabase sharedInstance] setAccountAutoUploadProperty:@"autoUploadFull" state:NO];
 
             // remove
-            [[NCManageDatabase sharedInstance] clearTable:[tableQueueUpload class] account:app.activeAccount];
+            [[NCManageDatabase sharedInstance] clearTable:[tableQueueUpload class] account:appDelegate.activeAccount];
         }
         
         [self reloadForm];
@@ -251,10 +264,13 @@
             [[NCAutoUpload sharedInstance] checkIfLocationIsEnabled];
                             
             if(isLocationIsEnabled == YES) {
-                    
-                UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"_autoupload_background_title_", nil) message:NSLocalizedString(@"_autoupload_background_msg_", nil) delegate:nil cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"_ok_", nil), nil];
-                [alertView show];
-                    
+                
+                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"_autoupload_background_title_", nil) message:NSLocalizedString(@"_autoupload_background_msg_", nil) preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *okAction = [UIAlertAction actionWithTitle:NSLocalizedString(@"_ok_", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {}];
+                
+                [alertController addAction:okAction];
+                [self presentViewController:alertController animated:YES completion:nil];
+                
                 [[NCManageDatabase sharedInstance] setAccountAutoUploadProperty:@"autoUploadBackground" state:YES];
                     
             } else {
@@ -278,12 +294,9 @@
             
         } else {
             
-            [[NCManageDatabase sharedInstance] clearTable:[tableQueueUpload class] account:app.activeAccount];
+            [[NCManageDatabase sharedInstance] clearTable:[tableQueueUpload class] account:appDelegate.activeAccount];
             
-            [app.netQueueUpload cancelAllOperations];
-            [app.netQueueUploadWWan cancelAllOperations];
-            
-            [[CCNetworking sharedNetworking] settingSessionsDownload:NO upload:YES taskStatus:k_taskStatusCancel activeAccount:app.activeAccount activeUser:app.activeUser activeUrl:app.activeUrl];
+            [[CCNetworking sharedNetworking] settingSessionsDownload:NO upload:YES taskStatus:k_taskStatusCancel activeAccount:appDelegate.activeAccount activeUser:appDelegate.activeUser activeUrl:appDelegate.activeUrl];
             
             [[NCManageDatabase sharedInstance] setAccountAutoUploadProperty:@"autoUploadFull" state:NO];
         }
@@ -293,8 +306,11 @@
         
         [[NCManageDatabase sharedInstance] setAccountAutoUploadProperty:@"autoUploadImage" state:[[rowDescriptor.value valueData] boolValue]];
 
-        if ([[rowDescriptor.value valueData] boolValue] == YES)
-            [[NCAutoUpload sharedInstance] alignPhotoLibrary];
+        if ([[rowDescriptor.value valueData] boolValue] == YES) {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                [[NCAutoUpload sharedInstance] alignPhotoLibrary];
+            });
+        }
     }
     
     if ([rowDescriptor.tag isEqualToString:@"autoUploadWWAnPhoto"]) {
@@ -306,8 +322,11 @@
     
         [[NCManageDatabase sharedInstance] setAccountAutoUploadProperty:@"autoUploadVideo" state:[[rowDescriptor.value valueData] boolValue]];
 
-        if ([[rowDescriptor.value valueData] boolValue] == YES)
-            [[NCAutoUpload sharedInstance] alignPhotoLibrary];            
+        if ([[rowDescriptor.value valueData] boolValue] == YES){
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+                [[NCAutoUpload sharedInstance] alignPhotoLibrary];
+            });
+        }
     }
     
     if ([rowDescriptor.tag isEqualToString:@"autoUploadWWAnVideo"]) {
@@ -343,9 +362,8 @@
     XLFormRowDescriptor *rowAutoUploadFull = [self.form formRowWithTag:@"autoUploadFull"];
     
     XLFormRowDescriptor *rowAutoUploadCreateSubfolder = [self.form formRowWithTag:@"autoUploadCreateSubfolder"];
-
+    
     XLFormRowDescriptor *rowAutoUploadFileName = [self.form formRowWithTag:@"autoUploadFileName"];
-
     
     // - STATUS ---------------------
     tableAccount *tableAccount = [[NCManageDatabase sharedInstance] getAccountActive];
@@ -373,8 +391,8 @@
     
     if (tableAccount.autoUploadCreateSubfolder)
         [rowAutoUploadCreateSubfolder setValue:@1]; else [rowAutoUploadCreateSubfolder setValue:@0];
-    
-    // - HIDDEN ---------------------
+
+    // - HIDDEN --------------------------------------------------------------------------
     
     rowAutoUploadImage.hidden = [NSString stringWithFormat:@"$%@==0", @"autoUpload"];
     rowAutoUploadWWAnPhoto.hidden = [NSString stringWithFormat:@"$%@==0", @"autoUpload"];
@@ -389,8 +407,8 @@
     rowAutoUploadCreateSubfolder.hidden = [NSString stringWithFormat:@"$%@==0", @"autoUpload"];
     
     rowAutoUploadFileName.hidden = [NSString stringWithFormat:@"$%@==0", @"autoUpload"];
-
-    // ----------------------
+    
+    // -----------------------------------------------------------------------------------
     
     [self.tableView reloadData];
     

@@ -1,6 +1,6 @@
 //
 //  OCnetworking.h
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 10/05/15.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -34,7 +34,7 @@
 
 @interface OCnetworking : NSOperation <CCNetworkingDelegate>
 
-- (id)initWithDelegate:(id <OCNetworkingDelegate>)delegate metadataNet:(CCMetadataNet *)metadataNet withUser:(NSString *)withUser withPassword:(NSString *)withPassword withUrl:(NSString *)withUrl isCryptoCloudMode:(BOOL)isCryptoCloudMode;
+- (id)initWithDelegate:(id <OCNetworkingDelegate>)delegate metadataNet:(CCMetadataNet *)metadataNet withUser:(NSString *)withUser withUserID:(NSString *)withUserID withPassword:(NSString *)withPassword withUrl:(NSString *)withUrl;
 
 @property (nonatomic, weak) id <OCNetworkingDelegate> delegate;
 
@@ -42,24 +42,14 @@
 @property (nonatomic, assign) BOOL isExecuting;
 @property (nonatomic, assign) BOOL isFinished;
 
-- (NSError *)readFileSync:(NSString *)filePathName;
-- (NSError *)checkServerSync:(NSString *)serverUrl;
-- (BOOL)automaticCreateFolderSync:(NSString *)folderPathName;
-
 @end
 
 @protocol OCNetworkingDelegate <NSObject>
 
 @optional
 
-- (void)downloadFileSuccess:(NSString *)fileID serverUrl:(NSString *)serverUrl selector:(NSString *)selector selectorPost:(NSString *)selectorPost;
-- (void)downloadFileFailure:(NSString *)fileID serverUrl:(NSString *)serverUrl selector:(NSString *)selector message:(NSString *)message errorCode:(NSInteger)errorCode;
-
 - (void)downloadThumbnailSuccess:(CCMetadataNet *)metadataNet;
 - (void)downloadThumbnailFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
-
-- (void)uploadFileSuccess:(CCMetadataNet *)metadataNet fileID:(NSString *)fileID serverUrl:(NSString *)serverUrl selector:(NSString *)selector selectorPost:(NSString *)selectorPost;
-- (void)uploadFileFailure:(CCMetadataNet *)metadataNet fileID:(NSString *)fileID serverUrl:(NSString *)serverUrl selector:(NSString *)selector message:(NSString *)message errorCode:(NSInteger)errorCode;
 
 - (void)readFolderSuccess:(CCMetadataNet *)metadataNet metadataFolder:(tableMetadata *)metadataFolder metadatas:(NSArray *)metadatas;
 - (void)readFolderFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
@@ -67,8 +57,7 @@
 - (void)createFolderSuccess:(CCMetadataNet *)metadataNet;
 - (void)createFolderFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
 
-- (void)deleteFileOrFolderSuccess:(CCMetadataNet *)metadataNet;
-- (void)deleteFileOrFolderFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
+- (void)deleteFileOrFolderSuccessFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
 
 - (void)moveSuccess:(CCMetadataNet *)metadataNet;
 - (void)renameSuccess:(CCMetadataNet *)metadataNet;
@@ -84,20 +73,23 @@
 - (void)getUserAndGroupSuccess:(CCMetadataNet *)metadataNet items:(NSArray *)items;
 - (void)getUserAndGroupFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
 
+- (void)getSharePermissionsFileSuccess:(CCMetadataNet *)metadataNet permissions:(NSString *)permissions;
+- (void)getSharePermissionsFileFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
+
 // Capabilities
-- (void)getCapabilitiesOfServerSuccess:(OCCapabilities *)capabilities;
+- (void)getCapabilitiesOfServerSuccess:(CCMetadataNet *)metadataNet capabilities:(OCCapabilities *)capabilities;
 - (void)getCapabilitiesOfServerFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
 
 // Activity
-- (void)getActivityServerSuccess:(NSArray *)listOfActivity;
+- (void)getActivityServerSuccess:(CCMetadataNet *)metadataNet listOfActivity:(NSArray *)listOfActivity;
 - (void)getActivityServerFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
 
 // External Sites
-- (void)getExternalSitesServerSuccess:(NSArray *)listOfExternalSites;
+- (void)getExternalSitesServerSuccess:(CCMetadataNet *)metadataNet listOfExternalSites:(NSArray *)listOfExternalSites;
 - (void)getExternalSitesServerFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
 
 // Notification
-- (void)getNotificationServerSuccess:(NSArray *)listOfNotifications;
+- (void)getNotificationServerSuccess:(CCMetadataNet *)metadataNet listOfNotifications:(NSArray *)listOfNotifications;
 - (void)getNotificationServerFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
 
 - (void)setNotificationServerSuccess:(CCMetadataNet *)metadataNet;
@@ -114,11 +106,30 @@
 // Favorite
 - (void)settingFavoriteSuccess:(CCMetadataNet *)metadataNet;
 - (void)settingFavoriteFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
+
 - (void)listingFavoritesSuccess:(CCMetadataNet *)metadataNet metadatas:(NSArray *)metadatas;
 - (void)listingFavoritesFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
 
 // Subscribing Nextcloud Server
 - (void)subscribingNextcloudServerFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
+
+// End-to-End Encryption
+- (void)getEndToEndPublicKeysSuccess:(CCMetadataNet *)metadataNet;
+- (void)getEndToEndPublicKeysFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
+- (void)signEndToEndPublicKeySuccess:(CCMetadataNet *)metadataNet;
+- (void)signEndToEndPublicKeyFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
+- (void)deleteEndToEndPublicKeySuccess:(CCMetadataNet *)metadataNet;
+- (void)deleteEndToEndPublicKeyFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
+
+- (void)getEndToEndPrivateKeyCipherSuccess:(CCMetadataNet *)metadataNet;
+- (void)getEndToEndPrivateKeyCipherFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
+- (void)storeEndToEndPrivateKeyCipherSuccess:(CCMetadataNet *)metadataNet;
+- (void)storeEndToEndPrivateKeyCipherFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
+- (void)deleteEndToEndPrivateKeySuccess:(CCMetadataNet *)metadataNet;
+- (void)deleteEndToEndPrivateKeyFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
+
+- (void)getEndToEndServerPublicKeySuccess:(CCMetadataNet *)metadataNet;
+- (void)getEndToEndServerPublicKeyFailure:(CCMetadataNet *)metadataNet message:(NSString *)message errorCode:(NSInteger)errorCode;
 
 @end
 

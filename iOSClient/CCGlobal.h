@@ -1,6 +1,6 @@
 //
 //  CCGlobal.h
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 13/10/14.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -24,35 +24,42 @@
 #import <UIKit/UIKit.h>
 
 extern NSString *const appApplicationSupport;
-extern NSString *const appDatabase;
 extern NSString *const appDatabaseNextcloud;
 extern NSString *const appCertificates;
+
+extern NSString *const serverStatus;
 
 extern NSString *const webDAV;
 extern NSString *const dav;
 
-extern NSString *const appKeyCryptoCloud;
-extern NSString *const appSecretCryptoCloud;
-extern NSString *const urlBaseDownloadDB;
-extern NSString *const urlBaseUploadDB;
+extern NSString *const flowEndpoint;
 
 #ifndef EXTENSION
 
 //AppDelegate *appDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
-#define app ((AppDelegate *)[[UIApplication sharedApplication] delegate])
+//#define app ((AppDelegate *)[[UIApplication sharedApplication] delegate])
+//dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//dispatch_async(dispatch_get_main_queue(), ^{
+//dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.3 * NSEC_PER_SEC), dispatch_get_main_queue(), ^(void) {
+
+//DispatchQueue.main.async
+//DispatchQueue.global().async
+
 #define CALL_ORIGIN NSLog(@"Origin: [%@]", [[[[NSThread callStackSymbols] objectAtIndex:1] componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"[]"]] objectAtIndex:1])
 
 #endif
 
-// Version Protocol plist
-#define k_versionProtocolPlist                          @"1.3"
-
 // UUID
 #define k_UUID_SIM                                      @"4BACFE4A-61A6-44B1-9A85-13FD167565AB"
+
+// Passphrase test EndToEnd Encryption
+#define k_passphrase_test                               @"more over television factory tendency independence international intellectual impress interest sentence pony"
 
 #define k_dismissAfterSecond                            4
 
 #define k_daysOfActivity                                7
+
+#define k_maxErrorAutoUploadAll                         100
 
 #define k_returnCreateFolderPlain                       0
 #define k_returnCreateFotoVideoPlain                    1
@@ -60,20 +67,17 @@ extern NSString *const urlBaseUploadDB;
 #define k_returnCreateFolderEncrypted                   3
 #define k_returnCreateFotoVideoEncrypted                4
 #define k_returnCreateFileEncrypted                     5
-#define k_returnCartaDiCredito                          6
-#define k_returnBancomat                                7
-#define k_returnContoCorrente                           8
-#define k_returnAccountWeb                              9
-#define k_returnNote                                    10
-#define k_returnPatenteGuida                            11
-#define k_returnCartaIdentita                           12
-#define k_returnPassaporto                              13
+#define k_returnCreateFileText                          6
 
 // Name Default DB
-#define k_databaseDefault                               @"techsize.realm"
+#define k_databaseDefault                               @"nextcloud.realm"
+
+// Intro
+#define k_Intro                                         @"Intro"
+#define k_Intro_no_cryptocloud                          @"IntroNoCryptoCloud"
 
 // Picker select image
-#define k_pickerControllerMax                           100.0
+#define k_pickerControllerMax                           1000.0
 
 // define Nextcloud IOS
 #define k_share_link_middle_part_url_after_version_8    @"index.php/s/"
@@ -92,40 +96,40 @@ extern NSString *const urlBaseUploadDB;
 #define k_networkingSessionNotification                 @"networkingSessionNotification"
 
 // Session
-#define k_domain_session_queue                          @"group.cloud.techsize"
+#define k_domain_session_queue                          @"techsize.cloud"
 
-#define k_download_session                              @"group.cloud.techsize.download.session"
-#define k_download_session_foreground                   @"group.cloud.techsize.download.sessionforeground"
-#define k_download_session_wwan                         @"group.cloud.techsize.download.sessionwwan"
-#define k_upload_session                                @"group.cloud.techsize.upload.session"
-#define k_upload_session_foreground                     @"group.cloud.techsize.upload.sessionforeground"
-#define k_upload_session_wwan                           @"group.cloud.techsize.upload.sessionwwan"
+#define k_download_session                              @"techsize.cloud.download.session"
+#define k_download_session_foreground                   @"techsize.cloud.download.sessionforeground"
+#define k_download_session_wwan                         @"techsize.cloud.download.sessionwwan"
+#define k_upload_session                                @"techsize.cloud.upload.session"
+#define k_upload_session_wwan                           @"techsize.cloud.upload.sessionwwan"
+#define k_upload_session_foreground                     @"techsize.cloud.upload.sessionforeground"
 
 // OperationQueue
-#define k_queue                                         @"group.cloud.techsize.queue"
-#define k_download_queue                                @"group.cloud.techsize.download.queue"
-#define k_download_queuewwan                            @"group.cloud.techsize.download.queuewwan"
-#define k_upload_queue                                  @"group.cloud.techsize.upload.queue"
-#define k_upload_queuewwan                              @"group.cloud.techsize.upload.queuewwan"
+#define k_queue                                         @"techsize.cloud.queue"
+#define k_download_queue                                @"techsize.cloud.download.queue"
+#define k_download_queuewwan                            @"techsize.cloud.download.queuewwan"
+#define k_upload_queue                                  @"techsize.cloud.upload.queue"
+#define k_upload_queuewwan                              @"techsize.cloud.upload.queuewwan"
 
 // Service Key Share
-#define k_serviceShareKeyChain                          @"TechSize Cloud"
-#define k_metadataKeyedUnarchiver                       @"group.cloud.techsize.metadata"
+#define k_serviceShareKeyChain                          @"TechSize"
+#define k_metadataKeyedUnarchiver                       @"it.twsweb.nextcloud.metadata"
 
 // TaskIdentifier
 #define k_taskIdentifierDone                            -1
 #define k_taskIdentifierStop                            -2
+#define k_taskIdentifierWaitStart                       -3
 #define k_taskIdentifierError                           -99999
 #define k_taskIdentifierNULL                            99999
 
 // TaskStatus
-#define k_taskStatusNone                                0
 #define k_taskStatusCancel                              -1
 #define k_taskStatusResume                              -2
 #define k_taskStatusSuspend                             -3
 
 #define k_timerVerifySession                            10
-#define k_timerProcessAutoUpload                        5
+#define k_timerProcessAutoDownloadUpload                5
 #define k_timerUpdateApplicationIconBadgeNumber         3
 
 #define k_maxConcurrentOperation                         10
@@ -135,7 +139,6 @@ extern NSString *const urlBaseUploadDB;
 // Error
 #define k_CCErrorTaskNil                                -9999
 #define k_CCErrorTaskDownloadNotFound                   -9998
-#define k_CCErrorFileUploadNotFound                     -9997
 #define k_CCErrorInternalError                          -9996
 #define k_CCErrorNetworkNowAvailable                    -9995
 #define k_CCErrorFileAlreadyInDownload                  -9994
@@ -149,30 +152,22 @@ extern NSString *const urlBaseUploadDB;
 // Metadata.Net SELECTOR
 #define selectorAddFavorite                             @"addFavorite"
 #define selectorCreateFolder                            @"createFolder"
-#define selectorDecryptFile                             @"decryptFile"
 #define selectorDelete                                  @"delete"
-#define selectorDeleteCrypto                            @"deleteCrypto"
-#define selectorDeletePlist                             @"deletePlist"
-#define selectorDownloadFile                            @"downloadFile"
 #define selectorDownloadThumbnail                       @"downloadThumbnail"
 #define selectorDownloadSynchronize                     @"downloadSynchronize"
-#define selectorEncryptFile                             @"encryptFile"
 #define selectorGetUserAndGroup                         @"getUserAndGroup"
 #define selectorLoadFileView                            @"loadFileView"
 #define selectorLoadModelView                           @"loadModelView"
-#define selectorLoadPlist                               @"loadPlist"
 #define selectorLoadViewImage                           @"loadViewImage"
 #define selectorLoadCopy                                @"loadCopy"
 #define selectorMove                                    @"move"
-#define selectorMoveCrypto                              @"moveCrypto"
-#define selectorMovePlist                               @"movePlist"
 #define selectorOpenIn                                  @"openIn"
 #define selectorOpenWindowShare                         @"openWindowShare"
 #define selectorReadFile                                @"readFile"
-#define selectorReadFileUploadFile                      @"readFileUploadFile"
-#define selectorReadFileVerifyUpload                    @"readFileVerifyUpload"
 #define selectorReadFileWithDownload                    @"readFileWithDownload"
 #define selectorReadFileReloadFolder                    @"readFileReloadFolder"
+#define selectorReadFileFolder                          @"readFileFolder"
+#define selectorReadFileFolderWithDownload              @"readFileFolderWithDownload"
 #define selectorReadFolder                              @"readFolder"
 #define selectorReadFolderForced                        @"readFolderForced"
 #define selectorReadFolderWithDownload                  @"readFolderWithDownload"
@@ -186,21 +181,18 @@ extern NSString *const urlBaseUploadDB;
 #define selectorUploadAutoUpload                        @"uploadAutoUpload"
 #define selectorUploadAutoUploadAll                     @"uploadAutoUploadAll"
 #define selectorUploadFile                              @"uploadFile"
-#define selectorUploadFileCrypto                        @"uploadFileCrypto"
-#define selectorUploadFilePlist                         @"uploadFilePlist"
 #define selectorUploadRemovePhoto                       @"uploadRemovePhoto"
 
 // Metadata.Net ACTION
 #define actionCreateFolder                              @"createFolder"
 #define actionDeleteFileDirectory                       @"deleteFileOrFolder"
-#define actionDownloadFile                              @"downloadFile"
 #define actionDownloadThumbnail                         @"downloadThumbnail"
 #define actionGetActivityServer                         @"getActivityServer"
 #define actionGetCapabilities                           @"getCapabilitiesOfServer"
 #define actionGetUserAndGroup                           @"getUserAndGroup"
 #define actionGetUserProfile                            @"getUserProfile"
 #define actionGetNotificationServer                     @"getNotificationServer"
-#define actionSetNotificationServer                     @"setNotificationServer"
+#define actionGetSharePermissionsFile                   @"getSharePermissionsFile"
 #define actionGetExternalSitesServer                    @"getExternalSitesServer"
 #define actionMiddlewarePing                            @"middlewarePing"
 #define actionListingFavorites                          @"listingFavorites"
@@ -209,16 +201,21 @@ extern NSString *const urlBaseUploadDB;
 #define actionReadFolder                                @"readFolder"
 #define actionReadShareServer                           @"readShareServer"
 #define actionSearch                                    @"search"
+#define actionSetNotificationServer                     @"setNotificationServer"
 #define actionSettingFavorite                           @"settingFavorite"
 #define actionShare                                     @"share"
 #define actionShareWith                                 @"shareWith"
 #define actionSubscribingNextcloudServer                @"subscribingNextcloudServer"
 #define actionUnShare                                   @"unShare"
 #define actionUpdateShare                               @"updateShare"
-#define actionUploadFile                                @"uploadFile"
-#define actionUploadAsset                               @"uploadAsset"
-#define actionUploadTemplate                            @"uploadTemplate"
-#define actionUploadOnlyPlist                           @"uploadOnlyPlist"
+
+#define actionGetEndToEndPublicKeys                     @"getEndToEndPublicKeys"
+#define actionGetEndToEndPrivateKeyCipher               @"getEndToEndPrivateKeyCipher"
+#define actionSignEndToEndPublicKey                     @"signEndToEndPublicKey"
+#define actionStoreEndToEndPrivateKeyCipher             @"storeEndToEndPrivateKeyCipher"
+#define actionDeleteEndToEndPublicKey                   @"deleteEndToEndPublicKey"
+#define actionDeleteEndToEndPrivateKey                  @"deleteEndToEndPrivateKey"
+#define actionGetEndToEndServerPublicKey                @"getEndToEndServerPublicKey"
 
 // Metadata : FileType
 #define k_metadataTypeFile_audio                        @"audio"
@@ -226,18 +223,8 @@ extern NSString *const urlBaseUploadDB;
 #define k_metadataTypeFile_directory                    @"directory"
 #define k_metadataTypeFile_document                     @"document"
 #define k_metadataTypeFile_image                        @"image"
-#define k_metadataTypeFile_template                     @"template"
 #define k_metadataTypeFile_unknown                      @"unknow"
 #define k_metadataTypeFile_video                        @"video"
-
-// Metadata : Type
-#define k_metadataType_file                             @"file"
-#define k_metadataType_template                         @"model"
-
-// Metadata : Filename Type
-#define k_metadataTypeFilenamePlain                     0
-#define k_metadataTypeFilenamePlist                     1
-#define k_metadataTypeFilenameCrypto                    2
 
 // Metadata : Status
 #define k_metadataStatusNormal                          0
@@ -274,14 +261,14 @@ extern NSString *const urlBaseUploadDB;
 #define k_activityDebugActionGetNotification            @"Get Notification Server"
 #define k_activityDebugActionPushProxy                  @"Subscribing Push Proxy"
 #define k_activityDebugActionServerPush                 @"Subscribing Server Push"
-#define k_activityDebugActionFeatures                   @"Features Supported By Server"
 #define k_activityDebugActionCapabilities               @"Capabilities Of Server"
+#define k_activityDebugActionEndToEndEncryption         @"End To End Encryption "
 
-// Priority Auto Upload
-#define k_priorityAutoUploadImage                       0
-#define k_priorityAutoUploadVideo                       -1
-#define k_priorityAutoUploadError                       -2
-#define k_priorityAutoUploadStop                        -4
+// E2EE
+#define k_max_filesize_E2E                              524288000   // 500 MB
+
+// Flow Version
+#define k_flow_version_available                        12
 
 // -----------------------------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------------------------------

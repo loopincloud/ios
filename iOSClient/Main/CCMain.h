@@ -1,6 +1,6 @@
 //
 //  CCMain.h
-//  Crypto Cloud Technology Nextcloud
+//  Nextcloud iOS
 //
 //  Created by Marino Faggiana on 04/09/14.
 //  Copyright (c) 2017 TWS. All rights reserved.
@@ -32,7 +32,6 @@
 #import "CTAssetSelectionLabel.h"
 #import "BKPasscodeViewController.h"
 #import "NSString+TruncateToWidth.h"
-#import "UINavigationController+CCProgress.h"
 #import "UIScrollView+EmptyDataSet.h"
 #import "CCLogin.h"
 #import "CCCellMain.h"
@@ -40,7 +39,6 @@
 #import "CCMove.h"
 #import "CCDetail.h"
 #import "CTAssetsPickerController.h"
-#import "CCTemplates.h"
 #import "CCShareOC.h"
 #import "CCShareInfoCMOC.h"
 #import "CCNetworking.h"
@@ -51,37 +49,30 @@
 #import "CCHud.h"
 #import "CCMenuAccount.h"
 #import "CCPeekPop.h"
-#import "CCAccountWeb.h"
-#import "CCBancomat.h"
-#import "CCCartaDiCredito.h"
-#import "CCCartaIdentita.h"
-#import "CCContoCorrente.h"
-#import "CCNote.h"
-#import "CCPassaporto.h"
-#import "CCPatenteGuida.h"
 
 @class tableMetadata;
 
-@interface CCMain : UITableViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, UIDocumentInteractionControllerDelegate, UIViewControllerPreviewingDelegate, CCMoveDelegate, CTAssetsPickerControllerDelegate, BKPasscodeViewControllerDelegate, UISplitViewControllerDelegate, UIPopoverControllerDelegate, CCNetworkingDelegate, CCShareOCDelegate, CCAccountWebDelegate, CCBancomatDelegate, CCCartaDiCreditoDelegate, CCCartaIdentitaDelegate, CCContoCorrenteDelegate, CCNoteDelegate, CCPassaportoDelegate, CCPatenteGuidaDelegate, CCPeekPopDelegate, UIDocumentMenuDelegate, UIDocumentPickerDelegate, UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate, UIScrollViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
+@interface CCMain : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIGestureRecognizerDelegate, UIDocumentInteractionControllerDelegate, UIViewControllerPreviewingDelegate, CCMoveDelegate, CTAssetsPickerControllerDelegate, BKPasscodeViewControllerDelegate, UISplitViewControllerDelegate, UIPopoverControllerDelegate, CCNetworkingDelegate, CCShareOCDelegate, CCPeekPopDelegate, UIDocumentMenuDelegate, UIDocumentPickerDelegate, UISearchResultsUpdating, UISearchControllerDelegate, UISearchBarDelegate, UIScrollViewDelegate, DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
-@property BOOL isFolderEncrypted;
-
+@property (nonatomic, weak) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) UIRefreshControl *refreshControl;
 @property (nonatomic, strong) NSString *serverUrl;
 @property (nonatomic, strong) NSString *titleMain;
 @property (nonatomic, strong) NSString *textBackButton;
-
 @property (nonatomic, weak) CCShareOC *shareOC;
 @property (nonatomic, weak) CCDetail *detailViewController;
 @property (nonatomic, strong) UISearchController *searchController;
+@property (nonatomic, strong) UIView *reMenuBackgroundView;
+@property (nonatomic, strong) UITapGestureRecognizer *singleFingerTap;
+@property (nonatomic, strong) UIImage *imageTitle;
 
 - (void)closeAllMenu;
 - (void)returnCreate:(NSInteger)type;
 
-- (void)createFolder:(NSString *)fileNameFolder autoUploadDirectory:(BOOL)autoUploadDirectory;
 - (void)readFolder:(NSString *)serverUrl;
 - (void)readFileReloadFolder;
 
-- (void)uploadFileAsset:(NSMutableArray *)assets serverUrl:(NSString *)serverUrl cryptated:(BOOL)cryptated useSubFolder:(BOOL)useSubFolder session:(NSString *)session;
+- (void)uploadFileAsset:(NSMutableArray *)assets serverUrl:(NSString *)serverUrl useSubFolder:(BOOL)useSubFolder session:(NSString *)session;
 
 - (void)reloadTaskButton:(tableMetadata *)metadata;
 - (void)cancelTaskButton:(tableMetadata *)metadata reloadTable:(BOOL)reloadTable;
