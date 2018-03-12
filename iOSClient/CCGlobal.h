@@ -114,7 +114,7 @@ extern NSString *const flowEndpoint;
 
 // Service Key Share
 #define k_serviceShareKeyChain                          @"TechSize"
-#define k_metadataKeyedUnarchiver                       @"it.twsweb.nextcloud.metadata"
+#define k_metadataKeyedUnarchiver                       @"techsize.cloud.metadata"
 
 // TaskIdentifier
 #define k_taskIdentifierDone                            -1

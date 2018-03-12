@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E4FDCB8C2057336C006A4628 /* NCNetworkingSync.m in Sources */ = {isa = PBXBuildFile; fileRef = E4FDCB8B2057336C006A4628 /* NCNetworkingSync.m */; };
+		E4FDCB8D205733A4006A4628 /* NCNetworkingSync.m in Sources */ = {isa = PBXBuildFile; fileRef = E4FDCB8B2057336C006A4628 /* NCNetworkingSync.m */; };
+		E4FDCB8E205733A4006A4628 /* NCNetworkingSync.m in Sources */ = {isa = PBXBuildFile; fileRef = E4FDCB8B2057336C006A4628 /* NCNetworkingSync.m */; };
+		E4FDCB8F205733A5006A4628 /* NCNetworkingSync.m in Sources */ = {isa = PBXBuildFile; fileRef = E4FDCB8B2057336C006A4628 /* NCNetworkingSync.m */; };
 		F700222C1EC479840080073F /* Custom.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F700222B1EC479840080073F /* Custom.xcassets */; };
 		F700222D1EC479840080073F /* Custom.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F700222B1EC479840080073F /* Custom.xcassets */; };
 		F700222E1EC479840080073F /* Custom.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F700222B1EC479840080073F /* Custom.xcassets */; };
@@ -229,10 +233,6 @@
 		F750374D1DBFA91A008FB480 /* ALView+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = F75037441DBFA91A008FB480 /* ALView+PureLayout.m */; };
 		F750374F1DBFA91A008FB480 /* NSArray+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = F75037461DBFA91A008FB480 /* NSArray+PureLayout.m */; };
 		F75037511DBFA91A008FB480 /* NSLayoutConstraint+PureLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = F75037481DBFA91A008FB480 /* NSLayoutConstraint+PureLayout.m */; };
-		F75131631FA5EFF4002BB4D1 /* NCNetworkingSync.m in Sources */ = {isa = PBXBuildFile; fileRef = F75131621FA5EFF4002BB4D1 /* NCNetworkingSync.m */; };
-		F75131641FA5EFF4002BB4D1 /* NCNetworkingSync.m in Sources */ = {isa = PBXBuildFile; fileRef = F75131621FA5EFF4002BB4D1 /* NCNetworkingSync.m */; };
-		F75131651FA5EFF4002BB4D1 /* NCNetworkingSync.m in Sources */ = {isa = PBXBuildFile; fileRef = F75131621FA5EFF4002BB4D1 /* NCNetworkingSync.m */; };
-		F75131661FA5EFF4002BB4D1 /* NCNetworkingSync.m in Sources */ = {isa = PBXBuildFile; fileRef = F75131621FA5EFF4002BB4D1 /* NCNetworkingSync.m */; };
 		F75797AE1E81356C00187A1B /* CTAssetsPicker.strings in Resources */ = {isa = PBXBuildFile; fileRef = F75797AC1E81356C00187A1B /* CTAssetsPicker.strings */; };
 		F75AC2431F1F62450073EC19 /* NCManageAutoUploadFileName.swift in Sources */ = {isa = PBXBuildFile; fileRef = F75AC2421F1F62450073EC19 /* NCManageAutoUploadFileName.swift */; };
 		F75ADF451DC75FFE008A7347 /* CCLogin.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F75ADF441DC75FFE008A7347 /* CCLogin.storyboard */; };
@@ -675,6 +675,8 @@
 		08EA97451E6554FC004C83FA /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseCore.framework; sourceTree = "<group>"; };
 		08EA97461E6554FC004C83FA /* FirebaseInstanceID.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseInstanceID.framework; sourceTree = "<group>"; };
 		08EA97471E6554FC004C83FA /* GoogleToolboxForMac.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleToolboxForMac.framework; sourceTree = "<group>"; };
+		E4FDCB8A2057336C006A4628 /* NCNetworkingSync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NCNetworkingSync.h; path = iOSClient/NCNetworkingSync.h; sourceTree = SOURCE_ROOT; };
+		E4FDCB8B2057336C006A4628 /* NCNetworkingSync.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NCNetworkingSync.m; path = iOSClient/NCNetworkingSync.m; sourceTree = SOURCE_ROOT; };
 		F700222B1EC479840080073F /* Custom.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Custom.xcassets; sourceTree = "<group>"; };
 		F70022591EC4C9100080073F /* AFHTTPSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPSessionManager.h; sourceTree = "<group>"; };
 		F700225A1EC4C9100080073F /* AFHTTPSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPSessionManager.m; sourceTree = "<group>"; };
@@ -922,8 +924,6 @@
 		F75037491DBFA91A008FB480 /* PureLayout+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PureLayout+Internal.h"; sourceTree = "<group>"; };
 		F750374A1DBFA91A008FB480 /* PureLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PureLayout.h; sourceTree = "<group>"; };
 		F750374B1DBFA91A008FB480 /* PureLayoutDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PureLayoutDefines.h; sourceTree = "<group>"; };
-		F75131611FA5EFF4002BB4D1 /* NCNetworkingSync.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NCNetworkingSync.h; sourceTree = "<group>"; };
-		F75131621FA5EFF4002BB4D1 /* NCNetworkingSync.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NCNetworkingSync.m; sourceTree = "<group>"; };
 		F7514EDA1C7B1336008F3338 /* CCHud.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCHud.h; sourceTree = "<group>"; };
 		F7514EDB1C7B1336008F3338 /* CCHud.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCHud.m; sourceTree = "<group>"; };
 		F7540EE21D5B238600C3FFA8 /* aes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aes.h; sourceTree = "<group>"; };
@@ -1139,34 +1139,6 @@
 		F76C3B881C638A4C00DC4301 /* CCError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCError.m; sourceTree = "<group>"; };
 		F76F23321ED4600700C40023 /* Share-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Share-Bridging-Header.h"; sourceTree = "<group>"; };
 		F76F23331ED4603700C40023 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LaunchScreen.xib; sourceTree = "<group>"; };
-		F77438E81FCD694900662C46 /* ka-GE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ka-GE"; path = "ka-GE.lproj/CTAssetsPicker.strings"; sourceTree = "<group>"; };
-		F77438E91FCD694900662C46 /* ka-GE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ka-GE"; path = "ka-GE.lproj/SwiftWebVC.strings"; sourceTree = "<group>"; };
-		F77438EA1FCD694900662C46 /* ka-GE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ka-GE"; path = "ka-GE.lproj/BKPasscodeView.strings"; sourceTree = "<group>"; };
-		F77438EB1FCD694900662C46 /* ka-GE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ka-GE"; path = "ka-GE.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		F77438EC1FCD694900662C46 /* ka-GE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ka-GE"; path = "ka-GE.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		F77438ED1FCD694900662C46 /* ka-GE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ka-GE"; path = "ka-GE.lproj/Intro.strings"; sourceTree = "<group>"; };
-		F77438EE1FCD694900662C46 /* ka-GE */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "ka-GE"; path = "ka-GE.lproj/Error.strings"; sourceTree = "<group>"; };
-		F77438EF1FCD69D200662C46 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/CTAssetsPicker.strings; sourceTree = "<group>"; };
-		F77438F01FCD69D200662C46 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/SwiftWebVC.strings; sourceTree = "<group>"; };
-		F77438F11FCD69D200662C46 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/BKPasscodeView.strings; sourceTree = "<group>"; };
-		F77438F21FCD69D300662C46 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F77438F31FCD69D300662C46 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F77438F41FCD69D300662C46 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Intro.strings; sourceTree = "<group>"; };
-		F77438F51FCD69D300662C46 /* hu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hu; path = hu.lproj/Error.strings; sourceTree = "<group>"; };
-		F77438F61FCD6A0D00662C46 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/CTAssetsPicker.strings"; sourceTree = "<group>"; };
-		F77438F71FCD6A0D00662C46 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/SwiftWebVC.strings"; sourceTree = "<group>"; };
-		F77438F81FCD6A0D00662C46 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/BKPasscodeView.strings"; sourceTree = "<group>"; };
-		F77438F91FCD6A0D00662C46 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		F77438FA1FCD6A0E00662C46 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		F77438FB1FCD6A0E00662C46 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/Intro.strings"; sourceTree = "<group>"; };
-		F77438FC1FCD6A0E00662C46 /* zh-Hant-TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-TW"; path = "zh-Hant-TW.lproj/Error.strings"; sourceTree = "<group>"; };
-		F77438FD1FCD6B7E00662C46 /* sr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sr; path = sr.lproj/CTAssetsPicker.strings; sourceTree = "<group>"; };
-		F77438FE1FCD6B7E00662C46 /* sr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sr; path = sr.lproj/SwiftWebVC.strings; sourceTree = "<group>"; };
-		F77438FF1FCD6B7F00662C46 /* sr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sr; path = sr.lproj/BKPasscodeView.strings; sourceTree = "<group>"; };
-		F77439001FCD6B7F00662C46 /* sr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sr; path = sr.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F77439011FCD6B7F00662C46 /* sr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sr; path = sr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F77439021FCD6B7F00662C46 /* sr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sr; path = sr.lproj/Intro.strings; sourceTree = "<group>"; };
-		F77439031FCD6B7F00662C46 /* sr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sr; path = sr.lproj/Error.strings; sourceTree = "<group>"; };
 		F77439041FCD6BEF00662C46 /* es-CL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-CL"; path = "es-CL.lproj/CTAssetsPicker.strings"; sourceTree = "<group>"; };
 		F77439051FCD6BEF00662C46 /* es-CL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-CL"; path = "es-CL.lproj/SwiftWebVC.strings"; sourceTree = "<group>"; };
 		F77439061FCD6BEF00662C46 /* es-CL */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-CL"; path = "es-CL.lproj/BKPasscodeView.strings"; sourceTree = "<group>"; };
@@ -1568,13 +1540,6 @@
 		F7D5324E1F5D4137006568B1 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F7D5324F1F5D4137006568B1 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Intro.strings; sourceTree = "<group>"; };
 		F7D532501F5D4137006568B1 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Error.strings; sourceTree = "<group>"; };
-		F7D532511F5D4155006568B1 /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/CTAssetsPicker.strings"; sourceTree = "<group>"; };
-		F7D532521F5D4155006568B1 /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/SwiftWebVC.strings"; sourceTree = "<group>"; };
-		F7D532531F5D4155006568B1 /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/BKPasscodeView.strings"; sourceTree = "<group>"; };
-		F7D532541F5D4155006568B1 /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		F7D532551F5D4155006568B1 /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		F7D532561F5D4155006568B1 /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Intro.strings"; sourceTree = "<group>"; };
-		F7D532571F5D4156006568B1 /* sk-SK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "sk-SK"; path = "sk-SK.lproj/Error.strings"; sourceTree = "<group>"; };
 		F7D5328C1F5D443B006568B1 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/CTAssetsPicker.strings"; sourceTree = "<group>"; };
 		F7D5328D1F5D443B006568B1 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/SwiftWebVC.strings"; sourceTree = "<group>"; };
 		F7D5328E1F5D443B006568B1 /* en-GB */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "en-GB"; path = "en-GB.lproj/BKPasscodeView.strings"; sourceTree = "<group>"; };
@@ -1593,13 +1558,6 @@
 		F7DC5FE91F011EB700A903C7 /* MGSwipeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGSwipeButton.m; sourceTree = "<group>"; };
 		F7DC5FEA1F011EB700A903C7 /* MGSwipeTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGSwipeTableCell.h; sourceTree = "<group>"; };
 		F7DC5FEB1F011EB700A903C7 /* MGSwipeTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGSwipeTableCell.m; sourceTree = "<group>"; };
-		F7DE9AAD1F482FA5008DFE10 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/CTAssetsPicker.strings; sourceTree = "<group>"; };
-		F7DE9AAE1F482FA5008DFE10 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/SwiftWebVC.strings; sourceTree = "<group>"; };
-		F7DE9AAF1F482FA5008DFE10 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/BKPasscodeView.strings; sourceTree = "<group>"; };
-		F7DE9AB01F482FA5008DFE10 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F7DE9AB11F482FA5008DFE10 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		F7DE9AB21F482FA5008DFE10 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Intro.strings; sourceTree = "<group>"; };
-		F7DE9AB31F482FA5008DFE10 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Error.strings; sourceTree = "<group>"; };
 		F7DFE24F1EBDC3A400CF5202 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		F7DFE2501EBDC3A400CF5202 /* RealmSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = RealmSwift.framework; sourceTree = "<group>"; };
 		F7ECBA6C1E239DCD003E6328 /* CCCreateCloud.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CCCreateCloud.swift; sourceTree = "<group>"; };
@@ -2154,8 +2112,8 @@
 				F732BA041D76CE1500E9878B /* CCNetworking.m */,
 				F74D3DBD1BAC1941000BAE4B /* OCNetworking.h */,
 				F74D3DBE1BAC1941000BAE4B /* OCNetworking.m */,
-				F75131611FA5EFF4002BB4D1 /* NCNetworkingSync.h */,
-				F75131621FA5EFF4002BB4D1 /* NCNetworkingSync.m */,
+				E4FDCB8A2057336C006A4628 /* NCNetworkingSync.h */,
+				E4FDCB8B2057336C006A4628 /* NCNetworkingSync.m */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -3269,7 +3227,7 @@
 				ORGANIZATIONNAME = TWS;
 				TargetAttributes = {
 					F71459B41D12E3B700CAFEEC = {
-						DevelopmentTeam = 6JLRKY9ZV7;
+						DevelopmentTeam = MQ224A6W7W;
 						LastSwiftMigration = 0900;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
@@ -3282,7 +3240,7 @@
 					};
 					F74344111E1264ED001CC831 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 6JLRKY9ZV7;
+						DevelopmentTeam = MQ224A6W7W;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -3296,7 +3254,7 @@
 					};
 					F743441F1E1264EE001CC831 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 6JLRKY9ZV7;
+						DevelopmentTeam = MQ224A6W7W;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -3306,7 +3264,7 @@
 						};
 					};
 					F77B0DEB1D118A16002130FE = {
-						DevelopmentTeam = 6JLRKY9ZV7;
+						DevelopmentTeam = MQ224A6W7W;
 						LastSwiftMigration = 0900;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
@@ -3336,17 +3294,11 @@
 				"es-MX",
 				"nb-NO",
 				pl,
-				sv,
 				es,
 				is,
 				nl,
-				"sk-SK",
 				"en-GB",
 				"zh-Hans",
-				"ka-GE",
-				hu,
-				"zh-Hant-TW",
-				sr,
 				"es-CL",
 				"es-CO",
 				"es-CR",
@@ -3589,6 +3541,7 @@
 				F71459B81D12E3B700CAFEEC /* CCError.m in Sources */,
 				F73CC0701E813DFF006E3047 /* BKPasscodeInputView.m in Sources */,
 				F71459BA1D12E3B700CAFEEC /* NSString+TruncateToWidth.m in Sources */,
+				E4FDCB8D205733A4006A4628 /* NCNetworkingSync.m in Sources */,
 				F71459BC1D12E3B700CAFEEC /* Reachability.m in Sources */,
 				F71459BD1D12E3B700CAFEEC /* UIImage+animatedGIF.m in Sources */,
 				F73CC06D1E813DFF006E3047 /* BKPasscodeField.m in Sources */,
@@ -3631,7 +3584,6 @@
 				F70022C91EC4C9100080073F /* OCRichObjectStrings.m in Sources */,
 				F71459F11D12E3B700CAFEEC /* CCMove.m in Sources */,
 				F70022C31EC4C9100080073F /* OCNotifications.m in Sources */,
-				F75131641FA5EFF4002BB4D1 /* NCNetworkingSync.m in Sources */,
 				F71459F71D12E3B700CAFEEC /* CCGraphics.m in Sources */,
 				F7BAADC91ED5A87C00B7EAD4 /* NCDatabase.swift in Sources */,
 				F70022BD1EC4C9100080073F /* OCExternalSites.m in Sources */,
@@ -3663,6 +3615,7 @@
 				F725437C1E12A44A009BF4C2 /* CCSection.m in Sources */,
 				F74344651E127DE9001CC831 /* CCNetworking.m in Sources */,
 				F74344641E127DE6001CC831 /* OCNetworking.m in Sources */,
+				E4FDCB8E205733A4006A4628 /* NCNetworkingSync.m in Sources */,
 				F70022CA1EC4C9100080073F /* OCRichObjectStrings.m in Sources */,
 				F70023001EC4C9100080073F /* UtilsFramework.m in Sources */,
 				F73CC07A1E813DFF006E3047 /* BKShiftingView.m in Sources */,
@@ -3681,7 +3634,6 @@
 				F73CC0741E813DFF006E3047 /* BKPasscodeLockScreenManager.m in Sources */,
 				F77EB62B1EC0B50B003F814F /* CCCertificate.m in Sources */,
 				F7E718B01EB0FBE700FA58C9 /* CCGraphics.m in Sources */,
-				F75131651FA5EFF4002BB4D1 /* NCNetworkingSync.m in Sources */,
 				F74344171E1264EE001CC831 /* DocumentPickerViewController.swift in Sources */,
 				F70022D61EC4C9100080073F /* NSDate+ISO8601.m in Sources */,
 				F74344811E127F49001CC831 /* AFViewShaker.m in Sources */,
@@ -3748,11 +3700,11 @@
 				F7BB50C91F22386400C47094 /* OCActivity.m in Sources */,
 				F7BB50AF1F22370300C47094 /* NCManageDatabase.swift in Sources */,
 				F7BB50FA1F2239CB00C47094 /* BKTouchIDManager.m in Sources */,
+				E4FDCB8F205733A5006A4628 /* NCNetworkingSync.m in Sources */,
 				F7BB50BB1F22374E00C47094 /* OCNetworking.m in Sources */,
 				F7BB50C11F22378E00C47094 /* CCHud.m in Sources */,
 				F7BB50DE1F2238B700C47094 /* UtilsFramework.m in Sources */,
 				F7BB50D61F22389900C47094 /* OCHTTPRequestOperation.m in Sources */,
-				F75131661FA5EFF4002BB4D1 /* NCNetworkingSync.m in Sources */,
 				F7BB50BD1F22376000C47094 /* CCCertificate.m in Sources */,
 				F7BB50DA1F2238A600C47094 /* OCXMLServerErrorsParser.m in Sources */,
 				F7BB50C51F22379B00C47094 /* NSNotificationCenter+MainThread.m in Sources */,
@@ -3974,7 +3926,6 @@
 				F7B1FBC81E72E3D1001781FE /* SwiftWebVCActivity.swift in Sources */,
 				F7D424741F063B82009C9782 /* CTAssetThumbnailView.m in Sources */,
 				F77B0E981D118A16002130FE /* CCManageAccount.m in Sources */,
-				F75131631FA5EFF4002BB4D1 /* NCNetworkingSync.m in Sources */,
 				F762CB011EACB66200B38484 /* XLFormSelectorCell.m in Sources */,
 				F70022AD1EC4C9100080073F /* AFURLResponseSerialization.m in Sources */,
 				F7D424531F063B82009C9782 /* NSBundle+CTAssetsPickerController.m in Sources */,
@@ -4035,6 +3986,7 @@
 				F7D4237B1F0596C6009C9782 /* ReaderContentPage.m in Sources */,
 				F73B4F0A1F470D9100BBEE4B /* nsEUCTWProber.cpp in Sources */,
 				F762CB871EACB81000B38484 /* REMenu.m in Sources */,
+				E4FDCB8C2057336C006A4628 /* NCNetworkingSync.m in Sources */,
 				F762CB091EACB66200B38484 /* XLFormViewController.m in Sources */,
 				F762CB161EACB66200B38484 /* XLFormTextView.m in Sources */,
 				F7D424681F063B82009C9782 /* CTAssetsGridViewFooter.m in Sources */,
@@ -4096,17 +4048,11 @@
 				F78D6F451F0B7CB9002F9619 /* es-MX */,
 				F78D6F4C1F0B7CE4002F9619 /* nb-NO */,
 				F78D6F531F0B7D47002F9619 /* pl */,
-				F7DE9AAF1F482FA5008DFE10 /* sv */,
 				F7CC04E51F5AD50D00378CEF /* es */,
 				F7D532451F5D4123006568B1 /* is */,
 				F7D5324C1F5D4137006568B1 /* nl */,
-				F7D532531F5D4155006568B1 /* sk-SK */,
 				F7D5328E1F5D443B006568B1 /* en-GB */,
 				F7D532A31F5D4461006568B1 /* zh-Hans */,
-				F77438EA1FCD694900662C46 /* ka-GE */,
-				F77438F11FCD69D200662C46 /* hu */,
-				F77438F81FCD6A0D00662C46 /* zh-Hant-TW */,
-				F77438FF1FCD6B7F00662C46 /* sr */,
 				F77439061FCD6BEF00662C46 /* es-CL */,
 				F774390D1FCD6C0C00662C46 /* es-CO */,
 				F77439141FCD6C4A00662C46 /* es-CR */,
@@ -4142,17 +4088,11 @@
 				F78D6F441F0B7CB9002F9619 /* es-MX */,
 				F78D6F4B1F0B7CE4002F9619 /* nb-NO */,
 				F78D6F521F0B7D47002F9619 /* pl */,
-				F7DE9AAE1F482FA5008DFE10 /* sv */,
 				F7CC04E41F5AD50D00378CEF /* es */,
 				F7D532441F5D4123006568B1 /* is */,
 				F7D5324B1F5D4137006568B1 /* nl */,
-				F7D532521F5D4155006568B1 /* sk-SK */,
 				F7D5328D1F5D443B006568B1 /* en-GB */,
 				F7D532A21F5D4461006568B1 /* zh-Hans */,
-				F77438E91FCD694900662C46 /* ka-GE */,
-				F77438F01FCD69D200662C46 /* hu */,
-				F77438F71FCD6A0D00662C46 /* zh-Hant-TW */,
-				F77438FE1FCD6B7E00662C46 /* sr */,
 				F77439051FCD6BEF00662C46 /* es-CL */,
 				F774390C1FCD6C0C00662C46 /* es-CO */,
 				F77439131FCD6C4A00662C46 /* es-CR */,
@@ -4188,17 +4128,11 @@
 				F78D6F481F0B7CB9002F9619 /* es-MX */,
 				F78D6F4F1F0B7CE4002F9619 /* nb-NO */,
 				F78D6F561F0B7D47002F9619 /* pl */,
-				F7DE9AB21F482FA5008DFE10 /* sv */,
 				F7CC04E81F5AD50D00378CEF /* es */,
 				F7D532481F5D4123006568B1 /* is */,
 				F7D5324F1F5D4137006568B1 /* nl */,
-				F7D532561F5D4155006568B1 /* sk-SK */,
 				F7D532911F5D443B006568B1 /* en-GB */,
 				F7D532A61F5D4462006568B1 /* zh-Hans */,
-				F77438ED1FCD694900662C46 /* ka-GE */,
-				F77438F41FCD69D300662C46 /* hu */,
-				F77438FB1FCD6A0E00662C46 /* zh-Hant-TW */,
-				F77439021FCD6B7F00662C46 /* sr */,
 				F77439091FCD6BF000662C46 /* es-CL */,
 				F77439101FCD6C0D00662C46 /* es-CO */,
 				F77439171FCD6C4A00662C46 /* es-CR */,
@@ -4234,17 +4168,11 @@
 				F78D6F431F0B7CB9002F9619 /* es-MX */,
 				F78D6F4A1F0B7CE4002F9619 /* nb-NO */,
 				F78D6F511F0B7D47002F9619 /* pl */,
-				F7DE9AAD1F482FA5008DFE10 /* sv */,
 				F7CC04E31F5AD50D00378CEF /* es */,
 				F7D532431F5D4123006568B1 /* is */,
 				F7D5324A1F5D4137006568B1 /* nl */,
-				F7D532511F5D4155006568B1 /* sk-SK */,
 				F7D5328C1F5D443B006568B1 /* en-GB */,
 				F7D532A11F5D4461006568B1 /* zh-Hans */,
-				F77438E81FCD694900662C46 /* ka-GE */,
-				F77438EF1FCD69D200662C46 /* hu */,
-				F77438F61FCD6A0D00662C46 /* zh-Hant-TW */,
-				F77438FD1FCD6B7E00662C46 /* sr */,
 				F77439041FCD6BEF00662C46 /* es-CL */,
 				F774390B1FCD6C0C00662C46 /* es-CO */,
 				F77439121FCD6C4900662C46 /* es-CR */,
@@ -4280,17 +4208,11 @@
 				F78D6F491F0B7CB9002F9619 /* es-MX */,
 				F78D6F501F0B7CE5002F9619 /* nb-NO */,
 				F78D6F571F0B7D48002F9619 /* pl */,
-				F7DE9AB31F482FA5008DFE10 /* sv */,
 				F7CC04E91F5AD50E00378CEF /* es */,
 				F7D532491F5D4124006568B1 /* is */,
 				F7D532501F5D4137006568B1 /* nl */,
-				F7D532571F5D4156006568B1 /* sk-SK */,
 				F7D532921F5D443B006568B1 /* en-GB */,
 				F7D532A71F5D4462006568B1 /* zh-Hans */,
-				F77438EE1FCD694900662C46 /* ka-GE */,
-				F77438F51FCD69D300662C46 /* hu */,
-				F77438FC1FCD6A0E00662C46 /* zh-Hant-TW */,
-				F77439031FCD6B7F00662C46 /* sr */,
 				F774390A1FCD6BF000662C46 /* es-CL */,
 				F77439111FCD6C0D00662C46 /* es-CO */,
 				F77439181FCD6C4A00662C46 /* es-CR */,
@@ -4326,17 +4248,11 @@
 				F78D6F471F0B7CB9002F9619 /* es-MX */,
 				F78D6F4E1F0B7CE4002F9619 /* nb-NO */,
 				F78D6F551F0B7D47002F9619 /* pl */,
-				F7DE9AB11F482FA5008DFE10 /* sv */,
 				F7CC04E71F5AD50D00378CEF /* es */,
 				F7D532471F5D4123006568B1 /* is */,
 				F7D5324E1F5D4137006568B1 /* nl */,
-				F7D532551F5D4155006568B1 /* sk-SK */,
 				F7D532901F5D443B006568B1 /* en-GB */,
 				F7D532A51F5D4461006568B1 /* zh-Hans */,
-				F77438EC1FCD694900662C46 /* ka-GE */,
-				F77438F31FCD69D300662C46 /* hu */,
-				F77438FA1FCD6A0E00662C46 /* zh-Hant-TW */,
-				F77439011FCD6B7F00662C46 /* sr */,
 				F77439081FCD6BF000662C46 /* es-CL */,
 				F774390F1FCD6C0D00662C46 /* es-CO */,
 				F77439161FCD6C4A00662C46 /* es-CR */,
@@ -4372,17 +4288,11 @@
 				F78D6F461F0B7CB9002F9619 /* es-MX */,
 				F78D6F4D1F0B7CE4002F9619 /* nb-NO */,
 				F78D6F541F0B7D47002F9619 /* pl */,
-				F7DE9AB01F482FA5008DFE10 /* sv */,
 				F7CC04E61F5AD50D00378CEF /* es */,
 				F7D532461F5D4123006568B1 /* is */,
 				F7D5324D1F5D4137006568B1 /* nl */,
-				F7D532541F5D4155006568B1 /* sk-SK */,
 				F7D5328F1F5D443B006568B1 /* en-GB */,
 				F7D532A41F5D4461006568B1 /* zh-Hans */,
-				F77438EB1FCD694900662C46 /* ka-GE */,
-				F77438F21FCD69D300662C46 /* hu */,
-				F77438F91FCD6A0D00662C46 /* zh-Hant-TW */,
-				F77439001FCD6B7F00662C46 /* sr */,
 				F77439071FCD6BF000662C46 /* es-CL */,
 				F774390E1FCD6C0C00662C46 /* es-CO */,
 				F77439151FCD6C4A00662C46 /* es-CR */,
@@ -4420,7 +4330,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)\"/Libraries external/Realm\"",
@@ -4442,7 +4352,7 @@
 					"-Obj-C",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = it.twsweb.Nextcloud.Share;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Share/Share-Bridging-Header.h";
@@ -4466,7 +4376,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)\"/Libraries external/Realm\"",
@@ -4488,7 +4398,7 @@
 					"-Obj-C",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = it.twsweb.Nextcloud.Share;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud.Share;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Share/Share-Bridging-Header.h";
@@ -4510,7 +4420,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)\"/Libraries external/Realm\"",
@@ -4527,7 +4437,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"Libraries external\"/**";
-				PRODUCT_BUNDLE_IDENTIFIER = it.twsweb.Nextcloud.Picker;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud.Picker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG NC";
@@ -4550,7 +4460,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)\"/Libraries external/Realm\"",
@@ -4566,7 +4476,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"Libraries external\"/**";
-				PRODUCT_BUNDLE_IDENTIFIER = it.twsweb.Nextcloud.Picker;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud.Picker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = NC;
@@ -4589,7 +4499,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)\"/Libraries external/Realm\"",
@@ -4606,7 +4516,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"Libraries external\"/**";
-				PRODUCT_BUNDLE_IDENTIFIER = it.twsweb.Nextcloud.PickerFileProvider;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud.PickerFileProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG NC";
@@ -4630,7 +4540,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)\"/Libraries external/Realm\"",
@@ -4646,7 +4556,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LIBRARY_SEARCH_PATHS = "\"Libraries external\"/**";
-				PRODUCT_BUNDLE_IDENTIFIER = it.twsweb.Nextcloud.PickerFileProvider;
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud.PickerFileProvider;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = NC;
@@ -4669,7 +4579,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development IOS Push Services: it.twsweb.Nextcloud";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = "";
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4693,7 +4603,7 @@
 					"-all_load",
 				);
 				OTHER_SWIFT_FLAGS = "-DDEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = "it.twsweb.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -4720,7 +4630,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = "";
-				DEVELOPMENT_TEAM = 6JLRKY9ZV7;
+				DEVELOPMENT_TEAM = MQ224A6W7W;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -4743,7 +4653,7 @@
 					"-Obj-C",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "it.twsweb.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = br.com.techsize.Cloud;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
