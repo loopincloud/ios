@@ -65,7 +65,7 @@ class NCBrandColor: NSObject {
         let instance = NCBrandOptions()
         return instance
     }()
-    
+
     @objc public let brand:                           String = "TechSize Cloud"
     @objc public let mailMe:                          String = "contato@techsize.com.br"
     @objc public let textCopyrightNextcloudiOS:       String = "TechSize Cloud for iOS %@ © 2018"
