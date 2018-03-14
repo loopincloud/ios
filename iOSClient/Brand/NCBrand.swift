@@ -70,7 +70,7 @@ class NCBrandColor: NSObject {
     @objc public let mailMe:                          String = "contato@techsize.com.br"
     @objc public let textCopyrightNextcloudiOS:       String = "TechSize Cloud for iOS %@ © 2018"
     @objc public let textCopyrightNextcloudServer:    String = "Nextcloud Server %@"
-    @objc public let loginBaseUrl:                    String = "https://cloud.techsize.com.bre"
+    @objc public let loginBaseUrl:                    String = "https://cloud.techsize.com.br"
     @objc public let pushNotificationServer:          String = "https://push.techsize.com.br"
     @objc public let linkLoginProvider:               String = "https://cloud.techsize.com.br"
     @objc public let textLoginProvider:               String = "_login_bottom_label_"
@@ -97,7 +97,7 @@ class NCBrandColor: NSObject {
     
     @objc public let disable_intro:                   Bool = false
     @objc public let disable_linkLoginProvider:       Bool = false
-    @objc public let disable_request_login_url:       Bool = false
+    @objc public let disable_request_login_url:       Bool = true
     @objc public let disable_multiaccount:            Bool = false
     @objc public let disable_manage_account:          Bool = false
     @objc public let disable_more_external_site:      Bool = false

@@ -97,8 +97,9 @@
     self.login.tintColor = [NCBrandColor sharedInstance].customer;
     
     // Type view
-    [self.loginTypeView setTitle:NSLocalizedString(@"_traditional_login_", nil) forState:UIControlStateNormal];
-    [self.loginTypeView setTitleColor:[NCBrandColor sharedInstance].customerText forState:UIControlStateNormal];
+    self.loginTypeView.hidden = YES;
+    /*[self.loginTypeView setTitle:NSLocalizedString(@"_traditional_login_", nil) forState:UIControlStateNormal];
+    [self.loginTypeView setTitleColor:[NCBrandColor sharedInstance].customerText forState:UIControlStateNormal];*/
 
     // Bottom label
     self.bottomLabel.text = NSLocalizedString([NCBrandOptions sharedInstance].textLoginProvider, nil);
@@ -131,7 +132,7 @@
         _baseUrl.hidden = YES;
     }
 
-    if (_loginType == loginAdd) {
+    /*if (_loginType == loginAdd) {
         // Login Flow ?
         _imageUser.hidden = YES;
         _user.hidden = YES;
@@ -146,16 +147,16 @@
         _user.hidden = YES;
         _imagePassword.hidden = YES;
         _password.hidden = YES;
-    }
+    }*/
     
-    if (_loginType == loginModifyPasswordUser) {
+    /* if (_loginType == loginModifyPasswordUser) {
         _baseUrl.text = appDelegate.activeUrl;
         _baseUrl.userInteractionEnabled = NO;
         _baseUrl.textColor = [UIColor lightGrayColor];
         _user.text = appDelegate.activeUser;
-        _user.userInteractionEnabled = NO;
+        _user.userInteractionEnabled = YES;
         _user.textColor = [UIColor lightGrayColor];
-    }
+    // } */
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -577,7 +578,7 @@
 
 - (IBAction)handleLoginTypeView:(id)sender
 {
-    if (_user.hidden && _password.hidden) {
+    /*if (_user.hidden && _password.hidden) {
         
         _imageUser.hidden = NO;
         _user.hidden = NO;
@@ -594,7 +595,7 @@
         _password.hidden = YES;
         
         [self.loginTypeView setTitle:NSLocalizedString(@"_traditional_login_", nil) forState:UIControlStateNormal];
-    }
+    }*/
 }
 
 @end
